@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PresqueYaml", "PresqueYaml\PresqueYaml.fsproj", "{5264E219-7382-4C74-BC4D-7BBCF14FE5A9}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Demo", "Demo\Demo.fsproj", "{B836EF90-1A40-4BD3-99E5-17B1EBA44B8D}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PresqueYaml.Tests", "PresqueYaml.Tests\PresqueYaml.Tests.fsproj", "{4A0F704B-283F-44EA-BB9B-711099DD123E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5264E219-7382-4C74-BC4D-7BBCF14FE5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5264E219-7382-4C74-BC4D-7BBCF14FE5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5264E219-7382-4C74-BC4D-7BBCF14FE5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5264E219-7382-4C74-BC4D-7BBCF14FE5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B836EF90-1A40-4BD3-99E5-17B1EBA44B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B836EF90-1A40-4BD3-99E5-17B1EBA44B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B836EF90-1A40-4BD3-99E5-17B1EBA44B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B836EF90-1A40-4BD3-99E5-17B1EBA44B8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A0F704B-283F-44EA-BB9B-711099DD123E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A0F704B-283F-44EA-BB9B-711099DD123E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A0F704B-283F-44EA-BB9B-711099DD123E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A0F704B-283F-44EA-BB9B-711099DD123E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
