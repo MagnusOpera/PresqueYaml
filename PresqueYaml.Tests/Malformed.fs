@@ -40,3 +40,25 @@ let ``sequence must be on same indentation``() =
 
 // ####################################################################################################################
 
+[<Test>]
+let ``mapping value override must be on same line``() =
+    let yaml = "user:
+  name:
+   toto
+    titi"
+
+    (fun () -> yaml |> parse |> ignore)
+    |> should (throwWithMessage "Indentation error line 4") typeof<System.Exception>
+
+// ####################################################################################################################
+
+[<Test>]
+let ``mapping value2 must be on same line``() =
+    let yaml = "user:
+  name:
+toto"
+
+    (fun () -> yaml |> parse |> ignore)
+    |> should (throwWithMessage "Type mismatch line 3") typeof<System.Exception>
+
+// ####################################################################################################################

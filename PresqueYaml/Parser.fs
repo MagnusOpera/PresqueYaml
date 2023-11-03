@@ -54,9 +54,10 @@ let parse (yamlString: string) : YamlNode =
                 dedent currentState
 
             else
+                if currentState.Indent <> lineInfo.Indent then failwith $"Indentation error line {lineInfo.LineNum}"
+
                 // Sequence
                 if line.StartsWith("- ") then
-                    if currentState.Indent <> lineInfo.Indent then failwith $"Indentation error line {lineInfo.LineNum}"
                     let data =
                         match currentState.Data with
                         | NodeData.None ->
@@ -71,7 +72,6 @@ let parse (yamlString: string) : YamlNode =
 
                 // Mapping
                 elif line.Contains(":") then
-                    if currentState.Indent <> lineInfo.Indent then failwith $"Indentation error line {lineInfo.LineNum}"
                     let sepIndex = line.IndexOf(':')
                     let key = line.Substring(0, sepIndex).Trim()
                     let value = line.Substring(sepIndex+1).Trim()
