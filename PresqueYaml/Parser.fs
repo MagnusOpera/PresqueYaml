@@ -56,7 +56,6 @@ let parse (yamlString: string) : YamlNode =
         match remainingLines with
         | lineInfo :: nextLineInfos ->
             let currentState = states |> List.head
-            let line = lineInfo.Line
 
             // DEDENT
             if lineInfo.Indent < currentState.Indent then
@@ -64,6 +63,7 @@ let parse (yamlString: string) : YamlNode =
 
             else
                 if currentState.Indent <> lineInfo.Indent then failwith $"Indentation error line {lineInfo.LineNum}"
+                let line = lineInfo.Line
 
                 // Sequence
                 if line.StartsWith("- ") && (expected &&& ExpectedType.Sequence) <> ExpectedType.None then
@@ -71,18 +71,17 @@ let parse (yamlString: string) : YamlNode =
                         match currentState.Data with
                         | NodeData.None ->
                             let data = List<string>()
-                            currentState.Data <- data |> NodeData.Sequence
+                            currentState.Data <- NodeData.Sequence data
                             data
                         | NodeData.Sequence data -> data
                         | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
-                    let element = line.Substring(2).Trim()
-                    data.Add(element)
+                    line.Substring(2).Trim() |> data.Add
                     parseNode ExpectedType.Sequence states nextLineInfos
 
                 // Mapping
                 elif line.Contains(":") && (expected &&& ExpectedType.Mapping) <> ExpectedType.None then
                     let sepIndex = line.IndexOf(':')
-                    let key = line.Substring(0, sepIndex).Trim()
+                    let key = line.Substring(0, sepIndex).TrimEnd()
                     let value = line.Substring(sepIndex+1).Trim()
 
                     let value, states, nextLinesInfos =
@@ -91,8 +90,7 @@ let parse (yamlString: string) : YamlNode =
                             // INDENT
                             | Some nextLineInfo when lineInfo.Indent < nextLineInfo.Indent ->
                                 parseNode ExpectedType.MappingChild (createState nextLineInfo.Indent :: states) nextLineInfos
-                            | _ ->
-                                YamlNode.None, states, nextLineInfos
+                            | _ -> YamlNode.None, states, nextLineInfos
                         else
                             YamlNode.Scalar value, states, nextLineInfos
 
@@ -117,8 +115,7 @@ let parse (yamlString: string) : YamlNode =
                     failwith $"Unexpected data type line {lineInfo.LineNum}"
 
         | [] ->
-            let currentState = states |> List.head
-            dedent currentState
+            states |> List.head |> dedent
 
     let lines =
         yamlString.Split([| '\r'; '\n' |], StringSplitOptions.RemoveEmptyEntries)
