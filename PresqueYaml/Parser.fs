@@ -10,7 +10,7 @@ type YamlNode =
     | Mapping of Map<string, YamlNode>
 
 [<Flags>]
-type ExpectedType =
+type private ExpectedType =
     | Scalar = 1
     | Sequence = 2
     | Mapping = 4
@@ -19,7 +19,7 @@ type ExpectedType =
     | None = 0
 
 [<RequireQualifiedAccess>]
-type NodeData =
+type private NodeData =
     | None
     | Scalar of string
     | Sequence of List<string>
@@ -42,7 +42,7 @@ let parse (yamlString: string) : YamlNode =
         { NodeState.Indent = indent
           NodeState.Data = NodeData.None }
 
-    let rec parseNode expected (states: NodeState list) (remainingLines: LineInfo list): (YamlNode * NodeState list * LineInfo list) =
+    let rec parseNode (expected: ExpectedType) (states: NodeState list) (remainingLines: LineInfo list): (YamlNode * NodeState list * LineInfo list) =
 
         let dedent (state: NodeState) =
             let node =
@@ -55,6 +55,8 @@ let parse (yamlString: string) : YamlNode =
 
         match remainingLines with
         | lineInfo :: nextLineInfos ->
+            let raiseError msg = failwith $"{msg} (line {lineInfo.LineNum})"
+
             let currentState = states |> List.head
 
             // DEDENT
@@ -62,7 +64,7 @@ let parse (yamlString: string) : YamlNode =
                 dedent currentState
 
             else
-                if currentState.Indent <> lineInfo.Indent then failwith $"Indentation error line {lineInfo.LineNum}"
+                if currentState.Indent <> lineInfo.Indent then raiseError "Indentation error"
                 let line = lineInfo.Line
 
                 // Sequence
@@ -74,7 +76,7 @@ let parse (yamlString: string) : YamlNode =
                             currentState.Data <- NodeData.Sequence data
                             data
                         | NodeData.Sequence data -> data
-                        | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
+                        | _ -> raiseError "Type mismatch"
                     line.Substring(2).Trim() |> data.Add
                     parseNode ExpectedType.Sequence states nextLineInfos
 
@@ -98,10 +100,10 @@ let parse (yamlString: string) : YamlNode =
                         match currentState.Data with
                         | NodeData.None ->
                             let data = Dictionary<string, YamlNode>()
-                            currentState.Data <- data |> NodeData.Mapping
+                            currentState.Data <- NodeData.Mapping data
                             data
                         | NodeData.Mapping data -> data
-                        | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
+                        | _ -> raiseError "Type mismatch"
                     data[key] <- value
                     parseNode ExpectedType.Mapping states nextLinesInfos
 
@@ -109,10 +111,10 @@ let parse (yamlString: string) : YamlNode =
                 elif (expected &&& ExpectedType.Scalar) <> ExpectedType.None then
                     match currentState.Data with
                     | NodeData.None -> currentState.Data <- NodeData.Scalar line
-                    | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
+                    | _ -> raiseError "Type mismatch"
                     parseNode ExpectedType.None states nextLineInfos
                 else
-                    failwith $"Unexpected data type line {lineInfo.LineNum}"
+                    raiseError "Unexpected data type"
 
         | [] ->
             states |> List.head |> dedent

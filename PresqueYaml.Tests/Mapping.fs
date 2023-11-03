@@ -123,6 +123,6 @@ let ``mapping type mismatch is error``() =
 - toto"
 
     (fun () -> yaml |> parse |> ignore)
-    |> should (throwWithMessage "Unexpected data type line 2") typeof<System.Exception>
+    |> should (throwWithMessage "Unexpected data type (line 2)") typeof<System.Exception>
 
 // ####################################################################################################################

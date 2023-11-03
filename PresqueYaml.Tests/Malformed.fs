@@ -13,7 +13,7 @@ let ``mapping must be on same indentation``() =
 titi: tralala"
 
     (fun () -> yaml |> parse |> ignore)
-    |> should (throwWithMessage "Indentation error line 2") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 2)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -25,7 +25,7 @@ let ``dedent mapping must restore parent indentation``() =
    tutu: pouet"
 
     (fun () -> yaml |> parse |> ignore)
-    |> should (throwWithMessage "Indentation error line 4") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 4)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -36,7 +36,7 @@ let ``sequence must be on same indentation``() =
   - tralala"
 
     (fun () -> yaml |> parse |> ignore)
-    |> should (throwWithMessage "Indentation error line 3") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -48,4 +48,4 @@ let ``mapping value override must be on same line``() =
    titi"
 
     (fun () -> yaml |> parse |> ignore)
-    |> should (throwWithMessage "Unexpected data type line 3") typeof<System.Exception>
+    |> should (throwWithMessage "Unexpected data type (line 3)") typeof<System.Exception>
