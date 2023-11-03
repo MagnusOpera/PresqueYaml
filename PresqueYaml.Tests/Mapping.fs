@@ -4,6 +4,8 @@ open PresqueYaml
 open NUnit.Framework
 open FsUnit
 
+// ####################################################################################################################
+
 [<Test>]
 let ``empty yaml is None`` () =
     let expected = YamlNode.None
@@ -12,6 +14,8 @@ let ``empty yaml is None`` () =
     yaml
     |> parse
     |> should equal expected
+
+// ####################################################################################################################
 
 [<Test>]
 let ``mapping only is valid``() =
@@ -26,19 +30,7 @@ age: 42"
     |> parse
     |> should equal expected
 
-
-[<Test>]
-let ``mapping only indented is valid``() =
-    let expected =
-        YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                "age", YamlNode.Scalar "42" ])
-
-    let yaml = " name: John Doe
- age: 42"
-
-    yaml
-    |> parse
-    |> should equal expected
+// ####################################################################################################################
 
 [<Test>]
 let ``mapping only with spaces is valid``() =
@@ -46,45 +38,60 @@ let ``mapping only with spaces is valid``() =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
                                 "age", YamlNode.Scalar "42" ])
 
-    let yaml = " name: John Doe   
- age:   42   "
+    let yaml = "name: John Doe
+age:   42   "
 
     yaml
     |> parse
     |> should equal expected
 
-
+// ####################################################################################################################
 
 [<Test>]
-let ``nested mappings are valid``() =
+let ``nested mappings indent is valid``() =
     let expected =
-        YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                "age", YamlNode.Scalar "42"
-                                "languages", YamlNode.Sequence ["F#"; "Python" ] ])
+        YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+                                                                "age", YamlNode.Scalar "42" ] ) ])
 
-    let yaml = "name: John Doe
-age: 42
-languages:
-  - F#
-  - Python"
+    let yaml = "user:
+  name: John Doe
+  age: 42"
 
     yaml
     |> parse
     |> should equal expected
 
+// ####################################################################################################################
+
+[<Test>]
+let ``nested mappings dedent is valid``() =
+    let expected =
+        YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+                                                                 "age", YamlNode.None ] )
+                                "user2", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "Jane Doe"
+                                                                 "age", YamlNode.Scalar "42" ] ) ])
+
+    let yaml = "user1:
+  name: John Doe
+  age:
+user2:
+  name: Jane Doe
+  age: 42"
+
+    yaml
+    |> parse
+    |> should equal expected
+
+// ####################################################################################################################
 
 [<Test>]
 let ``mapping override is allowed``() =
     let expected =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                "age", YamlNode.Scalar "666"
-                                "languages", YamlNode.Sequence ["F#"; "Python" ] ])
+                                "age", YamlNode.Scalar "666" ])
 
     let yaml = "name: John Doe
 age: 42
-languages:
-  - F#
-  - Python
 age: 666
 "
 
@@ -92,6 +99,7 @@ age: 666
     |> parse
     |> should equal expected
 
+// ####################################################################################################################
 
 [<Test>]
 let ``mapping override null is allowed``() =
@@ -106,3 +114,15 @@ age:"
     yaml
     |> parse
     |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``mapping type mismatch is error``() =
+    let yaml = "users: 42
+- toto"
+
+    (fun () -> yaml |> parse |> ignore)
+    |> should (throwWithMessage "type mismatch line 2") typeof<System.Exception>
+
+// ####################################################################################################################
