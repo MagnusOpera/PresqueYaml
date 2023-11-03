@@ -1,4 +1,4 @@
-﻿module PresqueYaml
+﻿module PresqueYaml.RepresentationModel
 open System
 open System.Collections.Generic
 

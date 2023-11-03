@@ -1,6 +1,6 @@
 module PresqueYaml.Tests.RepresentationModel.Mapping
 
-open PresqueYaml
+open PresqueYaml.RepresentationModel
 open NUnit.Framework
 open FsUnit
 
