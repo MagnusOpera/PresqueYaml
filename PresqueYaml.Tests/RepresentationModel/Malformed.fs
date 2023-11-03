@@ -54,11 +54,6 @@ let ``mapping value override must be on same line``() =
 
 [<Test>]
 let ``sequence parent aligned in mapping is not valid``() =
-    let expected =
-        YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                "age", YamlNode.Scalar "42"
-                                "languages", YamlNode.Sequence ["F#"; "Python" ] ])
-
     let yaml = "name: John Doe
 age: 42
 languages:
