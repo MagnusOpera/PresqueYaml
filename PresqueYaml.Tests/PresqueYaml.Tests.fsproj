@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Wellformed.fs" />
     <Compile Include="Malformed.fs" />
     <Compile Include="Scalar.fs" />
     <Compile Include="Sequence.fs" />
