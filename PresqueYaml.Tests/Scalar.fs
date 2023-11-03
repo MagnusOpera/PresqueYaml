@@ -12,7 +12,7 @@ let ``scalar only is valid``() =
 
     let yaml = "toto"
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
 // ####################################################################################################################
@@ -35,7 +35,7 @@ let ``scalar only with spaces is valid``() =
 
     let yaml = "toto     "
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
 // ####################################################################################################################

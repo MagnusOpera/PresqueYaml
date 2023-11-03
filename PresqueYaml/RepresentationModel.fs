@@ -36,7 +36,7 @@ type private LineInfo =
       Indent: int
       Line: string }
 
-let parse (yamlString: string) : YamlNode =
+let read (yamlString: string) : YamlNode =
     let createState indent =
         { NodeState.Indent = indent
           NodeState.Data = NodeData.None }

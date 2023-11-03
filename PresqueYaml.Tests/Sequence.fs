@@ -14,7 +14,7 @@ let ``sequence only is valid``() =
 - titi"
 
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
 // ####################################################################################################################
@@ -27,7 +27,7 @@ let ``values in sequence are trimmed``() =
 - titi   "
 
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
 // ####################################################################################################################
@@ -46,7 +46,7 @@ languages:
   - Python"
 
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
 // ####################################################################################################################
@@ -56,7 +56,7 @@ let ``type mismatch in list is error``() =
     let yaml = "- toto
 -titi"
 
-    (fun () -> yaml |> parse |> ignore)
+    (fun () -> yaml |> read |> ignore)
     |> should (throwWithMessage "Unexpected data type (line 2)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -67,7 +67,7 @@ let ``type mismatch scalar first in list is error``() =
   -toto
   - titi"
 
-    (fun () -> yaml |> parse |> ignore)
+    (fun () -> yaml |> read |> ignore)
     |> should (throwWithMessage "Unexpected data type (line 2)") typeof<System.Exception>
 
 // ####################################################################################################################

@@ -34,6 +34,6 @@ user2:
 "
 
     yaml
-    |> parse
+    |> read
     |> should equal expected
 
