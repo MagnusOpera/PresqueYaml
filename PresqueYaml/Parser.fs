@@ -26,16 +26,15 @@ type private NodeData =
     | Mapping of Dictionary<string, YamlNode>
 
 [<RequireQualifiedAccess>]
-type private NodeState = {
-    Indent: int
-    mutable Data: NodeData
-}
+type private NodeState =
+    { Indent: int
+      mutable Data: NodeData }
 
-type private LineInfo = {
-    LineNum: int
-    Indent: int
-    Line: string
-}
+[<RequireQualifiedAccess>]
+type private LineInfo =
+    { LineNum: int
+      Indent: int
+      Line: string }
 
 let parse (yamlString: string) : YamlNode =
     let createState indent =
@@ -127,7 +126,9 @@ let parse (yamlString: string) : YamlNode =
         let mutable leadingSpaces = 0
         while leadingSpaces < line.Length && line[leadingSpaces] = ' ' do
             leadingSpaces <- leadingSpaces + 1
-        { LineNum = idx+1; Indent = leadingSpaces; Line = line.Substring(leadingSpaces).TrimEnd() }
+        { LineInfo.LineNum = idx + 1
+          LineInfo.Indent = leadingSpaces
+          LineInfo.Line = line.Substring(leadingSpaces).TrimEnd() }
 
     let indentAndLines =
         lines
