@@ -44,7 +44,6 @@ let parse (yamlString: string) : YamlNode =
                 | NodeData.Mapping data -> data |> Seq.map (|KeyValue|) |> Map.ofSeq |> YamlNode.Mapping
             node, states |> List.tail, remainingLines
 
-
         match remainingLines with
         | lineInfo :: nextLineInfos ->
             let currentState = states |> List.head
@@ -82,8 +81,7 @@ let parse (yamlString: string) : YamlNode =
                             match nextLineInfos |> List.tryHead with
                             // INDENT
                             | Some nextLineInfo when lineInfo.Indent < nextLineInfo.Indent ->
-                                let newState = createState nextLineInfo.Indent
-                                parseNode (newState::states) nextLineInfos
+                                parseNode (createState nextLineInfo.Indent :: states) nextLineInfos
                             | _ ->
                                 YamlNode.None, states, nextLineInfos
                         else
@@ -98,7 +96,6 @@ let parse (yamlString: string) : YamlNode =
                         | NodeData.Mapping data -> data
                         | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
                     data[key] <- value
-
                     parseNode states nextLineInfos
 
                 // Scalar
