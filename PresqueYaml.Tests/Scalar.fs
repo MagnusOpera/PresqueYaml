@@ -18,6 +18,18 @@ let ``scalar only is valid``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``scalar override is valid``() =
+    let expected = YamlNode.Scalar "titi"
+
+    let yaml = "toto
+titi"
+    yaml
+    |> parse
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
 let ``scalar only with spaces is valid``() =
     let expected = YamlNode.Scalar "toto"
 

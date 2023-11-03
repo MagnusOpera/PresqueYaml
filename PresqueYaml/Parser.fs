@@ -104,7 +104,8 @@ let parse (yamlString: string) : YamlNode =
                 // Scalar
                 else
                     match currentState.Data with
-                    | NodeData.None ->
+                    | NodeData.None
+                    | NodeData.Scalar _ ->
                         currentState.Data <- NodeData.Scalar line
                     | _ -> failwith $"Type mismatch line {lineInfo.LineNum}"
                     parseNode states nextLineInfos

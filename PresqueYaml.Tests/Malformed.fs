@@ -7,7 +7,7 @@ open FsUnit
 // ####################################################################################################################
 
 [<Test>]
-let ``wrong mapping indentation``() =
+let ``mapping must be on same indentation``() =
     let yaml = "users: 42
  toto:
 titi: tralala"
@@ -18,7 +18,7 @@ titi: tralala"
 // ####################################################################################################################
 
 [<Test>]
-let ``wrong mapping dedent indentation``() =
+let ``dedent mapping must restore parent indentation``() =
     let yaml = "users:
   toto:
     titi: tralala
@@ -30,7 +30,7 @@ let ``wrong mapping dedent indentation``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``wrong sequence indentation``() =
+let ``sequence must be on same indentation``() =
     let yaml = "users:
  - toto
   - tralala"

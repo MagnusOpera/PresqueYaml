@@ -7,7 +7,7 @@ open FsUnit
 // ####################################################################################################################
 
 [<Test>]
-let ``empty yaml is None`` () =
+let ``empty yaml is None and valid`` () =
     let expected = YamlNode.None
 
     let yaml = ""
@@ -33,7 +33,7 @@ age: 42"
 // ####################################################################################################################
 
 [<Test>]
-let ``mapping only with spaces is valid``() =
+let ``mapping values are trimmed``() =
     let expected =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
                                 "age", YamlNode.Scalar "42" ])

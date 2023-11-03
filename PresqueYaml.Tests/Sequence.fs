@@ -20,7 +20,7 @@ let ``sequence only is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``sequence only with spaces is valid``() =
+let ``values in sequence are trimmed``() =
     let expected = YamlNode.Sequence ["toto"; "titi"]
 
     let yaml = "-   toto
@@ -52,7 +52,7 @@ languages:
 // ####################################################################################################################
 
 [<Test>]
-let ``node type mismatch in list is error``() =
+let ``type mismatch in list is error``() =
     let yaml = "- toto
 -titi"
 
@@ -62,7 +62,7 @@ let ``node type mismatch in list is error``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``node type mismatch scalar first in list is error``() =
+let ``type mismatch scalar first in list is error``() =
     let yaml = "users:
   -toto
   - titi"
