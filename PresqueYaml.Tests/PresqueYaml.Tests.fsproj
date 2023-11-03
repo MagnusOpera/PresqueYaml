@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Wellformed.fs" />
-    <Compile Include="Malformed.fs" />
-    <Compile Include="Scalar.fs" />
-    <Compile Include="Sequence.fs" />
-    <Compile Include="Mapping.fs" />
+    <Compile Include="RepresentationModel/Wellformed.fs" />
+    <Compile Include="RepresentationModel/Malformed.fs" />
+    <Compile Include="RepresentationModel/Scalar.fs" />
+    <Compile Include="RepresentationModel/Sequence.fs" />
+    <Compile Include="RepresentationModel/Mapping.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

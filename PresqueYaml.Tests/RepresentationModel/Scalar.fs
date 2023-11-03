@@ -1,4 +1,4 @@
-module PresqueYaml.Scalar.Tests
+module PresqueYaml.Tests.RepresentationModel.Scalar
 
 open PresqueYaml
 open NUnit.Framework

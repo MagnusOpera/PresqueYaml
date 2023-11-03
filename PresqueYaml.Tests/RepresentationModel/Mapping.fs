@@ -1,4 +1,4 @@
-module PresqueYaml.Mapping.Tests
+module PresqueYaml.Tests.RepresentationModel.Mapping
 
 open PresqueYaml
 open NUnit.Framework

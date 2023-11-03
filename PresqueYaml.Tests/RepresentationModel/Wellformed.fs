@@ -1,4 +1,4 @@
-module PresqueYaml.Wellformed.Tests
+module PresqueYaml.Tests.RepresentationModel.Wellformed
 
 open PresqueYaml
 open NUnit.Framework

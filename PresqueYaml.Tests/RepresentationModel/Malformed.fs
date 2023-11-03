@@ -1,4 +1,4 @@
-module PresqueYaml.Malformed.Tests
+module PresqueYaml.Tests.RepresentationModel.Malformed
 
 open PresqueYaml
 open NUnit.Framework
