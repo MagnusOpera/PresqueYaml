@@ -85,6 +85,27 @@ user2:
 // ####################################################################################################################
 
 [<Test>]
+let ``compact nested mapping is valid``() =
+    let expected =
+        YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+                                                                 "age", YamlNode.None ] )
+                                "user2", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "Jane Doe"
+                                                                 "age", YamlNode.Scalar "42" ] ) ])
+
+    let yaml = "
+user1: name: John Doe
+       age:
+user2:
+  name: Jane Doe
+  age: 42"
+
+    yaml
+    |> read
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
 let ``mapping override is allowed``() =
     let expected =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"

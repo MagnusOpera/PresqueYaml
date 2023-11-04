@@ -86,18 +86,19 @@ let read (yamlString: string) : YamlNode =
                 elif line.Contains(":") then
                     let sepIndex = line.IndexOf(':')
                     let key = line.Substring(0, sepIndex).TrimEnd()
-                    let value = line.Substring(sepIndex+1).Trim()
+                    let value = line.Substring(sepIndex+1)
 
                     let value, states, nextLinesInfos =
-                        if String.IsNullOrEmpty value then
+                        if String.IsNullOrWhiteSpace value then
                             match nextLineInfos |> List.tryHead with
                             // INDENT
                             | Some nextLineInfo when lineInfo.Indent < nextLineInfo.Indent ->
                                 parseNode (createState nextLineInfo.Indent :: states) nextLineInfos
                             | _ -> YamlNode.None, states, nextLineInfos
                         else
-                            parseNode (createState (lineInfo.Indent + sepIndex + 1) :: states)
-                                      ({lineInfo with Indent = lineInfo.Indent + sepIndex + 1} :: nextLineInfos)
+                            let leadingSpaces = leadingSpaces value
+                            parseNode (createState (lineInfo.Indent + sepIndex + 1 + leadingSpaces) :: states)
+                                      ({lineInfo with Indent = lineInfo.Indent + sepIndex + 1 + leadingSpaces} :: nextLineInfos)
 
                     let data =
                         match currentState.Data with
