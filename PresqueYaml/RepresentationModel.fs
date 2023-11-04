@@ -94,7 +94,6 @@ let read (yamlString: string) : YamlNode =
                     | NodeData.Sequence data -> data
                     | _ -> raiseError "Type mismatch"
 
-                // extract value from descendant
                 let value, states, nextLineInfos =
                     parseNode (createState (lineInfo.ColNum + 2) :: states)
                               ({lineInfo with ColNum = lineInfo.ColNum + 2 } :: nextLineInfos)
@@ -136,7 +135,6 @@ let read (yamlString: string) : YamlNode =
                 | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data}\n{line.Trim()}"
                 | _ -> raiseError "Type mismatch"
                 parseNode states nextLineInfos
-
 
             // DEDENT
             if lineInfo.ColNum < currentState.Indent then
