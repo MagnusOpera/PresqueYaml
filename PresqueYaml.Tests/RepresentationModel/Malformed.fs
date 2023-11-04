@@ -41,18 +41,6 @@ let ``sequence must be on same indentation``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``mapping value override must be on same line``() =
-    let yaml = "user:
-  name:
-   toto
-   titi"
-
-    (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Unexpected data type (line 3)") typeof<System.Exception>
-
-// ####################################################################################################################
-
-[<Test>]
 let ``sequence parent aligned in mapping is not valid``() =
     let yaml = "name: John Doe
 age: 42
@@ -61,4 +49,15 @@ languages:
 - Python"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Unexpected data type (line 4)") typeof<System.Exception>
+    |> should (throwWithMessage "Type mismatch (line 4)") typeof<System.Exception>
+
+// ####################################################################################################################
+
+[<Test>]
+let ``mapping type mismatch is error``() =
+    let yaml = "users: 42
+- toto"
+
+    (fun () -> yaml |> read |> ignore)
+    |> should (throwWithMessage "Type mismatch (line 2)") typeof<System.Exception>
+

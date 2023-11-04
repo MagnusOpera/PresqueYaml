@@ -85,6 +85,27 @@ user2:
 // ####################################################################################################################
 
 [<Test>]
+let ``compact nested mapping is valid``() =
+    let expected =
+        YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+                                                                 "age", YamlNode.None ] )
+                                "user2", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "Jane Doe"
+                                                                 "age", YamlNode.Scalar "42" ] ) ])
+
+    let yaml = "
+user1: name: John Doe
+       age:
+user2:
+  name: Jane Doe
+  age: 42"
+
+    yaml
+    |> read
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
 let ``mapping override is allowed``() =
     let expected =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
@@ -118,11 +139,18 @@ age:"
 // ####################################################################################################################
 
 [<Test>]
-let ``mapping type mismatch is error``() =
-    let yaml = "users: 42
-- toto"
+let ``mapping value override must be on same line``() =
+    let expected =
+        YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map ["name", YamlNode.Scalar "toto titi"]) ])
 
-    (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Unexpected data type (line 2)") typeof<System.Exception>
+    let yaml = "user:
+  name:
+   toto
+   titi"
+
+    yaml
+    |> read
+    |> should equal expected
 
 // ####################################################################################################################
+
