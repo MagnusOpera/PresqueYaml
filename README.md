@@ -1,7 +1,8 @@
 # PresqueYaml
 
 In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
-If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.
+
+<table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.</td></tr></table>
 
 `PresqueYaml` offers:
 * Yaml deserialization to a representation model (AST)
