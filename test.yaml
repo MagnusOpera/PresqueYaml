@@ -1,6 +1,0 @@
-user:
-  name: John Doe   
-  languages:
-    - F#  
-    - Python
-  age: 30

@@ -11,7 +11,7 @@ let ``empty lines are ignored``() =
     let expected =
         YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
                                                                  "age", YamlNode.None
-                                                                 "comment", YamlNode.Scalar "😃"
+                                                                 "comment", YamlNode.Scalar "this is a comment\n😃"
                                                                  "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
                                                                                                   YamlNode.None
                                                                                                   YamlNode.Scalar "F#" ] ] )
@@ -29,8 +29,8 @@ user1:
   name: John Doe
 
   age:
-  comment: 😃
-  languages: [ Python, , F# ]
+  comment: this is a comment\\n😃
+  languages: [ Python,, F# ]
 
 
    # this is a comment
