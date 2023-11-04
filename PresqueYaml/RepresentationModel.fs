@@ -73,7 +73,13 @@ let read (yamlString: string) : YamlNode =
                             data
                         | NodeData.Sequence data -> data
                         | _ -> raiseError "Type mismatch"
-                    line.Substring(2).Trim() |> YamlNode.Scalar |> data.Add
+
+                    // extract value from descendant
+                    let value, states, nextLineInfos =
+                        parseNode (createState (lineInfo.Indent + 2) :: states)
+                                  ({lineInfo with Indent = lineInfo.Indent + 2 } :: nextLineInfos)
+
+                    value |> data.Add
                     parseNode states nextLineInfos
 
                 // Mapping
@@ -90,7 +96,8 @@ let read (yamlString: string) : YamlNode =
                                 parseNode (createState nextLineInfo.Indent :: states) nextLineInfos
                             | _ -> YamlNode.None, states, nextLineInfos
                         else
-                            YamlNode.Scalar value, states, nextLineInfos
+                            parseNode (createState (lineInfo.Indent + sepIndex + 1) :: states)
+                                      ({lineInfo with Indent = lineInfo.Indent + sepIndex + 1} :: nextLineInfos)
 
                     let data =
                         match currentState.Data with
