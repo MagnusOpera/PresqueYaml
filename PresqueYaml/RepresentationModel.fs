@@ -1,6 +1,7 @@
 ﻿module PresqueYaml.RepresentationModel
 open System
 open System.Collections.Generic
+open System.Text.RegularExpressions
 
 [<RequireQualifiedAccess>]
 type YamlNode =
@@ -38,13 +39,35 @@ let read (yamlString: string) : YamlNode =
             leadingSpaces <- leadingSpaces + 1
         leadingSpaces
 
+    let (|Regex|_|) pattern input =
+        let m = Regex.Match(input, pattern)
+        if m.Success then List.tail [ for g in m.Groups -> g.Value ] |> Some
+        else None
+
+    let unquoteString data =
+        match data with
+        | Regex "^'(.*)'$" [content] -> content
+        | Regex "^\"(.*)\"$" [content] -> content
+        | _ -> data.Trim()
+
     let rec parseNode (states: NodeState list) (remainingLines: LineInfo list): YamlNode * NodeState list * LineInfo list =
 
         let dedent (state: NodeState) =
             let node =
                 match state.Data with
                 | NodeData.None -> YamlNode.None
-                | NodeData.Scalar data ->  data |> YamlNode.Scalar
+                | NodeData.Scalar data ->
+                    match data with
+                    | Regex "^'(.*)'$" [content] -> content |> YamlNode.Scalar
+                    | Regex "^\"(.*)\"$" [content] -> content |> YamlNode.Scalar
+                    | Regex "^\[(.*)\]$" [content] ->
+                        content.Split(',')
+                        |> Seq.map (fun item ->
+                            if String.IsNullOrWhiteSpace(item) then YamlNode.None
+                            else item |> unquoteString |> YamlNode.Scalar)
+                        |> List.ofSeq
+                        |> YamlNode.Sequence
+                    | _ -> data |> YamlNode.Scalar                
                 | NodeData.Sequence data -> data |> List.ofSeq |> YamlNode.Sequence
                 | NodeData.Mapping data -> data |> Seq.map (|KeyValue|) |> Map.ofSeq |> YamlNode.Mapping
             node, states |> List.tail, remainingLines
@@ -85,7 +108,7 @@ let read (yamlString: string) : YamlNode =
                 // Mapping
                 elif line.Contains(":") then
                     let sepIndex = line.IndexOf(':')
-                    let key = line.Substring(0, sepIndex).TrimEnd()
+                    let key = line.Substring(0, sepIndex).TrimEnd() |> unquoteString
                     let value = line.Substring(sepIndex+1)
 
                     let value, states, nextLinesInfos =

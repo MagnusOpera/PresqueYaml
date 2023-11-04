@@ -10,8 +10,13 @@ open FsUnit
 let ``empty lines are ignored``() =
     let expected =
         YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                                                 "age", YamlNode.None ] )
-                                "user2", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "Jane Doe"
+                                                                 "age", YamlNode.None
+                                                                 "comment", YamlNode.Scalar "😃"
+                                                                 "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
+                                                                                                  YamlNode.None
+                                                                                                  YamlNode.Scalar "F#" ] ] )
+                                "user2", YamlNode.Mapping (Map [ "first name", YamlNode.Scalar "J a n e "
+                                                                 "last name", YamlNode.Scalar "Doe"
                                                                  "age", YamlNode.Scalar "42"
                                                                  "languages", YamlNode.Sequence [ YamlNode.Scalar "F#"
                                                                                                   YamlNode.Scalar "Python" ] ] ) ])
@@ -24,11 +29,14 @@ user1:
   name: John Doe
 
   age:
+  comment: 😃
+  languages: [ Python, ,   F# ]
 
 
    # this is a comment
 user2:
-  name: Jane Doe
+  'first name': 'J a n e '
+  'last name':   Doe
 
   age: 42
   languages:
