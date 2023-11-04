@@ -8,7 +8,7 @@ open FsUnit
 
 [<Test>]
 let ``sequence only is valid``() =
-    let expected = YamlNode.Sequence ["toto"; "titi"]
+    let expected = YamlNode.Sequence [YamlNode.Scalar "toto"; YamlNode.Scalar "titi"]
 
     let yaml = "- toto
 - titi"
@@ -21,7 +21,7 @@ let ``sequence only is valid``() =
 
 [<Test>]
 let ``values in sequence are trimmed``() =
-    let expected = YamlNode.Sequence ["toto"; "titi"]
+    let expected = YamlNode.Sequence [YamlNode.Scalar "toto"; YamlNode.Scalar "titi"]
 
     let yaml = "-   toto
 - titi   "
@@ -37,7 +37,7 @@ let ``sequence in mapping valid``() =
     let expected =
         YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
                                 "age", YamlNode.Scalar "42"
-                                "languages", YamlNode.Sequence ["F#"; "Python" ] ])
+                                "languages", YamlNode.Sequence [YamlNode.Scalar "F#"; YamlNode.Scalar "Python" ] ])
 
     let yaml = "name: John Doe
 age: 42

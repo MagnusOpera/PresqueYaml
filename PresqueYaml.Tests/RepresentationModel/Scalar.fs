@@ -17,15 +17,15 @@ let ``scalar only is valid``() =
 
 // ####################################################################################################################
 
-// [<Test>]
-// let ``scalar override is valid``() =
-//     let expected = YamlNode.Scalar "titi"
+[<Test>]
+let ``multiline scalar is valid``() =
+    let expected = YamlNode.Scalar "toto titi"
 
-//     let yaml = "toto
-// titi"
-//     yaml
-//     |> parse
-//     |> should equal expected
+    let yaml = "toto
+titi"
+    yaml
+    |> read
+    |> should equal expected
 
 // ####################################################################################################################
 

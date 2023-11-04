@@ -6,7 +6,7 @@ open System.Collections.Generic
 type YamlNode =
     | None
     | Scalar of string
-    | Sequence of string list
+    | Sequence of YamlNode list
     | Mapping of Map<string, YamlNode>
 
 [<Flags>]
@@ -22,7 +22,7 @@ type private ExpectedType =
 type private NodeData =
     | None
     | Scalar of string
-    | Sequence of List<string>
+    | Sequence of List<YamlNode>
     | Mapping of Dictionary<string, YamlNode>
 
 [<RequireQualifiedAccess>]
@@ -71,12 +71,12 @@ let read (yamlString: string) : YamlNode =
                     let data =
                         match currentState.Data with
                         | NodeData.None ->
-                            let data = List<string>()
+                            let data = List<YamlNode>()
                             currentState.Data <- NodeData.Sequence data
                             data
                         | NodeData.Sequence data -> data
                         | _ -> raiseError "Type mismatch"
-                    line.Substring(2).Trim() |> data.Add
+                    line.Substring(2).Trim() |> YamlNode.Scalar |> data.Add
                     parseNode ExpectedType.Sequence states nextLineInfos
 
                 // Mapping
@@ -110,8 +110,9 @@ let read (yamlString: string) : YamlNode =
                 elif (expected &&& ExpectedType.Scalar) <> ExpectedType.None then
                     match currentState.Data with
                     | NodeData.None -> currentState.Data <- NodeData.Scalar line
+                    | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data} {line}"
                     | _ -> raiseError "Type mismatch"
-                    parseNode ExpectedType.None states nextLineInfos
+                    parseNode ExpectedType.Scalar states nextLineInfos
                 else
                     raiseError "Unexpected data type"
 
