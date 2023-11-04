@@ -15,11 +15,14 @@ let ``empty lines are ignored``() =
                                                                  "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
                                                                                                   YamlNode.None
                                                                                                   YamlNode.Scalar "F#" ] ] )
-                                "user2", YamlNode.Mapping (Map [ "first name", YamlNode.Scalar "J a n e "
-                                                                 "last name", YamlNode.Scalar "Doe"
-                                                                 "age", YamlNode.Scalar "42"
+                                "user2", YamlNode.Mapping (Map [ "first name", YamlNode.Scalar "Toto"
+                                                                 "age", YamlNode.Scalar "666"
                                                                  "languages", YamlNode.Sequence [ YamlNode.Scalar "F# |> ❤️"
-                                                                                                  YamlNode.Scalar "Python" ] ] ) ])
+                                                                                                  YamlNode.Scalar "Python" ] ] )
+                                "categories", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "toto"
+                                                                                      YamlNode.Scalar "titi"] ]
+                                "fruits", YamlNode.Sequence [ YamlNode.Mapping (Map [ "cherry", YamlNode.Scalar "red" ])
+                                                              YamlNode.Mapping (Map [ "banana", YamlNode.Scalar "yellow" ]) ] ])
 
     let yaml = "
 
@@ -30,7 +33,7 @@ user1:
 
   age:
   comment: this is a comment\\n😃
-  languages: [ Python,, F# ]
+  languages: [ Python  , ,F# ]
 
 
    # this is a comment
@@ -40,8 +43,23 @@ user2:
 
   age: 42
   languages:
-    - F# |> ❤️
+    - F#
     -   Python
+
+user2:
+  'first name': Toto
+
+  age: 666
+  languages: [ F# |> ❤️,
+             Python ]
+
+categories:
+  - - toto
+    - titi
+
+fruits:
+  - cherry: red
+  - banana: yellow
 
 
 "
