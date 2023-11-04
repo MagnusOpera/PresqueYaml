@@ -41,7 +41,7 @@ let ``sequence must be on same indentation``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``sequence parent aligned in mapping is not valid``() =
+let ``sequence parent aligned with parent mapping is not valid``() =
     let yaml = "name: John Doe
 age: 42
 languages:
@@ -60,4 +60,3 @@ let ``mapping type mismatch is error``() =
 
     (fun () -> yaml |> read |> ignore)
     |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
-
