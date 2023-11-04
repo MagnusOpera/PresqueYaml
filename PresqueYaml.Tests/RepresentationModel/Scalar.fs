@@ -19,7 +19,7 @@ let ``scalar only is valid``() =
 
 [<Test>]
 let ``multiline scalar is valid``() =
-    let expected = YamlNode.Scalar "toto titi"
+    let expected = YamlNode.Scalar "toto\ntiti"
 
     let yaml = "toto
 titi"

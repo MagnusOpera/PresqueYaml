@@ -138,7 +138,7 @@ let read (yamlString: string) : YamlNode =
                 else
                     match currentState.Data with
                     | NodeData.None -> currentState.Data <- NodeData.Scalar (line.Trim())
-                    | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data} {line.Trim()}"
+                    | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data}\n{line.Trim()}"
                     | _ -> raiseError "Type mismatch"
                     parseNode states nextLineInfos
 

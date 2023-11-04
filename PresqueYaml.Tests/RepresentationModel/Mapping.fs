@@ -141,7 +141,7 @@ age:"
 [<Test>]
 let ``mapping value override must be on same line``() =
     let expected =
-        YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map ["name", YamlNode.Scalar "toto titi"]) ])
+        YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map ["name", YamlNode.Scalar "toto\ntiti"]) ])
 
     let yaml = "user:
   name:
