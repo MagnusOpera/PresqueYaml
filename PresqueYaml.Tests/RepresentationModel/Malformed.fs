@@ -13,7 +13,7 @@ let ``mapping must be on same indentation``() =
 titi: tralala"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 2, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -25,7 +25,7 @@ let ``dedent mapping must restore parent indentation``() =
    tutu: pouet"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 4)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 4, column 4)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -36,7 +36,7 @@ let ``sequence must be on same indentation``() =
   - tralala"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 3)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3, column 3)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -49,7 +49,7 @@ languages:
 - Python"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 4)") typeof<System.Exception>
+    |> should (throwWithMessage "Type mismatch (line 4, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -59,5 +59,5 @@ let ``mapping type mismatch is error``() =
 - toto"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
 

@@ -25,7 +25,7 @@ type private NodeState =
 [<RequireQualifiedAccess>]
 type private LineInfo =
     { LineNum: int
-      Indent: int
+      ColNum: int
       Line: string }
 
 let read (yamlString: string) : YamlNode =
@@ -50,97 +50,104 @@ let read (yamlString: string) : YamlNode =
         | Regex "^\"([^\"]*)\"$" [content] -> content
         | _ -> data.Trim()
 
+    let toYamlNode data =
+        match data with
+        | NodeData.None -> YamlNode.None
+        | NodeData.Scalar data ->
+            match data.Trim() with
+            // inline sequence
+            | Regex "^\[([^\]]*)\]$" [content] ->
+                content.Replace("\\n", " ").Split(',')
+                |> Seq.map (fun item ->
+                    if String.IsNullOrWhiteSpace(item) then YamlNode.None
+                    else item |> unquoteString |> YamlNode.Scalar)
+                |> List.ofSeq
+                |> YamlNode.Sequence
+            // single quoted string
+            | Regex "^'([^']*)'$" [content] -> content.Replace("\\n", "\n") |> YamlNode.Scalar
+            // double quoted string
+            | Regex "^\"([^\"]*)\"$" [content] -> content.Replace("\\n", "\n") |> YamlNode.Scalar
+            // unquoted string
+            | data -> data.Replace("\\n", "\n") |> YamlNode.Scalar
+        | NodeData.Sequence data -> data |> List.ofSeq |> YamlNode.Sequence
+        | NodeData.Mapping data -> data |> Seq.map (|KeyValue|) |> Map.ofSeq |> YamlNode.Mapping
+
     let rec parseNode (states: NodeState list) (remainingLines: LineInfo list): YamlNode * NodeState list * LineInfo list =
 
         let dedent (state: NodeState) =
-            let node =
-                match state.Data with
-                | NodeData.None -> YamlNode.None
-                | NodeData.Scalar data ->
-                    match data.Trim() with
-                    | Regex "^\[([^\]]*)\]$" [content] ->
-                        content.Replace("\\n", " ").Split(',')
-                        |> Seq.map (fun item ->
-                            if String.IsNullOrWhiteSpace(item) then YamlNode.None
-                            else item |> unquoteString |> YamlNode.Scalar)
-                        |> List.ofSeq
-                        |> YamlNode.Sequence
-                    | Regex "^'([^']*)'$" [content] -> content.Replace("\\n", "\n") |> YamlNode.Scalar
-                    | Regex "^\"([^\"]*)\"$" [content] -> content.Replace("\\n", "\n") |> YamlNode.Scalar
-                    | data -> data.Replace("\\n", "\n") |> YamlNode.Scalar
-                | NodeData.Sequence data -> data |> List.ofSeq |> YamlNode.Sequence
-                | NodeData.Mapping data -> data |> Seq.map (|KeyValue|) |> Map.ofSeq |> YamlNode.Mapping
+            let node = state.Data |> toYamlNode
             node, states |> List.tail, remainingLines
 
         match remainingLines with
         | lineInfo :: nextLineInfos ->
-            let raiseError msg = failwith $"{msg} (line {lineInfo.LineNum})"
+            let raiseError msg = failwith $"{msg} (line {lineInfo.LineNum + 1}, column {lineInfo.ColNum + 1})"
 
             let currentState = states |> List.head
 
-            // DEDENT
-            if lineInfo.Indent < currentState.Indent then
-                dedent currentState
-
-            else
-                if currentState.Indent <> lineInfo.Indent then raiseError "Indentation error"
-                let line = lineInfo.Line.Substring(lineInfo.Indent)
-
-                // Sequence
-                if line.StartsWith("- ") then
-                    let data =
-                        match currentState.Data with
-                        | NodeData.None ->
-                            let data = List<YamlNode>()
-                            currentState.Data <- NodeData.Sequence data
-                            data
-                        | NodeData.Sequence data -> data
-                        | _ -> raiseError "Type mismatch"
-
-                    // extract value from descendant
-                    let value, states, nextLineInfos =
-                        parseNode (createState (lineInfo.Indent + 2) :: states)
-                                  ({lineInfo with Indent = lineInfo.Indent + 2 } :: nextLineInfos)
-
-                    value |> data.Add
-                    parseNode states nextLineInfos
-
-                // Mapping
-                elif line.Contains(":") then
-                    let sepIndex = line.IndexOf(':')
-                    let key = line.Substring(0, sepIndex).TrimEnd() |> unquoteString
-                    let value = line.Substring(sepIndex+1)
-
-                    let value, states, nextLinesInfos =
-                        if String.IsNullOrWhiteSpace value then
-                            match nextLineInfos |> List.tryHead with
-                            // INDENT
-                            | Some nextLineInfo when lineInfo.Indent < nextLineInfo.Indent ->
-                                parseNode (createState nextLineInfo.Indent :: states) nextLineInfos
-                            | _ -> YamlNode.None, states, nextLineInfos
-                        else
-                            let leadingSpaces = leadingSpaces value
-                            parseNode (createState (lineInfo.Indent + sepIndex + 1 + leadingSpaces) :: states)
-                                      ({lineInfo with Indent = lineInfo.Indent + sepIndex + 1 + leadingSpaces} :: nextLineInfos)
-
-                    let data =
-                        match currentState.Data with
-                        | NodeData.None ->
-                            let data = Dictionary<string, YamlNode>()
-                            currentState.Data <- NodeData.Mapping data
-                            data
-                        | NodeData.Mapping data -> data
-                        | _ -> raiseError "Type mismatch"
-                    data[key] <- value
-                    parseNode states nextLinesInfos
-
-                // Scalar
-                else
+            let sequence () =
+                let data =
                     match currentState.Data with
-                    | NodeData.None -> currentState.Data <- NodeData.Scalar (line.Trim())
-                    | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data}\n{line.Trim()}"
+                    | NodeData.None ->
+                        let data = List<YamlNode>()
+                        currentState.Data <- NodeData.Sequence data
+                        data
+                    | NodeData.Sequence data -> data
                     | _ -> raiseError "Type mismatch"
-                    parseNode states nextLineInfos
+
+                // extract value from descendant
+                let value, states, nextLineInfos =
+                    parseNode (createState (lineInfo.ColNum + 2) :: states)
+                              ({lineInfo with ColNum = lineInfo.ColNum + 2 } :: nextLineInfos)
+
+                value |> data.Add
+                parseNode states nextLineInfos
+
+            let mapping (line: string) =
+                let sepIndex = line.IndexOf(':')
+                let key = line.Substring(0, sepIndex).TrimEnd() |> unquoteString
+                let value = line.Substring(sepIndex+1)
+
+                let value, states, nextLinesInfos =
+                    if String.IsNullOrWhiteSpace value then
+                        match nextLineInfos |> List.tryHead with
+                        // INDENT
+                        | Some nextLineInfo when lineInfo.ColNum < nextLineInfo.ColNum ->
+                            parseNode (createState nextLineInfo.ColNum :: states) nextLineInfos
+                        | _ -> YamlNode.None, states, nextLineInfos
+                    else
+                        let leadingSpaces = leadingSpaces value
+                        parseNode (createState (lineInfo.ColNum + sepIndex + 1 + leadingSpaces) :: states)
+                                  ({lineInfo with ColNum = lineInfo.ColNum + sepIndex + 1 + leadingSpaces} :: nextLineInfos)
+
+                let data =
+                    match currentState.Data with
+                    | NodeData.None ->
+                        let data = Dictionary<string, YamlNode>()
+                        currentState.Data <- NodeData.Mapping data
+                        data
+                    | NodeData.Mapping data -> data
+                    | _ -> raiseError "Type mismatch"
+                data[key] <- value
+                parseNode states nextLinesInfos
+
+            let scalar (line: string) =
+                match currentState.Data with
+                | NodeData.None -> currentState.Data <- NodeData.Scalar (line.Trim())
+                | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data}\n{line.Trim()}"
+                | _ -> raiseError "Type mismatch"
+                parseNode states nextLineInfos
+
+
+            // DEDENT
+            if lineInfo.ColNum < currentState.Indent then
+                dedent currentState
+            else
+                if currentState.Indent <> lineInfo.ColNum then raiseError "Indentation error"
+                let line = lineInfo.Line.Substring(lineInfo.ColNum)
+
+                if line.StartsWith("- ") then sequence ()
+                elif line.Contains(":") then mapping line
+                else scalar line
 
         | [] ->
             states |> List.head |> dedent
@@ -150,22 +157,16 @@ let read (yamlString: string) : YamlNode =
         |> List.ofArray
 
     let lineInfo idx (line: string) =
-        { LineInfo.LineNum = idx + 1
-          LineInfo.Indent = leadingSpaces line
+        { LineInfo.LineNum = idx
+          LineInfo.ColNum = leadingSpaces line
           LineInfo.Line = line }
 
     let isCommentOrEmpty (lineInfo: LineInfo) =
-        if lineInfo.Line |> String.IsNullOrWhiteSpace then
-            true
-        else
-            let line = lineInfo.Line.TrimStart()
-            line[0] = '#'
+        lineInfo.Line |> String.IsNullOrWhiteSpace || lineInfo.Line.TrimStart()[0] = '#'
 
-    let indentAndLines =
+    let node, _, _ =
         lines
         |> List.mapi lineInfo
         |> List.filter (not << isCommentOrEmpty)
-
-    let initialState = createState 0
-    let node, _, _ = parseNode [initialState] indentAndLines
+        |> parseNode [createState 0]
     node

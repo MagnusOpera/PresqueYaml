@@ -100,7 +100,7 @@ let ``type mismatch in list is error``() =
 -titi"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -111,6 +111,6 @@ let ``type mismatch scalar first in list is error``() =
   - titi"
 
     (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 3)") typeof<System.Exception>
+    |> should (throwWithMessage "Type mismatch (line 3, column 3)") typeof<System.Exception>
 
 // ####################################################################################################################
