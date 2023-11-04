@@ -4,11 +4,11 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 
 <table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.</td></tr></table>
 
-`PresqueYaml` offers:
+`PresqueYaml` is written in F# and offers:
 * Yaml deserialization to a representation model (AST)
-* Map this representation model to an object model
-* Support for C# (List<>, Dictionary<,>, Nullable<> and POCO)
-* Support for F# (list, map, option and records)
+* Map representation model to an object model
+* C# support: List<>, Dictionary<,>, Nullable<> and POCO
+* F# support: list, map, option and record
 
 Again, `PresqueYaml` does not offer complete yaml support and uses some non-standard behavior.
 
