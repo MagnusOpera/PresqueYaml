@@ -1,29 +1,28 @@
 # PresqueYaml
 
-In French, "presque" means "almost". Hope you now understand the purpose and limitations of this library 😃.
+In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
+If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.
 
-PresqueYaml offers:
-* Deserialization to a representation model (see it as an AST)
+`PresqueYaml` offers:
+* Yaml deserialization to a representation model (AST)
 * Map this representation model to an object model
-* Support for C# (List<>, Dictionary<,>, Nullable and POCO)
+* Support for C# (List<>, Dictionary<,>, Nullable<> and POCO)
 * Support for F# (list, map, option and records)
 
-PresqueYaml features:
-* compact form
-* inline sequence with several limitations
+Again, `PresqueYaml` does not offer complete yaml support and uses some non-standard behavior.
 
-Beware, PresqueYaml does not offer complete Yaml support and default to some non-standard behavior. Non-compliance highlights:
+Here are some key differences:
 * scalar are always literal (\n between items) - never folded (concatenated with space). If you want spaces, use single line form.
 * multi-lines scalar must be indented relative to start of first item.
 * inline sequences do not support quoted strings. Use standard sequence if you need to.
-* quoted strings are either single or double quoted strings. Only newline is escaped.
+* quoted strings are either single or double quoted strings. Only newlines are escaped.
 * compact form (both sequence and mapping) can be nested at will on same line.
 * mapping can have duplicated keys (last key wins).
 * empty document is a valid document.
-* no support for multiple document in one Yaml file.
+* no support for multiple document in one yaml file.
 
-All in all, PresqueYaml does support this kind of document (⏎ to highlight spaces in document):
-```
+All in all, `PresqueYaml` does support this kind of document (⏎ to highlight spaces in document):
+```yaml
 ⏎
 #     user 1⏎
 user1:⏎
@@ -63,3 +62,20 @@ fruits:⏎
 ⏎
 ```
 
+Corresponding AST is:
+```ocaml
+YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+                                                         "age", YamlNode.None
+                                                         "comment", YamlNode.Scalar "this is a comment\n😃"
+                                                         "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
+                                                                                          YamlNode.None
+                                                                                          YamlNode.Scalar "F#" ] ] )
+                        "user2", YamlNode.Mapping (Map [ "first name", YamlNode.Scalar "Toto"
+                                                         "age", YamlNode.Scalar "666"
+                                                         "languages", YamlNode.Sequence [ YamlNode.Scalar "F# |> ❤️"
+                                                                                          YamlNode.Scalar "Python" ] ] )
+                        "categories", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "toto"
+                                                                              YamlNode.Scalar "titi"] ]
+                        "fruits", YamlNode.Sequence [ YamlNode.Mapping (Map [ "cherry", YamlNode.Scalar "red" ])
+                                                      YamlNode.Mapping (Map [ "banana", YamlNode.Scalar "yellow" ]) ] ])
+```
