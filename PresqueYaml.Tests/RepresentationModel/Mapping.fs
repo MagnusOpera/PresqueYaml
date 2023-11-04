@@ -118,11 +118,18 @@ age:"
 // ####################################################################################################################
 
 [<Test>]
-let ``mapping type mismatch is error``() =
-    let yaml = "users: 42
-- toto"
+let ``mapping value override must be on same line``() =
+    let expected =
+        YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map ["name", YamlNode.Scalar "toto titi"]) ])
 
-    (fun () -> yaml |> read |> ignore)
-    |> should (throwWithMessage "Unexpected data type (line 2)") typeof<System.Exception>
+    let yaml = "user:
+  name:
+   toto
+   titi"
+
+    yaml
+    |> read
+    |> should equal expected
 
 // ####################################################################################################################
+
