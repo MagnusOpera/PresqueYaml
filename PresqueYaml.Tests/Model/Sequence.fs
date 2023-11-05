@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.RepresentationModel.Sequence
+module PresqueYaml.Tests.Model.Sequence
 
-open PresqueYaml.RepresentationModel
+open PresqueYaml.Model
 open NUnit.Framework
 open FsUnit
 

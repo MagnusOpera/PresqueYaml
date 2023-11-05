@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.RepresentationModel.Wellformed
+module PresqueYaml.Tests.Model.Wellformed
 
-open PresqueYaml.RepresentationModel
+open PresqueYaml.Model
 open NUnit.Framework
 open FsUnit
 

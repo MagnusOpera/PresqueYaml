@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.RepresentationModel.Scalar
+module PresqueYaml.Tests.Model.Scalar
 
-open PresqueYaml.RepresentationModel
+open PresqueYaml.Model
 open NUnit.Framework
 open FsUnit
 

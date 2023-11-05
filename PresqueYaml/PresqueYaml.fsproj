@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="RepresentationModel.fs" />
+    <Compile Include="Model.fs" />
+    <Compile Include="Mapper.fs" />
   </ItemGroup>
 
 </Project>

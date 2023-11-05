@@ -1,4 +1,4 @@
-﻿module PresqueYaml.RepresentationModel
+﻿module PresqueYaml.Model
 open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
