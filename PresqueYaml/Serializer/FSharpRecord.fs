@@ -10,14 +10,3 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
         | YamlNode.Mapping mapping -> null
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
 
-
-type FSharpRecordConverterFactory() =
-    inherit YamlConverterFactory()
-
-    override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsRecord -> true
-        | _ -> false
-
-    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
-        FSharpRecordConverter(options)

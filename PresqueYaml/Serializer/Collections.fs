@@ -25,23 +25,3 @@ type DictionaryConverter<'T>(options:YamlSerializerOptions) =
             |> Dictionary<string, 'T>
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
 
-
-type CollectionConverterFactory() =
-    inherit YamlConverterFactory()
-
-    override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isList typeToConvert
-        || TypeCache.isDictionary typeToConvert
-
-    override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-
-        let converterType, idx =
-            if TypeCache.isList typeToConvert then typedefof<ListConverter<_>>, 0
-            elif TypeCache.isDictionary typeToConvert then typedefof<DictionaryConverter<_>>, 1
-            else failwith "Unknown type"
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
-        :?> YamlConverter

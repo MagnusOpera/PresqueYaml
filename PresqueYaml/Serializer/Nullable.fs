@@ -12,19 +12,3 @@ type NullableConverter<'T when 'T: (new: unit -> 'T) and 'T: struct and 'T :> Va
             let data = YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
             Nullable<'T>(data)
 
-
-type NullableConverterFactory() =
-    inherit YamlConverterFactory()
-
-    override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isNullable typeToConvert
-
-    override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-
-        let converterType = typedefof<NullableConverter<_>>
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
-        :?> YamlConverter

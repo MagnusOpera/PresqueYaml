@@ -12,18 +12,3 @@ type ArrayConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
             |> Seq.map (fun node -> YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T)
             |> Array.ofSeq
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
-
-type ArrayConverterFactory() =
-    inherit YamlConverterFactory()
-
-    override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isArray typeToConvert
-
-    override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-        let converterType = typedefof<ArrayConverter<_>>
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetElementType() |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
-        :?> YamlConverter
