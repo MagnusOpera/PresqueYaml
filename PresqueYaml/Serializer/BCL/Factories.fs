@@ -88,3 +88,20 @@ type ArrayConverterFactory() =
             .GetConstructor([| typeof<YamlSerializerOptions> |])
             .Invoke([| options |])
         :?> YamlConverter
+
+
+type ClassConverterFactory() =
+    inherit YamlConverterFactory()
+
+    override _.CanConvert (typeToConvert:Type) =
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.Other -> true
+        | _ -> false
+
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+        let converterType = typedefof<ClassConverter<_>>
+        converterType
+            .MakeGenericType([| typeToConvert |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
+        :?> YamlConverter

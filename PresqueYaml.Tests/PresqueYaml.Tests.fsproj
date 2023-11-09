@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Serializer/BCL/Class.fs" />
     <Compile Include="Serializer/BCL/Convertible.fs" />
     <Compile Include="Serializer/BCL/Nullable.fs" />
     <Compile Include="Serializer/BCL/Collections.fs" />
