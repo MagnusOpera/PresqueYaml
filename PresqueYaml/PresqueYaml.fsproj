@@ -18,6 +18,7 @@
     <Compile Include="Serializer/FSharp/Collections.fs" />
     <Compile Include="Serializer/FSharp/Record.fs" />
     <Compile Include="Serializer/FSharp/Option.fs" />
+    <Compile Include="Serializer/FSharp/Unit.fs" />
     <Compile Include="Serializer/FSharp/Factories.fs" />
     <Compile Include="Defaults.fs" />
   </ItemGroup>

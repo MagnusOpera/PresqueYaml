@@ -10,6 +10,7 @@ type TypeKind =
     | FsSet = 3
     | FsMap = 4
     | FsTuple = 5
+    | FsUnit = 6
     | List = 50
     | Array = 51
     | Dictionary = 52
@@ -22,6 +23,7 @@ let private fsmapTy = typedefof<Map<_, _>>
 let private listTy = typedefof<List<_>>
 let private dictionaryTy = typedefof<Dictionary<_, _>>
 let private nullableTy = typedefof<Nullable<_>>
+let private fsunit = typeof<unit>
 
 let private matchType (ty: Type) =
     if ty.IsGenericType && ty.GetGenericTypeDefinition() = fslistTy then TypeKind.FsList
@@ -33,6 +35,7 @@ let private matchType (ty: Type) =
     elif FSharpType.IsTuple(ty) then TypeKind.FsTuple
     elif FSharpType.IsUnion(ty, true) then TypeKind.FsUnion
     elif FSharpType.IsRecord(ty, true) then TypeKind.FsRecord
+    elif ty = fsunit then TypeKind.FsUnit
     elif ty.IsArray then TypeKind.Array
     else TypeKind.Other
 

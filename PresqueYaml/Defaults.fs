@@ -12,5 +12,6 @@ let options =
             FSharpCollectionsConverterFactory()
             FSharpOptionConverterFactory()
             FSharpRecordConverterFactory()
+            FSharpUnitConverterFactory()
         ]
     options

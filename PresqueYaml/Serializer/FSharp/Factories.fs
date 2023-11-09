@@ -69,3 +69,15 @@ type FSharpRecordConverterFactory() =
             .GetConstructor([| typeof<YamlSerializerOptions> |])
             .Invoke([| options |])
         :?> YamlConverter
+
+
+type FSharpUnitConverterFactory() =
+    inherit YamlConverterFactory()
+
+    override _.CanConvert (typeToConvert:Type) =
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.FsUnit -> true
+        | _ -> false
+
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+        FSharpUnitConverter(options)
