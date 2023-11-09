@@ -19,7 +19,7 @@
     <Compile Include="Serializer/FSharp/Record.fs" />
     <Compile Include="Serializer/FSharp/Option.fs" />
     <Compile Include="Serializer/FSharp/Factories.fs" />
-    <Compile Include="Serializer/Defaults.fs" />
+    <Compile Include="Defaults.fs" />
   </ItemGroup>
 
 </Project>

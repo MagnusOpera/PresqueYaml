@@ -12,7 +12,7 @@ open System
 let ``nullable some conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<Nullable<int>>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Nullable<int>>(node, PresqueYaml.Defaults.options)
     |> should equal (Nullable<int>(42))
 
 // ####################################################################################################################
@@ -21,5 +21,5 @@ let ``nullable some conversion``() =
 let ``nullable none conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<Nullable<int>>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Nullable<int>>(node, PresqueYaml.Defaults.options)
     |> should equal (Nullable<int>())

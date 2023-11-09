@@ -43,15 +43,14 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
         |> Array.iteri (fun i field ->
             match tryGetNullValue field.PropertyType with
             | ValueSome v -> arr[i] <- v
-            | ValueNone -> ()
-        )
+            | ValueNone -> ())
         arr
 
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         let fieldIndices =
             fields
-            |> Seq.mapi (fun idx pi  -> pi.Name, idx)
+            |> Seq.mapi (fun idx pi  -> pi.Name.ToLowerInvariant(), idx)
             |> Map
 
         let fieldValues = Array.copy defaultFields
@@ -62,7 +61,7 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
                 match node with
                 | YamlNode.None -> ()
                 | _ ->
-                    match fieldIndices |> Map.tryFind name with
+                    match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
                     | Some index -> 
                         let propType = fields[index].PropertyType
                         let data = YamlSerializer.Deserialize(node, propType, options)

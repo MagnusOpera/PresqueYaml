@@ -1,7 +1,7 @@
-module PresqueYaml.Mappers.Defaults
+module PresqueYaml.Defaults
 open PresqueYaml.Serializer
 
-let defaultOptions =
+let options =
     let options = YamlSerializerOptions()
     options.Converters <-
         [

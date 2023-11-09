@@ -1,19 +1,23 @@
 namespace PresqueYaml.Serializer
 open System
+open TypeCache
 
 type CollectionConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isList typeToConvert
-        || TypeCache.isDictionary typeToConvert
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.List
+        | TypeCache.TypeKind.Dictionary -> true
+        | _ -> false
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
 
         let converterType, idx =
-            if TypeCache.isList typeToConvert then typedefof<ListConverter<_>>, 0
-            elif TypeCache.isDictionary typeToConvert then typedefof<DictionaryConverter<_>>, 1
-            else failwith "Unknown type"
+            match TypeCache.getKind typeToConvert with
+            | TypeCache.TypeKind.List -> typedefof<ListConverter<_>>, 0
+            | TypeCache.TypeKind.Dictionary -> typedefof<DictionaryConverter<_>>, 1
+            | _ -> failwith "Unknown type"
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
@@ -53,7 +57,9 @@ type NullableConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isNullable typeToConvert
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.Nullable -> true
+        | _ -> false
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
 
@@ -70,7 +76,9 @@ type ArrayConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        TypeCache.isArray typeToConvert
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.Array -> true
+        | _ -> false
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
         let converterType = typedefof<ArrayConverter<_>>

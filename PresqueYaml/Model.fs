@@ -2,6 +2,7 @@
 open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
+open System.Text
 
 [<RequireQualifiedAccess>]
 type YamlNode =

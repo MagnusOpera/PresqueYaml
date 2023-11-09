@@ -34,7 +34,7 @@ let ``record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
     
-    YamlSerializer.Deserialize<Toto>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Toto>(node, PresqueYaml.Defaults.options)
     |> should equal expected
 
 
@@ -57,5 +57,5 @@ let ``option record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
     
-    YamlSerializer.Deserialize<Toto option>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Toto option>(node, PresqueYaml.Defaults.options)
     |> should equal expected

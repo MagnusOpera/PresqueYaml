@@ -19,7 +19,7 @@ let ``list conversion``() =
         YamlNode.Scalar "4"
     ]
     
-    YamlSerializer.Deserialize<int list>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<int list>(node, PresqueYaml.Defaults.options)
     |> should equal expected
 
 // ####################################################################################################################
@@ -36,7 +36,7 @@ let ``set conversion``() =
         YamlNode.Scalar "4"
     ]
     
-    YamlSerializer.Deserialize<Set<int>>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Set<int>>(node, PresqueYaml.Defaults.options)
     |> should equal expected
 
 // ####################################################################################################################
@@ -51,5 +51,5 @@ let ``map conversion``() =
     let node = YamlNode.Mapping (Map ["toto", YamlNode.Scalar "42"
                                       "titi", YamlNode.Scalar "666"])
     
-    YamlSerializer.Deserialize<Map<string, int>>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<Map<string, int>>(node, PresqueYaml.Defaults.options)
     |> should equal expected

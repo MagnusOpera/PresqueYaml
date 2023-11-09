@@ -11,7 +11,7 @@ open FsUnit
 let ``short conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int16>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.Int16>(node, PresqueYaml.Defaults.options)
     |> should equal 42s
 
 // ####################################################################################################################
@@ -20,7 +20,7 @@ let ``short conversion``() =
 let ``ushort conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt16>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.UInt16>(node, PresqueYaml.Defaults.options)
     |> should equal 42us
 
 // ####################################################################################################################
@@ -29,7 +29,7 @@ let ``ushort conversion``() =
 let ``int conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int32>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.Int32>(node, PresqueYaml.Defaults.options)
     |> should equal 42
 
 // ####################################################################################################################
@@ -38,7 +38,7 @@ let ``int conversion``() =
 let ``uint conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt32>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.UInt32>(node, PresqueYaml.Defaults.options)
     |> should equal 42u
 
 // ####################################################################################################################
@@ -47,7 +47,7 @@ let ``uint conversion``() =
 let ``long conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int64>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.Int64>(node, PresqueYaml.Defaults.options)
     |> should equal 42L
 
 // ####################################################################################################################
@@ -56,7 +56,7 @@ let ``long conversion``() =
 let ``ulong conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt64>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<System.UInt64>(node, PresqueYaml.Defaults.options)
     |> should equal 42UL
 
 // ####################################################################################################################
@@ -65,7 +65,7 @@ let ``ulong conversion``() =
 let ``string conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<string>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<string>(node, PresqueYaml.Defaults.options)
     |> should equal "42"
 
 // ####################################################################################################################
@@ -74,7 +74,7 @@ let ``string conversion``() =
 let ``char conversion``() =
     let node = YamlNode.Scalar "A"
     
-    YamlSerializer.Deserialize<char>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<char>(node, PresqueYaml.Defaults.options)
     |> should equal 'A'
 
 
@@ -84,5 +84,5 @@ let ``char conversion``() =
 let ``byte conversion``() =
     let node = YamlNode.Scalar "A"
     
-    YamlSerializer.Deserialize<char>(node, PresqueYaml.Mappers.Defaults.defaultOptions)
+    YamlSerializer.Deserialize<char>(node, PresqueYaml.Defaults.options)
     |> should equal 65uy
