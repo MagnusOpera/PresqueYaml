@@ -9,6 +9,7 @@ let options =
             NullableConverterFactory()
             ArrayConverterFactory()
             CollectionConverterFactory()
+            ClassConverterFactory()
             FSharpCollectionsConverterFactory()
             FSharpOptionConverterFactory()
             FSharpRecordConverterFactory()
