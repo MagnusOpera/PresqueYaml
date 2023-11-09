@@ -7,7 +7,7 @@ open Microsoft.FSharp.Reflection
 type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T>()
 
-    let recordType: Type = typeof<'T>
+    let recordType = typeof<'T>
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
     let fields = FSharpType.GetRecordFields(recordType, true)
     let fieldCount = fields.Length
