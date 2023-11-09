@@ -6,7 +6,7 @@ type YamlConverter() =
     abstract CanConvert: typeToConvert:Type -> bool
     default _.CanConvert(_): bool = true
 
-and YamlSerializerOptions() =
+type YamlSerializerOptions() =
     member val Converters: YamlConverter list = [] with get, set
     member this.GetConverter(typeToConvert:Type): YamlConverter =
         this.Converters

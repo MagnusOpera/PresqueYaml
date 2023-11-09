@@ -63,5 +63,9 @@ type FSharpRecordConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
-        FSharpRecordConverter(options)
-
+        let converterType = typedefof<FSharpRecordConverter<_>>
+        converterType
+            .MakeGenericType([| typeToConvert |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
+        :?> YamlConverter

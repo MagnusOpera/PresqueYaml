@@ -9,16 +9,16 @@
     <Compile Include="Model.fs" />
     <Compile Include="Serializer/Serializer.fs" />
     <Compile Include="Serializer/TypeCache.fs" />
-    <Compile Include="Serializer/Convertible.fs" />
-    <Compile Include="Serializer/Array.fs" />
-    <Compile Include="Serializer/Collections.fs" />
-    <Compile Include="Serializer/Class.fs" />
-    <Compile Include="Serializer/Nullable.fs" />
-    <Compile Include="Serializer/FSharpCollections.fs" />
-    <Compile Include="Serializer/FSharpRecord.fs" />
-    <Compile Include="Serializer/FSharpOption.fs" />
-    <Compile Include="Serializer/BCLFactories.fs" />
-    <Compile Include="Serializer/FSharpFactories.fs" />
+    <Compile Include="Serializer/BCL/Convertible.fs" />
+    <Compile Include="Serializer/BCL/Array.fs" />
+    <Compile Include="Serializer/BCL/Collections.fs" />
+    <Compile Include="Serializer/BCL/Class.fs" />
+    <Compile Include="Serializer/BCL/Nullable.fs" />
+    <Compile Include="Serializer/BCL/Factories.fs" />
+    <Compile Include="Serializer/FSharp/Collections.fs" />
+    <Compile Include="Serializer/FSharp/Record.fs" />
+    <Compile Include="Serializer/FSharp/Option.fs" />
+    <Compile Include="Serializer/FSharp/Factories.fs" />
     <Compile Include="Serializer/Defaults.fs" />
   </ItemGroup>
 
