@@ -12,6 +12,7 @@
     <Compile Include="Mapper/Convertible.fs" />
     <Compile Include="Mapper/Nullable.fs" />
     <Compile Include="Mapper/Collections.fs" />
+    <Compile Include="Mapper/FSharpCollections.fs" />
     <Compile Include="Model/Wellformed.fs" />
     <Compile Include="Model/Malformed.fs" />
     <Compile Include="Model/Scalar.fs" />
