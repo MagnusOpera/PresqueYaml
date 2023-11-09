@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Serializer/BCL/Convertible.fs" />
+    <Compile Include="Serializer/BCL/Nullable.fs" />
+    <Compile Include="Serializer/BCL/Collections.fs" />
+    <Compile Include="Serializer/FSharp/Collections.fs" />
+    <Compile Include="Serializer/FSharp/Option.fs" />
+    <Compile Include="Serializer/FSharp/Record.fs" />
     <Compile Include="Model/Wellformed.fs" />
     <Compile Include="Model/Malformed.fs" />
     <Compile Include="Model/Scalar.fs" />
