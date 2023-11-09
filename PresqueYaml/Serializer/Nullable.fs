@@ -1,4 +1,4 @@
-namespace PresqueYaml.Mapper
+namespace PresqueYaml.Serializer
 open PresqueYaml.Model
 open System
 

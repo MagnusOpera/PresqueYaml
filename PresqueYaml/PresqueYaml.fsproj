@@ -7,17 +7,17 @@
 
   <ItemGroup>
     <Compile Include="Model.fs" />
-    <Compile Include="Mapper/Serializer.fs" />
-    <Compile Include="Mapper/TypeCache.fs" />
-    <Compile Include="Mapper/Convertible.fs" />
-    <Compile Include="Mapper/Array.fs" />
-    <Compile Include="Mapper/Collections.fs" />
-    <Compile Include="Mapper/Class.fs" />
-    <Compile Include="Mapper/Nullable.fs" />
-    <Compile Include="Mapper/FSharpCollections.fs" />
-    <Compile Include="Mapper/FSharpRecord.fs" />
-    <Compile Include="Mapper/FSharpOption.fs" />
-    <Compile Include="Mapper/Defaults.fs" />
+    <Compile Include="Serializer/Serializer.fs" />
+    <Compile Include="Serializer/TypeCache.fs" />
+    <Compile Include="Serializer/Convertible.fs" />
+    <Compile Include="Serializer/Array.fs" />
+    <Compile Include="Serializer/Collections.fs" />
+    <Compile Include="Serializer/Class.fs" />
+    <Compile Include="Serializer/Nullable.fs" />
+    <Compile Include="Serializer/FSharpCollections.fs" />
+    <Compile Include="Serializer/FSharpRecord.fs" />
+    <Compile Include="Serializer/FSharpOption.fs" />
+    <Compile Include="Serializer/Defaults.fs" />
   </ItemGroup>
 
 </Project>

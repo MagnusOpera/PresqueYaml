@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Mapper.FSharpOption
+module PresqueYaml.Tests.Serializer.FSharpOption
 
 open PresqueYaml.Model
-open PresqueYaml.Mapper
+open PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 

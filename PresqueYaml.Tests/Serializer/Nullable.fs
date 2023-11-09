@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Mapper.Nullable
+module PresqueYaml.Tests.Serializer.Nullable
 
 open PresqueYaml.Model
-open PresqueYaml.Mapper
+open PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 open System
