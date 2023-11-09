@@ -7,7 +7,13 @@
 
   <ItemGroup>
     <Compile Include="Model.fs" />
-    <Compile Include="Mapper.fs" />
+    <Compile Include="Mapper/Mapper.fs" />
+    <Compile Include="Mapper/TypeCache.fs" />
+    <Compile Include="Mapper/Convertible.fs" />
+    <Compile Include="Mapper/FSharpCollections.fs" />
+    <Compile Include="Mapper/FSharpRecord.fs" />
+    <Compile Include="Mapper/FSharpOption.fs" />
+    <Compile Include="Mapper/FSharp.fs" />
   </ItemGroup>
 
 </Project>
