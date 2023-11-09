@@ -6,12 +6,12 @@ type FSharpConverterFactory() =
 
     override _.CanConvert (typeToConvert:Type) =
         match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.List -> true
-        | TypeCache.TypeKind.Set -> true
-        | TypeCache.TypeKind.Map -> true
-        | TypeCache.TypeKind.Tuple -> false
-        | TypeCache.TypeKind.Record -> true
-        | TypeCache.TypeKind.Union ->
+        | TypeCache.TypeKind.FsList -> true
+        | TypeCache.TypeKind.FsSet -> true
+        | TypeCache.TypeKind.FsMap -> true
+        | TypeCache.TypeKind.FsTuple -> false
+        | TypeCache.TypeKind.FsRecord -> true
+        | TypeCache.TypeKind.FsUnion ->
             if typeToConvert.IsGenericType then
                 let gen = typeToConvert.GetGenericTypeDefinition()
                 if gen = typedefof<option<_>> then true
@@ -22,9 +22,9 @@ type FSharpConverterFactory() =
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.Record ->
+        | TypeCache.TypeKind.FsRecord ->
             FSharpRecordConverter(options)
-        | TypeCache.TypeKind.Union ->
+        | TypeCache.TypeKind.FsUnion ->
             if typeToConvert.IsGenericType then
                 let gen = typeToConvert.GetGenericTypeDefinition()
                 if gen = typedefof<option<_>> then FSharpOptionConverter(options)
@@ -34,9 +34,9 @@ type FSharpConverterFactory() =
         | _ ->
             let converterType =
                 match TypeCache.getKind typeToConvert with
-                | TypeCache.TypeKind.List -> typedefof<FSharpListConverter<_>>
-                | TypeCache.TypeKind.Set -> typedefof<FSharpSetConverter<_>>
-                | TypeCache.TypeKind.Map -> typedefof<FSharpMapConverter<_>>
+                | TypeCache.TypeKind.FsList -> typedefof<FSharpListConverter<_>>
+                | TypeCache.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>
+                | TypeCache.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>
                 | _ -> failwith "Unknown type"
 
             converterType

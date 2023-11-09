@@ -10,10 +10,15 @@
     <Compile Include="Mapper/Mapper.fs" />
     <Compile Include="Mapper/TypeCache.fs" />
     <Compile Include="Mapper/Convertible.fs" />
+    <Compile Include="Mapper/Array.fs" />
+    <Compile Include="Mapper/Collections.fs" />
+    <Compile Include="Mapper/Class.fs" />
+    <Compile Include="Mapper/Nullable.fs" />
     <Compile Include="Mapper/FSharpCollections.fs" />
     <Compile Include="Mapper/FSharpRecord.fs" />
     <Compile Include="Mapper/FSharpOption.fs" />
-    <Compile Include="Mapper/FSharp.fs" />
+    <Compile Include="Mapper/FSharpFactory.fs" />
+    <Compile Include="Mapper/Defaults.fs" />
   </ItemGroup>
 
 </Project>

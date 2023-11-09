@@ -1,5 +1,7 @@
 module TypeCache
 open FSharp.Reflection
+open System.Collections.Generic
+open System
 
 // Have to use concurrentdictionary here because dictionaries thrown on non-locked access:
 (* Error Message:
@@ -9,48 +11,72 @@ open FSharp.Reflection
 type Dict<'a, 'b> = System.Collections.Concurrent.ConcurrentDictionary<'a, 'b>
 
 type TypeKind =
-    | Record = 0
-    | Union = 1
-    | List = 2
-    | Set = 3
-    | Map = 4
-    | Tuple = 5
+    | FsRecord = 0
+    | FsUnion = 1
+    | FsList = 2
+    | FsSet = 3
+    | FsMap = 4
+    | FsTuple = 5
+    | List = 50
+    | Array = 51
+    | Dictionary = 52
+    | Nullable = 53
     | Other = 100
 
 /// cached access to FSharpType.* and System.Type to prevent repeated access to reflection members
 let getKind =
     let cache = Dict<System.Type, TypeKind>()
-    let listTy = typedefof<_ list>
-    let setTy = typedefof<Set<_>>
-    let mapTy = typedefof<Map<_, _>>
+    let fslistTy = typedefof<_ list>
+    let fssetTy = typedefof<Set<_>>
+    let fsmapTy = typedefof<Map<_, _>>
+
+    let listTy = typedefof<List<_>>
+    let dictionaryTy = typedefof<Dictionary<_, _>>
+    let nullableTy = typedefof<Nullable<_>>
 
     fun (ty: System.Type) ->
         cache.GetOrAdd(
             ty,
             fun ty ->
-                if ty.IsGenericType && ty.GetGenericTypeDefinition() = listTy then TypeKind.List
-                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = setTy then TypeKind.Set
-                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = mapTy then TypeKind.Map
-                elif FSharpType.IsTuple(ty) then TypeKind.Tuple
-                elif FSharpType.IsUnion(ty, true) then TypeKind.Union
-                elif FSharpType.IsRecord(ty, true) then TypeKind.Record
+                if ty.IsGenericType && ty.GetGenericTypeDefinition() = fslistTy then TypeKind.FsList
+                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = fssetTy then TypeKind.FsSet
+                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = fsmapTy then TypeKind.FsMap
+                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = listTy then TypeKind.List
+                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = dictionaryTy then TypeKind.Dictionary
+                elif ty.IsGenericType && ty.GetGenericTypeDefinition() = nullableTy then TypeKind.Nullable
+                elif FSharpType.IsTuple(ty) then TypeKind.FsTuple
+                elif FSharpType.IsUnion(ty, true) then TypeKind.FsUnion
+                elif FSharpType.IsRecord(ty, true) then TypeKind.FsRecord
+                elif ty.IsArray then TypeKind.Array
                 else TypeKind.Other
         )
 
-let isUnion ty =
-    getKind ty = TypeKind.Union
+let isFsUnion ty =
+    getKind ty = TypeKind.FsUnion
 
-let isRecord ty =
-    getKind ty = TypeKind.Record
+let isFsRecord ty =
+    getKind ty = TypeKind.FsRecord
+
+let isFsList ty =
+    getKind ty = TypeKind.FsList
+
+let isFsSet ty =
+    getKind ty = TypeKind.FsSet
+
+let isFsMap ty =
+    getKind ty = TypeKind.FsMap
+
+let isFsTuple ty =
+    getKind ty = TypeKind.FsTuple
 
 let isList ty =
     getKind ty = TypeKind.List
 
-let isSet ty =
-    getKind ty = TypeKind.Set
+let isArray ty =
+    getKind ty = TypeKind.Array
 
-let isMap ty =
-    getKind ty = TypeKind.Map
+let isDictionary ty =
+    getKind ty = TypeKind.Dictionary
 
-let isTuple ty =
-    getKind ty = TypeKind.Tuple
+let isNullable ty =
+    getKind ty = TypeKind.Nullable

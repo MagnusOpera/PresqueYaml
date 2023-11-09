@@ -3,9 +3,8 @@ open PresqueYaml.Model
 open System
 
 type FSharpOptionConverter<'T when 'T : null>(options:YamlSerializerOptions) =
-    inherit YamlConverter<'T>()
+    inherit YamlConverter<'T option>()
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
-        match node with
-        | YamlNode.Mapping mapping -> null
-        | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
+        let data = YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
+        Option.ofObj data
