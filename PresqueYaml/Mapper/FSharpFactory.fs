@@ -32,16 +32,15 @@ type FSharpConverterFactory() =
                 else failwith "Unknown type"
             else failwith "Unknown type"
         | _ ->
-            let converterType =
+            let converterType, idx =
                 match TypeCache.getKind typeToConvert with
-                | TypeCache.TypeKind.FsList -> typedefof<FSharpListConverter<_>>
-                | TypeCache.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>
-                | TypeCache.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>
+                | TypeCache.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
+                | TypeCache.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
+                | TypeCache.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
                 | _ -> failwith "Unknown type"
 
             converterType
-                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
                 .GetConstructor([| typeof<YamlSerializerOptions> |])
                 .Invoke([| options |])
             :?> YamlConverter
-

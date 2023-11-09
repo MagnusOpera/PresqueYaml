@@ -6,6 +6,7 @@ let defaultOptions =
     options.Converters <-
         [
             ConvertibleConverterFactory()
+            NullableConverterFactory()
             ArrayConverterFactory()
             CollectionConverterFactory()
             FSharpConverterFactory()
