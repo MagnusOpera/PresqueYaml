@@ -11,5 +11,6 @@ let defaultOptions =
             CollectionConverterFactory()
             FSharpCollectionsConverterFactory()
             FSharpOptionConverterFactory()
+            FSharpRecordConverterFactory()
         ]
     options
