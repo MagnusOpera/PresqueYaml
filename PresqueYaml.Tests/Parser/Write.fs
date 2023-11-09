@@ -1,6 +1,6 @@
-// module PresqueYaml.Tests.Model.Write
+// module PresqueYaml.Tests.Parser.Write
 
-// open PresqueYaml.Model
+// open PresqueYaml
 // open NUnit.Framework
 // open FsUnit
 

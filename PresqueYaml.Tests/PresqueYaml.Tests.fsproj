@@ -17,11 +17,11 @@
     <Compile Include="Serializer/FSharp/Option.fs" />
     <Compile Include="Serializer/FSharp/Unit.fs" />
     <Compile Include="Serializer/FSharp/Record.fs" />
-    <Compile Include="Model/Wellformed.fs" />
-    <Compile Include="Model/Malformed.fs" />
-    <Compile Include="Model/Scalar.fs" />
-    <Compile Include="Model/Sequence.fs" />
-    <Compile Include="Model/Mapping.fs" />
+    <Compile Include="Parser/Wellformed.fs" />
+    <Compile Include="Parser/Malformed.fs" />
+    <Compile Include="Parser/Scalar.fs" />
+    <Compile Include="Parser/Sequence.fs" />
+    <Compile Include="Parser/Mapping.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

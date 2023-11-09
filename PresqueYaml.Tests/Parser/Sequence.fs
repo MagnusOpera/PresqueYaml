@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Model.Sequence
+module PresqueYaml.Tests.Parser.Sequence
 
-open PresqueYaml.Model
+open PresqueYaml
 open NUnit.Framework
 open FsUnit
 
@@ -14,7 +14,7 @@ let ``sequence only is valid``() =
 - titi"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -27,7 +27,7 @@ let ``values in sequence are trimmed``() =
 - titi   "
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -46,7 +46,7 @@ languages:
   - Python"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -68,7 +68,7 @@ let ``mapping in sequence is valid``() =
     - Python"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -89,7 +89,7 @@ let ``compact sequence in sequence is valid``() =
 "
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -99,7 +99,7 @@ let ``type mismatch in list is error``() =
     let yaml = "- toto
 -titi"
 
-    (fun () -> yaml |> read |> ignore)
+    (fun () -> yaml |> Parser.read |> ignore)
     |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -110,7 +110,7 @@ let ``type mismatch scalar first in list is error``() =
   -toto
   - titi"
 
-    (fun () -> yaml |> read |> ignore)
+    (fun () -> yaml |> Parser.read |> ignore)
     |> should (throwWithMessage "Type mismatch (line 3, column 3)") typeof<System.Exception>
 
 // ####################################################################################################################

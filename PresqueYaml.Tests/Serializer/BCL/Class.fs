@@ -1,6 +1,6 @@
 module PresqueYaml.Tests.Serializer.Class
 
-open PresqueYaml.Model
+open PresqueYaml
 open PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit

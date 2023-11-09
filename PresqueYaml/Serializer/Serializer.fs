@@ -1,6 +1,6 @@
 namespace PresqueYaml.Serializer
 open System
-open PresqueYaml.Model
+open PresqueYaml
 
 type YamlConverter() =
     abstract CanConvert: typeToConvert:Type -> bool

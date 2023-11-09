@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Model.Wellformed
+module PresqueYaml.Tests.Parser.Wellformed
 
-open PresqueYaml.Model
+open PresqueYaml
 open NUnit.Framework
 open FsUnit
 
@@ -65,7 +65,7 @@ fruits:
 "
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 
@@ -128,5 +128,5 @@ fruits:
 //       Python"
 
 //     yaml
-//     |> read
+//     |> Parser.read
 //     |> should equal expected

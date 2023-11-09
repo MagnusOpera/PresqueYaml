@@ -1,7 +1,7 @@
 module PresqueYaml.Tests.Serializer.Collections
 
 open System.Collections.Generic
-open PresqueYaml.Model
+open PresqueYaml
 open PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit

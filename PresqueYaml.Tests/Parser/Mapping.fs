@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Model.Mapping
+module PresqueYaml.Tests.Parser.Mapping
 
-open PresqueYaml.Model
+open PresqueYaml
 open NUnit.Framework
 open FsUnit
 
@@ -12,7 +12,7 @@ let ``empty yaml is None and valid`` () =
 
     let yaml = ""
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -27,7 +27,7 @@ let ``mapping only is valid``() =
 age: 42"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -42,7 +42,7 @@ let ``mapping values are trimmed``() =
 age:   42   "
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -58,7 +58,7 @@ let ``nested mappings indent is valid``() =
   age: 42"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -79,7 +79,7 @@ user2:
   age: 42"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -100,7 +100,7 @@ user2:
   age: 42"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -117,7 +117,7 @@ age: 666
 "
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -133,7 +133,7 @@ age: 42
 age:"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -149,7 +149,7 @@ let ``mapping value override must be on same line``() =
    titi"
 
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################

@@ -1,5 +1,5 @@
 namespace PresqueYaml.Serializer
-open PresqueYaml.Model
+open PresqueYaml
 open System
 
 type FSharpOptionConverter<'T>(options:YamlSerializerOptions) =

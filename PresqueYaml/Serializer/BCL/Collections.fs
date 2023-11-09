@@ -1,6 +1,6 @@
 namespace PresqueYaml.Serializer
 open System.Collections.Generic
-open PresqueYaml.Model
+open PresqueYaml
 open System
 
 type ListConverter<'T>(options:YamlSerializerOptions) =

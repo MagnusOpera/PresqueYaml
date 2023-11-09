@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Model.Scalar
+module PresqueYaml.Tests.Parser.Scalar
 
-open PresqueYaml.Model
+open PresqueYaml
 open NUnit.Framework
 open FsUnit
 
@@ -12,7 +12,7 @@ let ``scalar only is valid``() =
 
     let yaml = "toto"
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -24,7 +24,7 @@ let ``multiline scalar is valid``() =
     let yaml = "toto
 titi"
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################
@@ -35,7 +35,7 @@ let ``scalar only with spaces is valid``() =
 
     let yaml = "toto     "
     yaml
-    |> read
+    |> Parser.read
     |> should equal expected
 
 // ####################################################################################################################

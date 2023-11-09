@@ -1,8 +1,8 @@
 ﻿open System.IO
-open PresqueYaml.Model
+open PresqueYaml
 
 let yamlString = File.ReadAllText("test-nested.yaml")
-let parsedYaml = read yamlString
+let parsedYaml = Parser.read yamlString
 
 // Affichage du résultat
 printfn "Result : %A" parsedYaml
