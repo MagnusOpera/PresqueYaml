@@ -8,7 +8,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Yaml deserialization to a representation model (AST)
 * Map representation model to an object model
 * C# support: List<>, Dictionary<,>, Nullable<> and POCO
-* F# support: list, map, option and record
+* F# support: list, map, option, unit and record
 
 Again, `PresqueYaml` does not offer complete yaml support and uses some non-standard behavior.
 
@@ -16,7 +16,7 @@ Here are some key differences:
 * scalar are always literal (\n between items) - never folded (concatenated with space). If you want spaces, use single line form.
 * multi-lines scalar must be indented relative to start of first item.
 * inline sequences do not support quoted strings. Use standard sequence if you need to.
-* quoted strings are either single or double quoted strings. Only newlines are escaped.
+* quoted strings are either single or double quoted strings - they are the same. Only newlines are escaped.
 * compact form (both sequence and mapping) can be nested at will on same line.
 * mapping can have duplicated keys (last key wins).
 * empty document is a valid document.
