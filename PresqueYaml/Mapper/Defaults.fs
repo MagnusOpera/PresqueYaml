@@ -9,6 +9,7 @@ let defaultOptions =
             NullableConverterFactory()
             ArrayConverterFactory()
             CollectionConverterFactory()
-            FSharpConverterFactory()
+            FSharpCollectionsConverterFactory()
+            FSharpOptionConverterFactory()
         ]
     options

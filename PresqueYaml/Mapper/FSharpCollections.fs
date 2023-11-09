@@ -32,3 +32,27 @@ type FSharpMapConverter<'T>(options:YamlSerializerOptions) =
             mapping
             |> Map.map (fun key node -> YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T)
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
+
+type FSharpCollectionsConverterFactory() =
+    inherit YamlConverterFactory()
+
+    override _.CanConvert (typeToConvert:Type) =
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.FsList -> true
+        | TypeCache.TypeKind.FsSet -> true
+        | TypeCache.TypeKind.FsMap -> true
+        | _ -> false
+
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+        let converterType, idx =
+            match TypeCache.getKind typeToConvert with
+            | TypeCache.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
+            | TypeCache.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
+            | TypeCache.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
+            | _ -> failwith "Unknown type"
+
+        converterType
+            .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
+        :?> YamlConverter

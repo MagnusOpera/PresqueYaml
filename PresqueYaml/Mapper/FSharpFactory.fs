@@ -11,26 +11,12 @@ type FSharpConverterFactory() =
         | TypeCache.TypeKind.FsMap -> true
         | TypeCache.TypeKind.FsTuple -> false
         | TypeCache.TypeKind.FsRecord -> true
-        | TypeCache.TypeKind.FsUnion ->
-            if typeToConvert.IsGenericType then
-                let gen = typeToConvert.GetGenericTypeDefinition()
-                if gen = typedefof<option<_>> then true
-                elif gen = typedefof<voption<_>> then true
-                else false
-            else false
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         match TypeCache.getKind typeToConvert with
         | TypeCache.TypeKind.FsRecord ->
             FSharpRecordConverter(options)
-        | TypeCache.TypeKind.FsUnion ->
-            if typeToConvert.IsGenericType then
-                let gen = typeToConvert.GetGenericTypeDefinition()
-                if gen = typedefof<option<_>> then FSharpOptionConverter(options)
-                elif gen = typedefof<voption<_>> then FSharpOptionConverter(options)
-                else failwith "Unknown type"
-            else failwith "Unknown type"
         | _ ->
             let converterType, idx =
                 match TypeCache.getKind typeToConvert with
