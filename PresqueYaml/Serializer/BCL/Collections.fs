@@ -8,7 +8,9 @@ type ListConverter<'T>(options:YamlSerializerOptions) =
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
-        | YamlNode.None -> List<'T>()
+        | YamlNode.None ->
+            if options.NoneIsEmptyCollection then List<'T>()
+            else failwith $"Failed to convert None to list"
         | YamlNode.Sequence sequence ->
             sequence
             |> Seq.map (fun node -> YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T)
@@ -20,7 +22,9 @@ type DictionaryConverter<'T>(options:YamlSerializerOptions) =
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
-        | YamlNode.None -> Dictionary<string, 'T>()
+        | YamlNode.None ->
+            if options.NoneIsEmptyCollection then Dictionary<string, 'T>()
+            else failwith $"Failed to convert None to dictionary"        
         | YamlNode.Mapping mapping ->
             mapping
             |> Map.map (fun key node -> YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T)
@@ -32,7 +36,9 @@ type ArrayConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
-        | YamlNode.None -> Array.empty
+        | YamlNode.None ->
+            if options.NoneIsEmptyCollection then Array.empty
+            else failwith $"Failed to convert None to array"
         | YamlNode.Sequence sequence ->
             sequence
             |> Seq.map (fun node -> YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T)
