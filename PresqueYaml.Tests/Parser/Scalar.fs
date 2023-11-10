@@ -65,3 +65,18 @@ let ``multiline literal scalar is valid``() =
     yaml
     |> Parser.read
     |> should equal expected
+
+
+// ####################################################################################################################
+
+[<Test>]
+let ``multiline literal scalar must be indented``() =
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John\nDoe"])
+
+    let yaml = "
+toto:  John
+       Doe  "
+
+    yaml
+    |> Parser.read
+    |> should equal expected
