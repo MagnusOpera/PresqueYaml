@@ -24,6 +24,15 @@ let ``list conversion``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``empty list conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<string list>(node, PresqueYaml.Defaults.options)
+    |> should be Empty
+
+// ####################################################################################################################
+
+[<Test>]
 let ``set conversion``() =
     let expected = Set [ 4; 2; 1; 3]
 
@@ -41,6 +50,15 @@ let ``set conversion``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``empty set conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<Set<string>>(node, PresqueYaml.Defaults.options)
+    |> should be Empty
+
+// ####################################################################################################################
+
+[<Test>]
 let ``map conversion``() =
     let expected = Map [
         "toto", 42
@@ -52,3 +70,12 @@ let ``map conversion``() =
     
     YamlSerializer.Deserialize<Map<string, int>>(node, PresqueYaml.Defaults.options)
     |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``empty map conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<Map<string, int>>(node, PresqueYaml.Defaults.options)
+    |> should be Empty

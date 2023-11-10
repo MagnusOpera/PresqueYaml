@@ -25,6 +25,15 @@ let ``list conversion``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``empty list conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<List<string>>(node, PresqueYaml.Defaults.options)
+    |> should be Empty
+
+// ####################################################################################################################
+
+[<Test>]
 let ``array conversion``() =
     let expected = [| 1; 2; 3; 4 |]
 
@@ -38,6 +47,14 @@ let ``array conversion``() =
     YamlSerializer.Deserialize<int[]>(node, PresqueYaml.Defaults.options)
     |> should equal expected
 
+// ####################################################################################################################
+
+[<Test>]
+let ``empty array conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<string[]>(node, PresqueYaml.Defaults.options)
+    |> should be Empty
 
 // ####################################################################################################################
 
@@ -53,3 +70,12 @@ let ``dictionary conversion``() =
     
     YamlSerializer.Deserialize<Dictionary<string, int>>(node, PresqueYaml.Defaults.options)
     |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``empty dictionary conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<Dictionary<string, int>>(node, PresqueYaml.Defaults.options)
+    |> should be Empty

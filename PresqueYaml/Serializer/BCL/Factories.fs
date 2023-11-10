@@ -26,6 +26,24 @@ type CollectionConverterFactory() =
         :?> YamlConverter
 
 
+type ArrayConverterFactory() =
+    inherit YamlConverterFactory()
+
+    override _.CanConvert (typeToConvert:Type) =
+        match TypeCache.getKind typeToConvert with
+        | TypeCache.TypeKind.Array -> true
+        | _ -> false
+
+    override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
+        let converterType = typedefof<ArrayConverter<_>>
+
+        converterType
+            .MakeGenericType([| typeToConvert.GetElementType() |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
+        :?> YamlConverter
+
+
 type ConvertibleConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -67,24 +85,6 @@ type NullableConverterFactory() =
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
-        :?> YamlConverter
-
-
-type ArrayConverterFactory() =
-    inherit YamlConverterFactory()
-
-    override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.Array -> true
-        | _ -> false
-
-    override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-        let converterType = typedefof<ArrayConverter<_>>
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetElementType() |])
             .GetConstructor([| typeof<YamlSerializerOptions> |])
             .Invoke([| options |])
         :?> YamlConverter

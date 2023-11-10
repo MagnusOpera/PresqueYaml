@@ -12,7 +12,6 @@
     <Compile Include="Serializer/TypeCache.fs" />
     <Compile Include="Serializer/Helpers.fs" />
     <Compile Include="Serializer/BCL/Convertible.fs" />
-    <Compile Include="Serializer/BCL/Array.fs" />
     <Compile Include="Serializer/BCL/Collections.fs" />
     <Compile Include="Serializer/BCL/Class.fs" />
     <Compile Include="Serializer/BCL/Nullable.fs" />
