@@ -7,5 +7,6 @@ type ConvertibleConverter<'T>(options:YamlSerializerOptions) =
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
+        | YamlNode.None -> Unchecked.defaultof<'T>
         | YamlNode.Scalar data -> Convert.ChangeType(data, typeToConvert) :?> 'T
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"

@@ -35,6 +35,15 @@ let ``int conversion``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``default int conversion``() =
+    let node = YamlNode.None
+    
+    YamlSerializer.Deserialize<System.Int32>(node, PresqueYaml.Defaults.options)
+    |> should equal 0
+
+// ####################################################################################################################
+
+[<Test>]
 let ``uint conversion``() =
     let node = YamlNode.Scalar "42"
     
