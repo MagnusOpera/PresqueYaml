@@ -29,6 +29,7 @@ type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
         let parameterValues = Array.copy defaultParameters
 
         match node with
+        | YamlNode.None -> null
         | YamlNode.Mapping mapping ->
             for (KeyValue(name, node)) in mapping do
                 match node with
@@ -40,7 +41,5 @@ type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
                         let data = YamlSerializer.Deserialize(node, propType, options)
                         parameterValues[index] <- data
                     | _ -> ()
-
-        | _ -> ()
-
-        ctor.Invoke(parameterValues) :?> 'T
+            ctor.Invoke(parameterValues) :?> 'T
+        | _ -> failwith "Can't convert sequence or mapping to record"

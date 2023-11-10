@@ -18,14 +18,3 @@ let ``unit conversion``() =
     
     YamlSerializer.Deserialize<unit>(node, PresqueYaml.Defaults.options)
     |> should equal (())
-
-// ####################################################################################################################
-
-[<Test>]
-let ``unit in record conversion``() =
-    let node = YamlNode.Scalar "42"
-    
-    let expected = { Value = () }
-
-    YamlSerializer.Deserialize<Pouet>(node, PresqueYaml.Defaults.options)
-    |> should equal expected

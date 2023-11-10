@@ -42,7 +42,5 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
                         let data = YamlSerializer.Deserialize(node, propType, options)
                         fieldValues[index] <- data
                     | _ -> ()
-
-        | _ -> ()
-
-        ctor fieldValues :?> 'T
+            ctor fieldValues :?> 'T
+        | _ -> failwith "Can't convert None, Sequence or Mapping to record"
