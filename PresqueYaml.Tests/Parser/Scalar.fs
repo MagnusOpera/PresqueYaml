@@ -39,3 +39,16 @@ let ``scalar only with spaces is valid``() =
     |> should equal expected
 
 // ####################################################################################################################
+
+[<Test>]
+let ``multiline folded scalar is valid``() =
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
+
+    let yaml = "toto: >
+  John  
+  Doe  "
+
+    yaml
+    |> Parser.read
+    |> should equal expected
+

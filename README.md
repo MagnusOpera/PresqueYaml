@@ -5,15 +5,16 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 <table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.</td></tr></table>
 
 `PresqueYaml` is written in F# and offers:
-* Yaml deserialization to a representation model (AST)
-* Map representation model to an object model
-* C# support: List<>, Dictionary<,>, Nullable<> and POCO
-* F# support: list, map, option, unit and record
+* Yaml deserialization to a representation model (AST).
+* Map representation model to an object model.
+* C# support: List<>, Dictionary<,>, Nullable<> and POCO (via unique constructor).
+* F# support: list, map, option, unit and record.
 
 Again, `PresqueYaml` does not offer complete yaml support and uses some non-standard behavior.
 
 Here are some key differences:
-* scalar are always literal (\n between items) - never folded (concatenated with space). If you want spaces, use single line form.
+* empty lines are ignored.
+* scalar are always literal by default (\n between items) - you can still use | or > if you want to.
 * multi-lines scalar must be indented relative to start of first item.
 * inline sequences do not support quoted strings. Use standard sequence if you need to.
 * quoted strings are either single or double quoted strings - they are the same. Only newlines are escaped.

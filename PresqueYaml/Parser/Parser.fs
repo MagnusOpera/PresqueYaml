@@ -14,6 +14,7 @@ type private NodeData =
 [<RequireQualifiedAccess>]
 type private NodeState =
     { Indent: int
+      FoldedScalar: bool
       mutable Data: NodeData }
 
 [<RequireQualifiedAccess>]
@@ -23,8 +24,9 @@ type private LineInfo =
       Line: string }
 
 let read (yamlString: string) : YamlNode =
-    let createState indent =
+    let createState indent foldedScalar =
         { NodeState.Indent = indent
+          NodeState.FoldedScalar = foldedScalar
           NodeState.Data = NodeData.None }
 
     let leadingSpaces (line: string) =
@@ -89,7 +91,7 @@ let read (yamlString: string) : YamlNode =
                     | _ -> raiseError "Type mismatch"
 
                 let value, states, nextLineInfos =
-                    parseNode (createState (lineInfo.ColNum + 2) :: states)
+                    parseNode (createState (lineInfo.ColNum + 2) false :: states)
                               ({lineInfo with ColNum = lineInfo.ColNum + 2 } :: nextLineInfos)
 
                 value |> data.Add
@@ -101,15 +103,19 @@ let read (yamlString: string) : YamlNode =
                 let value = line.Substring(sepIndex+1)
 
                 let value, states, nextLinesInfos =
-                    if String.IsNullOrWhiteSpace value then
+                    match value.TrimStart() with
+                    | ""
+                    | "|"
+                    | ">" as value ->
+                        let isFolded = value = ">"
                         match nextLineInfos |> List.tryHead with
                         // INDENT
                         | Some nextLineInfo when lineInfo.ColNum < nextLineInfo.ColNum ->
-                            parseNode (createState nextLineInfo.ColNum :: states) nextLineInfos
+                            parseNode (createState nextLineInfo.ColNum isFolded :: states) nextLineInfos
                         | _ -> YamlNode.None, states, nextLineInfos
-                    else
+                    | _ ->
                         let leadingSpaces = leadingSpaces value
-                        parseNode (createState (lineInfo.ColNum + sepIndex + 1 + leadingSpaces) :: states)
+                        parseNode (createState (lineInfo.ColNum + sepIndex + 1 + leadingSpaces) false :: states)
                                   ({lineInfo with ColNum = lineInfo.ColNum + sepIndex + 1 + leadingSpaces} :: nextLineInfos)
 
                 let data =
@@ -126,7 +132,9 @@ let read (yamlString: string) : YamlNode =
             let scalar (line: string) =
                 match currentState.Data with
                 | NodeData.None -> currentState.Data <- NodeData.Scalar (line.Trim())
-                | NodeData.Scalar data -> currentState.Data <- NodeData.Scalar $"{data}\n{line.Trim()}"
+                | NodeData.Scalar data ->
+                    let sep = if currentState.FoldedScalar then " " else "\n"
+                    currentState.Data <- NodeData.Scalar $"{data}{sep}{line.Trim()}"
                 | _ -> raiseError "Type mismatch"
                 parseNode states nextLineInfos
 
@@ -151,7 +159,7 @@ let read (yamlString: string) : YamlNode =
     let lineInfo idx (line: string) =
         { LineInfo.LineNum = idx
           LineInfo.ColNum = leadingSpaces line
-          LineInfo.Line = line }
+          LineInfo.Line = line.TrimEnd() }
 
     let isCommentOrEmpty (lineInfo: LineInfo) =
         lineInfo.Line |> String.IsNullOrWhiteSpace || lineInfo.Line.TrimStart()[0] = '#'
@@ -160,5 +168,5 @@ let read (yamlString: string) : YamlNode =
         lines
         |> List.mapi lineInfo
         |> List.filter (not << isCommentOrEmpty)
-        |> parseNode [createState 0]
+        |> parseNode [createState 0 false]
     node
