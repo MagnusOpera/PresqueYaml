@@ -19,10 +19,40 @@ let ``scalar only is valid``() =
 
 [<Test>]
 let ``multiline scalar is valid``() =
+    let expected = YamlNode.Scalar "toto titi"
+
+    let yaml = "|
+toto
+titi"
+
+    yaml
+    |> Parser.read
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``multiline folded scalar is valid``() =
+    let expected = YamlNode.Scalar "toto titi"
+
+    let yaml = "|
+toto
+titi"
+
+    yaml
+    |> Parser.read
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``multiline literal scalar is valid``() =
     let expected = YamlNode.Scalar "toto\ntiti"
 
-    let yaml = "toto
+    let yaml = ">
+toto
 titi"
+
     yaml
     |> Parser.read
     |> should equal expected
@@ -41,25 +71,11 @@ let ``scalar only with spaces is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``multiline folded scalar is valid``() =
+let ``multiline folded scalar in mapping is valid``() =
     let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
 
     let yaml = "toto: >
-  John  
-  Doe  "
-
-    yaml
-    |> Parser.read
-    |> should equal expected
-
-// ####################################################################################################################
-
-[<Test>]
-let ``multiline literal scalar is valid``() =
-    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John\nDoe"])
-
-    let yaml = "toto:  |
-  John  
+  John
   Doe  "
 
     yaml

@@ -18,19 +18,31 @@ titi: tralala"
 // ####################################################################################################################
 
 [<Test>]
-let ``dedent mapping must restore parent indentation``() =
-    let yaml = "users:
-  toto:
-    titi: tralala
-   tutu: pouet"
+let ``mapping must have same indentation 1/2``() =
+    let yaml = "
+  titi: tralala
+ tutu: pouet"
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 4, column 4)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
 
 [<Test>]
-let ``sequence must be on same indentation``() =
+let ``mapping must have same indentation 2/2``() =
+    let yaml = "
+titi:
+  toto:
+    tutu: pouet
+  tata: ddqddwqwd"
+
+    (fun () -> yaml |> Parser.read |> ignore)
+    |> should (throwWithMessage "Indentation error (line 3, column 3)") typeof<System.Exception>
+
+// ####################################################################################################################
+
+[<Test>]
+let ``children sequence of mapping must have same indentation``() =
     let yaml = "users:
  - toto
   - tralala"
