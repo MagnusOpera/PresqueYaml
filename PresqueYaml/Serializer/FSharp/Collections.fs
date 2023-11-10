@@ -8,7 +8,7 @@ type FSharpListConverter<'T>(options:YamlSerializerOptions) =
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
-            if options.NoneIsEmptyCollection then List.empty
+            if options.NoneIsDefault then List.empty
             else failwith $"Failed to convert None to list"
         | YamlNode.Sequence sequence ->
             sequence
@@ -21,7 +21,7 @@ type FSharpSetConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
-            if options.NoneIsEmptyCollection then Set.empty
+            if options.NoneIsDefault then Set.empty
             else failwith $"Failed to convert None to set"
         | YamlNode.Sequence sequence ->
             sequence
@@ -35,7 +35,7 @@ type FSharpMapConverter<'T>(options:YamlSerializerOptions) =
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
-            if options.NoneIsEmptyCollection then Map.empty
+            if options.NoneIsDefault then Map.empty
             else failwith $"Failed to convert None to map"
         | YamlNode.Mapping mapping ->
             mapping
