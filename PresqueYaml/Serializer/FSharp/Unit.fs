@@ -6,4 +6,4 @@ type FSharpUnitConverter(options:YamlSerializerOptions) =
     inherit YamlConverter<obj>()
 
     override _.Read(node:YamlNode, typeToConvert:Type): obj =
-        null
+        Unchecked.defaultof<unit>
