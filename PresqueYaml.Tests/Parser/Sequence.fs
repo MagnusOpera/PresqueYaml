@@ -74,7 +74,7 @@ let ``mapping in sequence is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``compact sequence in sequence is valid``() =
+let ``nested inline sequence is valid``() =
     let expected =
         YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "John Doe"
                                                 YamlNode.Scalar "Jane Doe" ]
@@ -82,10 +82,13 @@ let ``compact sequence in sequence is valid``() =
                                                 YamlNode.Scalar "Python" ] ]
 
     let yaml = "
-- -    John Doe
+-
+  -    John Doe
   -   Jane Doe
-- - F#
+-- F#
   -    Python
+
+
 "
 
     yaml
@@ -95,22 +98,28 @@ let ``compact sequence in sequence is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``type mismatch in list is error``() =
+let ``list supports no spaces after hyphen``() =
+    let expected = YamlNode.Sequence [ YamlNode.Scalar "toto"; YamlNode.Scalar "titi" ]
+
     let yaml = "- toto
 -titi"
 
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
+    yaml
+    |> Parser.read
+    |> should equal expected
 
 // ####################################################################################################################
 
 [<Test>]
-let ``type mismatch scalar first in list is error``() =
+let ``list supports no spaces after hyphen in mapping``() =
+    let expected = YamlNode.Mapping (Map [ "users", YamlNode.Sequence [ YamlNode.Scalar "toto"; YamlNode.Scalar "titi" ] ])
+
     let yaml = "users:
   -toto
   - titi"
 
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 3, column 3)") typeof<System.Exception>
+    yaml
+    |> Parser.read
+    |> should equal expected
 
 // ####################################################################################################################

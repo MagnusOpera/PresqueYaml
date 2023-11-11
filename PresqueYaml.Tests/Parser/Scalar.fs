@@ -21,7 +21,7 @@ let ``scalar only is valid``() =
 let ``multiline scalar is valid``() =
     let expected = YamlNode.Scalar "toto titi"
 
-    let yaml = "|
+    let yaml = "
 toto
 titi"
 
@@ -32,30 +32,24 @@ titi"
 // ####################################################################################################################
 
 [<Test>]
-let ``multiline folded scalar is valid``() =
-    let expected = YamlNode.Scalar "toto titi"
-
+let ``multiline folded scalar is error``() =
     let yaml = "|
 toto
 titi"
 
-    yaml
-    |> Parser.read
-    |> should equal expected
+    (fun () -> yaml |> Parser.read |> ignore)
+    |> should (throwWithMessage "Indentation error (line 2, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
 
 [<Test>]
-let ``multiline literal scalar is valid``() =
-    let expected = YamlNode.Scalar "toto\ntiti"
-
+let ``multiline literal scalar is error``() =
     let yaml = ">
 toto
 titi"
 
-    yaml
-    |> Parser.read
-    |> should equal expected
+    (fun () -> yaml |> Parser.read |> ignore)
+    |> should (throwWithMessage "Indentation error (line 2, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -72,7 +66,7 @@ let ``scalar only with spaces is valid``() =
 
 [<Test>]
 let ``multiline folded scalar in mapping is valid``() =
-    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John\nDoe"])
 
     let yaml = "toto: >
   John
@@ -87,7 +81,7 @@ let ``multiline folded scalar in mapping is valid``() =
 
 [<Test>]
 let ``multiline literal scalar must be indented``() =
-    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John\nDoe"])
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
 
     let yaml = "
 toto:  John

@@ -50,8 +50,7 @@ user2:
   'first name': Toto
 
   age: 666
-  languages: [ F# |> ❤️,
-             Python ]
+  languages: [ F# \|> ❤️, Python ]
 
 categories:
   - - toto
