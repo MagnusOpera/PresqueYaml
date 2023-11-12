@@ -102,7 +102,7 @@ let read (yamlString: string) : YamlNode =
                             let sequenceBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Sequence (List<YamlNode>()) }
                             parseNode (sequenceBlock :: parentBlocks) accept idx currentLineNumber
                         // mapping
-                        | Regex "^( *)[^ ]+:(?:(?: +[^ ])| *$)" [spaces] ->
+                        | Regex "^( *)(?:[^ ]+:(?: | *$))" [spaces] ->
                             let idx = currentColNumber + spaces.Length
                             let mappingBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Mapping (Dictionary<string, YamlNode>()) }
                             parseNode (mappingBlock :: parentBlocks) accept idx currentLineNumber
