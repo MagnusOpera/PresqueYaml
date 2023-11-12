@@ -38,6 +38,8 @@ let read (yamlString: string) : YamlNode =
             let value =
                 s.Replace("\\n", "\n")
                  .Replace("\\t", "\t")
+                 .Replace("\\r", "\r")
+                 .Replace("\\s", " ")
             value
 
         let dedent () =
