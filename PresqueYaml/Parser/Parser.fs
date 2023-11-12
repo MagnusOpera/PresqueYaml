@@ -39,7 +39,9 @@ let read (yamlString: string) : YamlNode =
             while pos < stopIndex && line[pos] = ' ' do
                 pos <- pos + 1
             if pos = stopIndex then None
-            else Some pos
+            else
+                if line[pos] = '\t' then parsingError "Unexpected tab character" pos
+                Some pos
 
         let dedent () =
             let node =
@@ -111,17 +113,16 @@ let read (yamlString: string) : YamlNode =
                             | Regex "^( *)$" [_] ->
                                 parseNode states accept currentBlock.Indent (currentLineNumber+1)
                             // if content then folded scalar
-                            | Regex "^( *)\w" [spaces] ->
+                            | Regex "^( *)[^ ]" [spaces] ->
                                 let idx = currentColNumber + spaces.Length
                                 let scalarNode = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
                                 parseNode (scalarNode :: parentBlocks) accept idx currentLineNumber
                             | _ ->
-                                parsingError "Unexpected content" currentColNumber
+                                parsingError "Unexpected content" currentBlock.Indent
 
                         let scalarBlock (state: List<string>) =
                             let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
                             match currentLine[idx] with
-                            | '\t' -> parsingError "Unexpected tab character" idx
                             | _ ->
                                 let value = currentLine.Substring(idx).TrimEnd()
                                 state.Add(value)
@@ -130,7 +131,6 @@ let read (yamlString: string) : YamlNode =
                         let sequenceBlock (state: List<YamlNode>) =
                             let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
                             match currentLine[idx] with
-                            | '\t' -> parsingError "Unexpected tab character" idx
                             | '-' ->
                                 let accept value =
                                     state.Add(value)
@@ -144,9 +144,9 @@ let read (yamlString: string) : YamlNode =
                         let mappingBlock (state: Dictionary<string, YamlNode>) =
                             let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
                             match currentLine[idx] with
-                            | '\t' -> parsingError "Unexpected tab character" idx
                             | _ ->
                                 let colonIndex = currentLine.IndexOf(':', currentColNumber)
+                                if colonIndex = -1 then parsingError "Expecting mapping" currentBlock.Indent
 
                                 let accept value =
                                     let key = currentLine.Substring(idx, colonIndex - idx).Trim()

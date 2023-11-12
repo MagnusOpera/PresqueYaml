@@ -112,8 +112,6 @@ let ``list supports no spaces after hyphen``() =
 
 [<Test>]
 let ``list must be followed with at least on space after hyphen in mapping``() =
-    let expected = YamlNode.Mapping (Map [ "users", YamlNode.Sequence [ YamlNode.Scalar "toto"; YamlNode.Scalar "titi" ] ])
-
     let yaml = "users:
   -toto
   - titi"
