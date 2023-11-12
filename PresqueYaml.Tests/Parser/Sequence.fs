@@ -98,9 +98,7 @@ let ``nested inline sequence is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``list supports no spaces after hyphen``() =
-    let expected = YamlNode.Sequence [ YamlNode.Scalar "toto"; YamlNode.Scalar "titi" ]
-
+let ``sequence fails if no spaces after hyphen``() =
     let yaml = "- toto
 -titi"
 
@@ -108,15 +106,17 @@ let ``list supports no spaces after hyphen``() =
     |> should (throwWithMessage "Expecting sequence (line 2, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
-// TODO: fix this test - it is valid
 
 [<Test>]
-let ``list must be followed with at least on space after hyphen in mapping``() =
+let ``scalar starting with hyphen force following content as scalar``() =
+    let expected = YamlNode.Mapping (Map ["users", YamlNode.Scalar "-toto - titi" ])
+
     let yaml = "users:
   -toto
   - titi"
 
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Unexpected content (line 2, column 2)") typeof<System.Exception>
+    yaml
+    |> Parser.read
+    |> should equal expected
 
 // ####################################################################################################################
