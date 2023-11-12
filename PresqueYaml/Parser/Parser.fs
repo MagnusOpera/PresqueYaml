@@ -123,9 +123,15 @@ let read (yamlString: string) : YamlNode =
                                 parseNode (scalarNode :: parentBlocks) accept currentColNumber currentLineNumber
 
                     let scalarBlock (state: List<string>) =
-                        let value = blockContent.Trim()
+                        let value, shiftIndent =
+                            if state.Count > 0 then
+                                blockContent, 0
+                            else
+                                let newValue = blockContent.TrimStart()
+                                newValue, blockContent.Length - newValue.Length
+                        let value = value.TrimEnd()
                         state.Add(value)
-                        parseNode states accept currentBlock.Indent (currentLineNumber+1)
+                        parseNode states accept (currentBlock.Indent+shiftIndent) (currentLineNumber+1)
 
                     let sequenceBlock (state: List<YamlNode>) =
                         match blockContent with
