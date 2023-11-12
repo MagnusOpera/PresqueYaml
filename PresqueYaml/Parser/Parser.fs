@@ -135,7 +135,7 @@ let read (yamlString: string) : YamlNode =
 
                     let sequenceBlock (state: List<YamlNode>) =
                         match blockContent with
-                        | Regex "^(- +|- *$)" [spaces] ->
+                        | Regex "^(-(?: | *$))" [spaces] ->
                             let accept value =
                                 state.Add(value)
                                 parseNode states accept currentBlock.Indent
