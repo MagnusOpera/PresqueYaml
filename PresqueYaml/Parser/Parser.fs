@@ -97,7 +97,7 @@ let read (yamlString: string) : YamlNode =
                     let unknownBlock() =
                         match blockContent with
                         // sequence
-                        | Regex "^( *)-(?:(?: +[^ ])| *$)" [spaces] ->
+                        | Regex "^( *)(?:-(?: | *$))" [spaces] ->
                             let idx = currentColNumber + spaces.Length
                             let sequenceBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Sequence (List<YamlNode>()) }
                             parseNode (sequenceBlock :: parentBlocks) accept idx currentLineNumber
