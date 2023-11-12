@@ -92,8 +92,10 @@ let read (yamlString: string) : YamlNode =
 
                 // line with content and enough chars to cover requested indent
                 | _ ->
+                    let blockContent = currentLine.Substring(currentColNumber)
+
                     let unknownBlock() =
-                        match currentLine.Substring(currentColNumber) with
+                        match blockContent with
                         // sequence
                         | Regex "^( *)-(?:(?: +[^ ])| *$)" [spaces] ->
                             let idx = currentColNumber + spaces.Length
@@ -132,15 +134,14 @@ let read (yamlString: string) : YamlNode =
                             parseNode states accept currentBlock.Indent (currentLineNumber+1)
 
                     let sequenceBlock (state: List<YamlNode>) =
-                        let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
-                        match currentLine[idx] with
-                        | '-' ->
+                        match blockContent with
+                        | Regex "^(- +|- *$)" [spaces] ->
                             let accept value =
                                 state.Add(value)
                                 parseNode states accept currentBlock.Indent
 
                             let unknownBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent+1; NodeState.BlockInfo = BlockInfo.Unknown }
-                            parseNode (unknownBlock :: states) accept (idx+1) currentLineNumber
+                            parseNode (unknownBlock :: states) accept (currentColNumber+spaces.Length) currentLineNumber
                         | _ ->
                             parsingError "Expecting sequence" currentBlock.Indent
 
