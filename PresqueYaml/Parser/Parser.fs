@@ -30,7 +30,7 @@ let (|Regex|_|) pattern input =
 let read (yamlString: string) : YamlNode =
     let lines = yamlString.Split("\n")
 
-    let rec parseNode currentLineNumber currentColNumber (states: NodeState list): node:YamlNode * nextLineNumber:int =
+    let rec parseNode (states: NodeState list) accept currentColNumber currentLineNumber : node:YamlNode * nextLineNumber:int =
 
         let parsingError msg col = failwith $"{msg} (line {currentLineNumber + 1}, column {col + 1})"
 
@@ -42,24 +42,27 @@ let read (yamlString: string) : YamlNode =
             else Some pos
 
         let dedent () =
-            match states with
-            | [] -> YamlNode.None, currentLineNumber
-            | currentBlock :: _ ->
-                match currentBlock.BlockInfo with
-                | BlockInfo.Unknown ->
-                    YamlNode.None, currentLineNumber
-                | BlockInfo.Scalar (mode, state) ->
-                    let data =
-                        match mode with
-                        | ScalarMode.Folded -> String.Join(' ', state)
-                        | ScalarMode.Literal -> String.Join('\n', state)
-                    YamlNode.Scalar data, currentLineNumber
-                | BlockInfo.Sequence (state) ->
-                    let data = state |> List.ofSeq
-                    YamlNode.Sequence data, currentLineNumber
-                | BlockInfo.Mapping (state) ->
-                    let data = state |> Seq.map (|KeyValue|) |> Map
-                    YamlNode.Mapping data, currentLineNumber
+            let node =
+                match states with
+                | [] ->
+                    parsingError "Parsing error" currentColNumber
+                | currentBlock :: _ ->
+                    match currentBlock.BlockInfo with
+                    | BlockInfo.Unknown ->
+                        YamlNode.None
+                    | BlockInfo.Scalar (mode, state) ->
+                        let data =
+                            match mode with
+                            | ScalarMode.Folded -> String.Join(' ', state)
+                            | ScalarMode.Literal -> String.Join('\n', state)
+                        YamlNode.Scalar data
+                    | BlockInfo.Sequence state ->
+                        let data = state |> List.ofSeq
+                        YamlNode.Sequence data
+                    | BlockInfo.Mapping state ->
+                        let data = state |> Seq.map (|KeyValue|) |> Map
+                        YamlNode.Mapping data
+            accept node currentLineNumber
 
         // end of file ? we need to dedent
         if currentLineNumber >= lines.Length then
@@ -73,15 +76,11 @@ let read (yamlString: string) : YamlNode =
                 // is the line empty or comment ?
                 let emptyLine = currentLine.Trim()
                 if String.IsNullOrEmpty emptyLine || emptyLine.StartsWith("#") then
-                    parseNode (currentLineNumber+1) currentBlock.Indent states
+                    parseNode states accept currentBlock.Indent (currentLineNumber+1)
                 else
                     // need to dedent ?
                     match tryFindNoneWhitespace currentLine 0 currentBlock.Indent with
                     | Some idx when currentBlock.Line < currentLineNumber && idx < currentBlock.Indent ->
-                        // // check dedent returns to parent indentation
-                        // match parentBlocks |> List.tryHead with
-                        // | Some parentBlock -> if parentBlock.Indent <> idx then parsingError "Indentation error" idx
-                        // | _ -> parsingError "Indentation error" idx
                         dedent()
 
                     | _ ->
@@ -91,28 +90,28 @@ let read (yamlString: string) : YamlNode =
                             | Regex "^( *)-(?:(?: +[^ ])| *$)" [spaces] ->
                                 let idx = currentColNumber + spaces.Length
                                 let sequenceBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Sequence (List<YamlNode>()) }
-                                parseNode currentLineNumber idx (sequenceBlock :: parentBlocks)
+                                parseNode (sequenceBlock :: parentBlocks) accept idx currentLineNumber
                             // mapping
                             | Regex "^( *)\w+:(?:(?: +[^ ])| *$)" [spaces] ->
                                 let idx = currentColNumber + spaces.Length
                                 let mappingBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Mapping (Dictionary<string, YamlNode>()) }
-                                parseNode currentLineNumber idx (mappingBlock :: parentBlocks)
+                                parseNode (mappingBlock :: parentBlocks) accept idx currentLineNumber
                             // folded scalar
-                            | Regex "^( *>)(?: *$)" [folded] ->
+                            | Regex "^( *>)(?: *$)" [_] ->
                                 let scalarBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
-                                parseNode (currentLineNumber+1) currentBlock.Indent (scalarBlock :: parentBlocks)
+                                parseNode (scalarBlock :: parentBlocks) accept currentBlock.Indent (currentLineNumber+1)
                             // literal scalar
-                            | Regex "^( *\|)(?: *$)" [literal] ->
+                            | Regex "^( *\|)(?: *$)" [_] ->
                                 let scalarBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Literal, List<string>()) }
-                                parseNode (currentLineNumber+1) currentBlock.Indent (scalarBlock :: parentBlocks)
+                                parseNode (scalarBlock :: parentBlocks) accept currentBlock.Indent (currentLineNumber+1)
                             // if no content then postpone the decision
-                            | Regex "^( *)$" [spaces] ->
-                                parseNode (currentLineNumber+1) currentBlock.Indent states
+                            | Regex "^( *)$" [_] ->
+                                parseNode states accept currentBlock.Indent (currentLineNumber+1)
                             // if content then folded scalar
                             | Regex "^( *)\w" [spaces] ->
                                 let idx = currentColNumber + spaces.Length
                                 let scalarNode = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
-                                parseNode currentLineNumber idx (scalarNode :: parentBlocks)
+                                parseNode (scalarNode :: parentBlocks) accept idx currentLineNumber
                             | _ ->
                                 parsingError "Unexpected content" currentColNumber
 
@@ -123,17 +122,19 @@ let read (yamlString: string) : YamlNode =
                             | _ ->
                                 let value = currentLine.Substring(idx).TrimEnd()
                                 state.Add(value)
-                                parseNode (currentLineNumber+1) currentBlock.Indent states
+                                parseNode states accept currentBlock.Indent (currentLineNumber+1)
 
                         let sequenceBlock (state: List<YamlNode>) =
                             let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
                             match currentLine[idx] with
                             | '\t' -> parsingError "Unexpected tab character" idx
                             | '-' ->
+                                let accept value =
+                                    state.Add(value)
+                                    parseNode states accept currentBlock.Indent
+
                                 let unknownBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent+1; NodeState.BlockInfo = BlockInfo.Unknown }
-                                let value, currentLineNumber = parseNode currentLineNumber (idx+1) (unknownBlock :: states)
-                                state.Add(value)
-                                parseNode currentLineNumber currentBlock.Indent states
+                                parseNode (unknownBlock :: states) accept (idx+1) currentLineNumber
                             | _ ->
                                 parsingError "Expecting sequence" currentBlock.Indent
 
@@ -143,19 +144,22 @@ let read (yamlString: string) : YamlNode =
                             | '\t' -> parsingError "Unexpected tab character" idx
                             | _ ->
                                 let colonIndex = currentLine.IndexOf(':', currentColNumber)
-                                if colonIndex = -1 then parsingError "Expecting mapping" idx
-                                let key = currentLine.Substring(idx, colonIndex - idx).Trim()
+
+                                let accept value =
+                                    let key = currentLine.Substring(idx, colonIndex - idx).Trim()
+                                    state[key] <- value
+                                    parseNode states accept currentBlock.Indent
+
                                 let unknownBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent+1; NodeState.BlockInfo = BlockInfo.Unknown }
-                                let value, currentLineNumber = parseNode currentLineNumber (colonIndex+1) (unknownBlock :: states)
-                                state[key] <- value
-                                parseNode currentLineNumber currentBlock.Indent states
+                                parseNode (unknownBlock :: states) accept (colonIndex+1) currentLineNumber
 
                         match currentBlock.BlockInfo with
                         | BlockInfo.Unknown -> unknownBlock()
                         | BlockInfo.Scalar (_, state) -> scalarBlock state
-                        | BlockInfo.Sequence (state) -> sequenceBlock state
-                        | BlockInfo.Mapping (state) -> mappingBlock state
+                        | BlockInfo.Sequence state -> sequenceBlock state
+                        | BlockInfo.Mapping state -> mappingBlock state
 
     let startBlock = { NodeState.Line = 0; NodeState.Indent = 0; NodeState.BlockInfo = BlockInfo.Unknown }
-    let node, currentLineNumber = parseNode 0 0 [startBlock]
+    let accept value currentLineNumber = value,currentLineNumber
+    let node, _ = parseNode [startBlock] accept 0 0
     node
