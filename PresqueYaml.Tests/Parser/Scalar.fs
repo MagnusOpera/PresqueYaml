@@ -32,24 +32,30 @@ titi"
 // ####################################################################################################################
 
 [<Test>]
-let ``multiline folded scalar is error``() =
+let ``multiline folded scalar is valid``() =
+    let expected = YamlNode.Scalar "toto\ntiti"
+
     let yaml = "|
 toto
 titi"
 
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 2, column 1)") typeof<System.Exception>
+    yaml
+    |> Parser.read
+    |> should equal expected
 
 // ####################################################################################################################
 
 [<Test>]
-let ``multiline literal scalar is error``() =
+let ``multiline literal scalar is valid``() =
+    let expected = YamlNode.Scalar "toto titi"
+
     let yaml = ">
 toto
 titi"
 
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 2, column 1)") typeof<System.Exception>
+    yaml
+    |> Parser.read
+    |> should equal expected
 
 // ####################################################################################################################
 

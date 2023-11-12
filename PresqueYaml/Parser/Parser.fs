@@ -73,11 +73,12 @@ let read (yamlString: string) : YamlNode =
             | currentBlock :: parentBlocks ->
                 let currentLine = lines[currentLineNumber]
 
+                match currentLine with
                 // is the line empty or comment ?
-                let emptyLine = currentLine.Trim()
-                if String.IsNullOrEmpty emptyLine || emptyLine.StartsWith("#") then
+                | Regex "^( *)(?:#|$)" [_] ->
                     parseNode states accept currentBlock.Indent (currentLineNumber+1)
-                else
+
+                | _ ->
                     // need to dedent ?
                     match tryFindNoneWhitespace currentLine 0 currentBlock.Indent with
                     | Some idx when currentBlock.Line < currentLineNumber && idx < currentBlock.Indent ->
