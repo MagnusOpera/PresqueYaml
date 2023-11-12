@@ -35,6 +35,12 @@ let read (yamlString: string) : YamlNode =
         let parsingError msg col = failwith $"{msg} (line {currentLineNumber + 1}, column {col + 1})"
 
         let prepareScalar (s: string) =
+
+            let s =
+                if Regex.IsMatch(s, "^ *((?<![\\\\])['\"])((?:.(?!(?<![\\\\])\\1))*.?)\\1 *$") then
+                    s.Trim().Substring(1, s.Length-2)
+                else s
+
             let value =
                 s.Replace("\\n", "\n")
                  .Replace("\\t", "\t")
