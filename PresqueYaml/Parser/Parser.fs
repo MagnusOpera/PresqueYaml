@@ -97,7 +97,7 @@ let read (yamlString: string) : YamlNode =
                                 let sequenceBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Sequence (List<YamlNode>()) }
                                 parseNode (sequenceBlock :: parentBlocks) accept idx currentLineNumber
                             // mapping
-                            | Regex "^( *)\w+:(?:(?: +[^ ])| *$)" [spaces] ->
+                            | Regex "^( *)[^ ]+:(?:(?: +[^ ])| *$)" [spaces] ->
                                 let idx = currentColNumber + spaces.Length
                                 let mappingBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Mapping (Dictionary<string, YamlNode>()) }
                                 parseNode (mappingBlock :: parentBlocks) accept idx currentLineNumber
@@ -129,6 +129,8 @@ let read (yamlString: string) : YamlNode =
                                 parseNode states accept currentBlock.Indent (currentLineNumber+1)
 
                         let sequenceBlock (state: List<YamlNode>) =
+
+
                             let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
                             match currentLine[idx] with
                             | '-' ->
