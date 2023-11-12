@@ -34,15 +34,6 @@ let read (yamlString: string) : YamlNode =
 
         let parsingError msg col = failwith $"{msg} (line {currentLineNumber + 1}, column {col + 1})"
 
-        let tryFindNoneWhitespace (line: string) startIndex stopIndex =
-            let mutable pos = startIndex
-            while pos < stopIndex && line[pos] = ' ' do
-                pos <- pos + 1
-            if pos = stopIndex then None
-            else
-                if line[pos] = '\t' then parsingError "Unexpected tab character" pos
-                Some pos
-
         let prepareScalar (s: string) =
             let value =
                 s.Replace("\\n", "\n")
@@ -81,17 +72,21 @@ let read (yamlString: string) : YamlNode =
             | currentBlock :: parentBlocks ->
                 let currentLine = lines[currentLineNumber]
 
-                match tryFindNoneWhitespace currentLine 0 currentLine.Length with
+                let headline = currentLine.TrimStart()
+                let leadingSpaces = currentLine.Length - headline.Length
+
+                match headline with
                 // empty line
-                | None ->
+                | "" ->
                     parseNode states accept currentBlock.Indent (currentLineNumber+1)
 
                 // comment line
-                | Some idx when currentLine[idx] = '#' ->
+                | _ when headline[0] = '#' ->
                     parseNode states accept currentBlock.Indent (currentLineNumber+1)
 
                 // dedent
-                | Some idx when currentBlock.Line < currentLineNumber && idx < currentBlock.Indent ->
+                | _ when currentBlock.Line < currentLineNumber && leadingSpaces < currentBlock.Indent ->
+                    let idx = currentLine.Length - headline.Length
                     match states |> List.tryFind (fun state -> state.Indent = idx) with
                     | None -> parsingError "Indentation error" idx
                     | _ -> dedent()
