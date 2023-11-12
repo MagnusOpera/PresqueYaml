@@ -146,19 +146,17 @@ let read (yamlString: string) : YamlNode =
                             parsingError "Expecting sequence" currentBlock.Indent
 
                     let mappingBlock (state: Dictionary<string, YamlNode>) =
-                        let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
-                        match currentLine[idx] with
-                        | _ ->
-                            let colonIndex = currentLine.IndexOf(':', currentColNumber)
-                            if colonIndex = -1 then parsingError "Expecting mapping" currentBlock.Indent
-
+                        match blockContent with
+                        | Regex "^([^ ]+:(?: | *$))" [spaces] ->
                             let accept value =
-                                let key = currentLine.Substring(idx, colonIndex - idx).Trim()
+                                let key = spaces.Replace(":", "").TrimEnd()
                                 state[key] <- value
                                 parseNode states accept currentBlock.Indent
 
                             let unknownBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent+1; NodeState.BlockInfo = BlockInfo.Unknown }
-                            parseNode (unknownBlock :: states) accept (colonIndex+1) currentLineNumber
+                            parseNode (unknownBlock :: states) accept (currentColNumber+spaces.Length) currentLineNumber
+                        | _ ->
+                            parsingError "Expecting mapping" currentBlock.Indent
 
                     match currentBlock.BlockInfo with
                     | BlockInfo.Unknown -> unknownBlock()
