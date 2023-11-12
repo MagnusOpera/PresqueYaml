@@ -82,7 +82,9 @@ let read (yamlString: string) : YamlNode =
                     // need to dedent ?
                     match currentLine with
                     | Regex "^( *)(?:[^ ])" [spaces] when currentBlock.Line < currentLineNumber && spaces.Length < currentBlock.Indent ->
-                        dedent()
+                        match states |> List.tryFind (fun state -> state.Indent = spaces.Length) with
+                        | None -> parsingError "Indentation error" spaces.Length
+                        | _ -> dedent()
 
                     | _ ->
                         let unknownBlock() =
@@ -161,6 +163,6 @@ let read (yamlString: string) : YamlNode =
                         | BlockInfo.Mapping state -> mappingBlock state
 
     let startBlock = { NodeState.Line = 0; NodeState.Indent = 0; NodeState.BlockInfo = BlockInfo.Unknown }
-    let accept value currentLineNumber = value,currentLineNumber
+    let accept value _ = value,-1
     let node, _ = parseNode [startBlock] accept 0 0
     node

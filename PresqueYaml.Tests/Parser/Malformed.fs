@@ -34,10 +34,10 @@ let ``mapping must have same indentation 2/2``() =
 titi:
   toto:
     tutu: pouet
-  tata: ddqddwqwd"
+   tata: ddqddwqwd"
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 3, column 3)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 5, column 4)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -50,7 +50,7 @@ let ``children sequence of mapping must have same indentation``() =
 "
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 3, column 3)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
 

@@ -86,7 +86,7 @@ let ``nested inline sequence is valid``() =
   -    John Doe
   -   Jane Doe
 -- F#
-  -    Python
+ -    Python
 
 
 "
