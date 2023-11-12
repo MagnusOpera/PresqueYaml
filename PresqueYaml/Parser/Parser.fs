@@ -43,6 +43,12 @@ let read (yamlString: string) : YamlNode =
                 if line[pos] = '\t' then parsingError "Unexpected tab character" pos
                 Some pos
 
+        let prepareScalar (s: string) =
+            let value =
+                s.Replace("\\n", "\n")
+                 .Replace("\\t", "\t")
+            value
+
         let dedent () =
             let node =
                 match states with
@@ -114,13 +120,21 @@ let read (yamlString: string) : YamlNode =
                         | Regex "^( *\|)(?: *$)" [_] ->
                             let scalarBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Literal, List<string>()) }
                             parseNode (scalarBlock :: parentBlocks) accept currentBlock.Indent (currentLineNumber+1)
+                        // compact sequence
+                        | Regex "^ *\[([^\]]*)\] *$" [content] ->
+                            let value =
+                                content.Split(',')
+                                |> Seq.map (fun item -> item.Trim() |> prepareScalar |> YamlNode.Scalar)
+                                |> List.ofSeq
+                                |> YamlNode.Sequence
+                            accept value (currentLineNumber+1)
                         | _ ->
                             // if no content then postpone the decision
                             if String.IsNullOrWhiteSpace(blockContent) then
                                 parseNode states accept currentBlock.Indent (currentLineNumber+1)
                             else
-                                let scalarNode = { NodeState.Line = currentLineNumber; NodeState.Indent = currentColNumber; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
-                                parseNode (scalarNode :: parentBlocks) accept currentColNumber currentLineNumber
+                                let value = blockContent.Trim() |> prepareScalar |> YamlNode.Scalar
+                                accept value (currentLineNumber+1)
 
                     let scalarBlock (state: List<string>) =
                         let value, shiftIndent =
@@ -129,7 +143,7 @@ let read (yamlString: string) : YamlNode =
                             else
                                 let newValue = blockContent.TrimStart()
                                 newValue, blockContent.Length - newValue.Length
-                        let value = value.TrimEnd()
+                        let value = value.TrimEnd() |> prepareScalar
                         state.Add(value)
                         parseNode states accept (currentBlock.Indent+shiftIndent) (currentLineNumber+1)
 

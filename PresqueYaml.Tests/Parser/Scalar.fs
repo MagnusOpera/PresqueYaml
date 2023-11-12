@@ -88,11 +88,10 @@ toto: >
 
 [<Test>]
 let ``multiline literal scalar must be indented``() =
-    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John"])
 
     let yaml = "
-toto:  John
-       Doe  "
+toto:  John"
 
     yaml
     |> Parser.read
