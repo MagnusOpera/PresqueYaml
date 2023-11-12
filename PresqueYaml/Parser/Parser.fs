@@ -114,16 +114,13 @@ let read (yamlString: string) : YamlNode =
                         | Regex "^( *\|)(?: *$)" [_] ->
                             let scalarBlock = { NodeState.Line = currentLineNumber; NodeState.Indent = currentBlock.Indent; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Literal, List<string>()) }
                             parseNode (scalarBlock :: parentBlocks) accept currentBlock.Indent (currentLineNumber+1)
-                        // if no content then postpone the decision
-                        | Regex "^( *)$" [_] ->
-                            parseNode states accept currentBlock.Indent (currentLineNumber+1)
-                        // if content then folded scalar
-                        | Regex "^( *)[^ ]" [spaces] ->
-                            let idx = currentColNumber + spaces.Length
-                            let scalarNode = { NodeState.Line = currentLineNumber; NodeState.Indent = idx; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
-                            parseNode (scalarNode :: parentBlocks) accept idx currentLineNumber
                         | _ ->
-                            parsingError "Unexpected content" currentBlock.Indent
+                            // if no content then postpone the decision
+                            if String.IsNullOrWhiteSpace(blockContent) then
+                                parseNode states accept currentBlock.Indent (currentLineNumber+1)
+                            else
+                                let scalarNode = { NodeState.Line = currentLineNumber; NodeState.Indent = currentColNumber; NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>()) }
+                                parseNode (scalarNode :: parentBlocks) accept currentColNumber currentLineNumber
 
                     let scalarBlock (state: List<string>) =
                         let idx = tryFindNoneWhitespace currentLine currentColNumber currentLine.Length |> Option.defaultValue 0
