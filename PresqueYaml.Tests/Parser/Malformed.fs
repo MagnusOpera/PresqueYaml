@@ -43,9 +43,11 @@ titi:
 
 [<Test>]
 let ``children sequence of mapping must have same indentation``() =
-    let yaml = "users:
+    let yaml = "
+  - tralala
  - toto
-  - tralala"
+
+"
 
     (fun () -> yaml |> Parser.read |> ignore)
     |> should (throwWithMessage "Indentation error (line 3, column 3)") typeof<System.Exception>
@@ -61,7 +63,7 @@ languages:
 - Python"
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 4, column 1)") typeof<System.Exception>
+    |> should (throwWithMessage "Expecting mapping (line 4, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
 
@@ -71,4 +73,4 @@ let ``mapping type mismatch is error``() =
 - toto"
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
+    |> should (throwWithMessage "Expecting mapping (line 2, column 1)") typeof<System.Exception>

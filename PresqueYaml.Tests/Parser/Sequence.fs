@@ -111,15 +111,14 @@ let ``list supports no spaces after hyphen``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``list supports no spaces after hyphen in mapping``() =
+let ``list must be followed with at least on space after hyphen in mapping``() =
     let expected = YamlNode.Mapping (Map [ "users", YamlNode.Sequence [ YamlNode.Scalar "toto"; YamlNode.Scalar "titi" ] ])
 
     let yaml = "users:
   -toto
   - titi"
 
-    yaml
-    |> Parser.read
-    |> should equal expected
+    (fun () -> yaml |> Parser.read |> ignore)
+    |> should (throwWithMessage "Unexpected content (line 2, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################

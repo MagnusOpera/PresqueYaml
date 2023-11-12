@@ -66,9 +66,10 @@ let ``scalar only with spaces is valid``() =
 
 [<Test>]
 let ``multiline folded scalar in mapping is valid``() =
-    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John\nDoe"])
+    let expected = YamlNode.Mapping (Map [ "toto", YamlNode.Scalar "John Doe"])
 
-    let yaml = "toto: >
+    let yaml = "
+toto: >
   John
   Doe  "
 
