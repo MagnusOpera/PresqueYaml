@@ -80,8 +80,8 @@ let read (yamlString: string) : YamlNode =
 
                 | _ ->
                     // need to dedent ?
-                    match tryFindNoneWhitespace currentLine 0 currentBlock.Indent with
-                    | Some idx when currentBlock.Line < currentLineNumber && idx < currentBlock.Indent ->
+                    match currentLine with
+                    | Regex "^( *)(?:[^ ])" [spaces] when currentBlock.Line < currentLineNumber && spaces.Length < currentBlock.Indent ->
                         dedent()
 
                     | _ ->
