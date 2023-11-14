@@ -8,7 +8,7 @@ type YamlConverter() =
 
 type YamlSerializerOptions() =
     member val Converters: YamlConverter list = [] with get, set
-    member val NoneIsDefault: bool = true with get, set
+    member val NoneIsEmpty: bool = true with get, set
     member this.GetConverter(typeToConvert:Type): YamlConverter =
         this.Converters
         |> List.find (fun converter -> converter.CanConvert typeToConvert)
