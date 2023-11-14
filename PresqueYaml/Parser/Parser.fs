@@ -65,13 +65,12 @@ let read (yamlString: string) : YamlNode =
                     | BlockInfo.Unknown ->
                         YamlNode.None
                     | BlockInfo.Scalar (mode, state) ->
-                        let data =
+                        let modedData =
                             match mode with
                             | ScalarMode.Folded -> String.Join(' ', state)
                             | ScalarMode.Literal -> String.Join('\n', state)
-
                         let data =
-                            match data |> convertScalar with
+                            match modedData |> convertScalar with
                             | Some data -> data
                             | _ -> parsingError "Invalid quoted string" currentBlock.Indent
                         YamlNode.Scalar data
