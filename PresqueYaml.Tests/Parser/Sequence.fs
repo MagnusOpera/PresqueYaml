@@ -20,6 +20,18 @@ let ``sequence only is valid``() =
 // ####################################################################################################################
 
 [<Test>]
+let ``compact sequence is valid``() =
+    let expected = YamlNode.Mapping (Map [ "users", YamlNode.Sequence [YamlNode.Scalar "toto"; YamlNode.Scalar "titi"] ])
+
+    let yaml = "users: [ toto, titi ]"
+
+    yaml
+    |> Parser.read
+    |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
 let ``values in sequence are trimmed``() =
     let expected = YamlNode.Sequence [YamlNode.Scalar "toto"; YamlNode.Scalar "titi"]
 
@@ -74,7 +86,7 @@ let ``mapping in sequence is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``compact sequence in sequence is valid``() =
+let ``nested inline sequence is valid``() =
     let expected =
         YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "John Doe"
                                                 YamlNode.Scalar "Jane Doe" ]
@@ -82,10 +94,13 @@ let ``compact sequence in sequence is valid``() =
                                                 YamlNode.Scalar "Python" ] ]
 
     let yaml = "
-- -    John Doe
+-
+  -    John Doe
   -   Jane Doe
 - - F#
   -    Python
+
+
 "
 
     yaml
@@ -95,22 +110,9 @@ let ``compact sequence in sequence is valid``() =
 // ####################################################################################################################
 
 [<Test>]
-let ``type mismatch in list is error``() =
+let ``sequence fails if no spaces after hyphen``() =
     let yaml = "- toto
 -titi"
 
     (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 2, column 1)") typeof<System.Exception>
-
-// ####################################################################################################################
-
-[<Test>]
-let ``type mismatch scalar first in list is error``() =
-    let yaml = "users:
-  -toto
-  - titi"
-
-    (fun () -> yaml |> Parser.read |> ignore)
-    |> should (throwWithMessage "Type mismatch (line 3, column 3)") typeof<System.Exception>
-
-// ####################################################################################################################
+    |> should (throwWithMessage "Expecting sequence (line 2, column 1)") typeof<System.Exception>

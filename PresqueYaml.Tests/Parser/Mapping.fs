@@ -85,7 +85,7 @@ user2:
 // ####################################################################################################################
 
 [<Test>]
-let ``compact nested mapping is valid``() =
+let ``inline nested mapping is valid``() =
     let expected =
         YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
                                                                  "age", YamlNode.None ] )
@@ -143,10 +143,13 @@ let ``mapping value override must be on same line``() =
     let expected =
         YamlNode.Mapping (Map [ "user", YamlNode.Mapping (Map ["name", YamlNode.Scalar "toto\ntiti"]) ])
 
-    let yaml = "user:
-  name:
+    let yaml = "
+user:
+  name: |
    toto
-   titi"
+   titi
+
+"
 
     yaml
     |> Parser.read

@@ -10,17 +10,11 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
     let recordType = typeof<'T>
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
     let fields = FSharpType.GetRecordFields(recordType, true)
-    let fieldCount = fields.Length
 
     let defaultFields =
-        let arr = Array.zeroCreate fieldCount
-        
         fields
-        |> Array.iteri (fun i field ->
-            match Helpers.tryGetNullValue field.PropertyType with
-            | ValueSome v -> arr[i] <- v
-            | ValueNone -> ())
-        arr
+        |> Array.map (fun field ->
+            YamlSerializer.Deserialize(YamlNode.None, field.PropertyType, options))
 
     let fieldIndices =
         fields
@@ -37,7 +31,7 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
                 | YamlNode.None -> ()
                 | _ ->
                     match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
-                    | Some index -> 
+                    | Some index ->
                         let propType = fields[index].PropertyType
                         let data = YamlSerializer.Deserialize(node, propType, options)
                         fieldValues[index] <- data

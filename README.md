@@ -10,18 +10,14 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * C# support: List<>, Dictionary<,>, Nullable<> and POCO (via unique constructor).
 * F# support: list, map, option, unit and record.
 
-Again, `PresqueYaml` does not offer complete yaml support and uses some non-standard behavior.
+Again, `PresqueYaml` does not offer complete yaml support.
 
 Here are some key differences:
-* empty lines are ignored.
-* scalar are always literal by default (\n between items) - you can still use | or > if you want to.
-* multi-lines scalar must be indented relative to start of first item.
-* inline sequences do not support quoted strings. Use standard sequence if you need to.
-* quoted strings are either single or double quoted strings - they are the same. Only newlines are escaped.
-* compact form (both sequence and mapping) can be nested at will on same line.
+* quoted strings are either single or double quoted strings - they are the same.
+* quoted string keys are not allowed.
 * mapping can have duplicated keys (last key wins).
-* empty document is a valid document.
 * no support for multiple document in one yaml file.
+* no schema support.
 
 All in all, `PresqueYaml` does support this kind of document (⏎ to highlight spaces in document):
 ```yaml
@@ -38,8 +34,8 @@ user1:⏎
 ⏎
    # this is a comment⏎
 user2:⏎
-  'first name': 'J a n e '    ⏎
-  'last name':   Doe  ⏎
+  firstname: 'J a n e '    ⏎
+  lastname:   Doe  ⏎
   ⏎
   age: 42⏎
   languages:⏎
@@ -47,7 +43,7 @@ user2:⏎
     -   Python⏎
 ⏎
 user2:⏎
-  'first name': Toto⏎
+  firstname: Toto⏎
 ⏎
   age: 666⏎
   languages: [ F# |> ❤️,⏎
@@ -72,7 +68,7 @@ YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar
                                                          "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
                                                                                           YamlNode.None
                                                                                           YamlNode.Scalar "F#" ] ] )
-                        "user2", YamlNode.Mapping (Map [ "first name", YamlNode.Scalar "Toto"
+                        "user2", YamlNode.Mapping (Map [ "firstname", YamlNode.Scalar "Toto"
                                                          "age", YamlNode.Scalar "666"
                                                          "languages", YamlNode.Sequence [ YamlNode.Scalar "F# |> ❤️"
                                                                                           YamlNode.Scalar "Python" ] ] )

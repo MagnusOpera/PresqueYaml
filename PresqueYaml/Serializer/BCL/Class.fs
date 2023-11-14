@@ -8,17 +8,11 @@ type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
     let classType = typeof<'T>
     let ctor = classType.GetConstructors() |> Seq.exactlyOne
     let parameters = ctor.GetParameters()
-    let parameterCount = parameters.Length
 
     let defaultParameters =
-        let arr = Array.zeroCreate parameterCount
-        
         parameters
-        |> Array.iteri (fun i parameter ->
-            match Helpers.tryGetNullValue parameter.ParameterType with
-            | ValueSome v -> arr[i] <- v
-            | ValueNone -> ())
-        arr
+        |> Array.map (fun parameter ->
+            YamlSerializer.Deserialize(YamlNode.None, parameter.ParameterType, options))
 
     let parameterIndices =
         parameters
@@ -36,7 +30,7 @@ type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
                 | YamlNode.None -> ()
                 | _ ->
                     match parameterIndices |> Map.tryFind (name.ToLowerInvariant()) with
-                    | Some index -> 
+                    | Some index ->
                         let propType = parameters[index].ParameterType
                         let data = YamlSerializer.Deserialize(node, propType, options)
                         parameterValues[index] <- data
