@@ -28,14 +28,14 @@ type YamlSerializer() =
     static member Deserialize (node:YamlNode, returnType:Type, options:YamlSerializerOptions): obj =
         let converter = options.GetConverter returnType
 
-        let converter = 
+        let converter =
             match converter with
             | :? YamlConverterFactory as factory ->
                 let converter = factory.CreateConverter(returnType, options)
                 converter
             | _ -> converter
 
-        let readMethodInfo = converter.GetType().GetMethod("Read")
+        let readMethodInfo = converter.GetType() |> TypeCache.getRead
         readMethodInfo.Invoke(converter, [| node; returnType |])
 
     static member Deserialize<'T>(node:YamlNode, options:YamlSerializerOptions): 'T =

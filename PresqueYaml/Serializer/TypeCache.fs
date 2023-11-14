@@ -1,4 +1,5 @@
 module TypeCache
+open System.Reflection
 open FSharp.Reflection
 open System.Collections.Generic
 open System
@@ -39,6 +40,11 @@ let private matchType (ty: Type) =
     elif ty.IsArray then TypeKind.Array
     else TypeKind.Other
 
+let private readMethod (ty: Type) =
+    ty.GetMethod("Read")
 
 let private cache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, TypeKind>()
 let getKind ty = cache.GetOrAdd(ty, matchType)
+
+let private readCache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, MethodInfo>()
+let getRead ty = readCache.GetOrAdd(ty, readMethod)
