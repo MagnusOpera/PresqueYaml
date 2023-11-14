@@ -4,12 +4,12 @@ open System.Collections.Generic
 open System.Text.RegularExpressions
 
 [<RequireQualifiedAccess>]
-type ScalarMode =
+type private ScalarMode =
     | Folded // >: newline as space
     | Literal // |: newline as is
 
 [<RequireQualifiedAccess>]
-type BlockInfo =
+type private BlockInfo =
     | Unknown
     | Scalar of mode:ScalarMode * state:List<string>
     | Sequence of state:List<YamlNode>
