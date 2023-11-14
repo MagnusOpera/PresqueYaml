@@ -34,6 +34,28 @@ let read (yamlString: string) : YamlNode =
 
         let parsingError msg col = failwith $"{msg} (line {currentLineNumber + 1}, column {col + 1})"
 
+
+        let removeDoubleQuotes (s: string) =
+            if String.IsNullOrEmpty s then Some s
+            elif s[0] = '\'' && s.Length > 1 then
+                if s[s.Length - 1] = '\'' then s.Substring(1, s.Length-2) |> Some
+                else None
+            elif s[0] = '\"' && s.Length > 1 then
+                if s[s.Length - 1] = '\"' then s.Substring(1, s.Length-2) |> Some
+                else None
+            else Some s
+
+        let removeEscapes (s: string) =
+            s.Replace("\\n", "\n")
+             .Replace("\\t", "\t")
+             .Replace("\\r", "\r")
+             .Replace("\\s", " ")
+
+        let convertScalar (s: string) =
+            s
+            |> removeDoubleQuotes
+            |> Option.map removeEscapes
+
         let dedent () =
             let node =
                 match states with
@@ -48,8 +70,13 @@ let read (yamlString: string) : YamlNode =
                             match mode with
                             | ScalarMode.Folded -> String.Join(' ', state)
                             | ScalarMode.Literal -> String.Join('\n', state)
-                        data.Replace("\\n", "\n").Replace("\\t", "\t").Replace("\\r", "\r").Replace("\\s", " ")
-                        |> YamlNode.Scalar
+
+                        let data =
+                            match data |> convertScalar with
+                            | Some data -> data
+                            | _ -> parsingError "Invalid quoted string" currentBlock.Indent
+
+                        YamlNode.Scalar data
                     | BlockInfo.Sequence state ->
                         let data = state |> List.ofSeq
                         YamlNode.Sequence data
@@ -123,7 +150,12 @@ let read (yamlString: string) : YamlNode =
                             if String.IsNullOrWhiteSpace(blockContent) then
                                 parseNode states accept currentBlock.Indent (currentLineNumber+1)
                             else
-                                let value = YamlNode.Scalar (blockContent.Trim())
+                                let data =
+                                    match blockContent.Trim() |> convertScalar with
+                                    | Some data -> data
+                                    | _ -> parsingError "Invalid quoted string" currentBlock.Indent
+
+                                let value = YamlNode.Scalar data
                                 accept value (currentLineNumber+1)
 
                     let scalarBlock (state: List<string>) =
