@@ -158,11 +158,10 @@ let read (yamlString: string) : YamlNode =
                                 parseNode states accept currentBlock.Indent (currentLineNumber+1)
                             else
                                 // compact scalar
-                                let data = blockContent.Trim()
                                 let scalarBlock = { NodeState.Line = currentLineNumber
-                                                    NodeState.Indent = currentBlock.Indent
-                                                    NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Literal, List<string>([data])) }
-                                dedent (scalarBlock::parentBlocks) (currentLineNumber+1)
+                                                    NodeState.Indent = currentColNumber
+                                                    NodeState.BlockInfo = BlockInfo.Scalar (ScalarMode.Folded, List<string>([])) }
+                                parseNode (scalarBlock::parentBlocks) accept currentColNumber currentLineNumber
 
                     let scalarBlock (state: List<string>) =
                         let value, shiftIndent =
