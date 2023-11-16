@@ -5,6 +5,7 @@ let options =
     let options = YamlSerializerOptions()
     options.Converters <-
         [
+            YamlNodeConverter()
             ConvertibleConverterFactory()
             NullableConverterFactory()
             ArrayConverterFactory()
