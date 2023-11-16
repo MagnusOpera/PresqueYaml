@@ -9,6 +9,7 @@
     <Compile Include="Parser\YamlParser.fs" />
     <Compile Include="Serializer\TypeCache.fs" />
     <Compile Include="Serializer/Serializer.fs" />
+    <Compile Include="Serializer\YamlNode.fs" />
     <Compile Include="Serializer/BCL/Convertible.fs" />
     <Compile Include="Serializer/BCL/Collections.fs" />
     <Compile Include="Serializer/BCL/Class.fs" />
