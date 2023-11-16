@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Serializer.FSharpUnit
+module MagnusOpera.PresqueYaml.Tests.Serializer.FSharpUnit
 
-open PresqueYaml
-open PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -16,5 +16,5 @@ type Pouet = {
 let ``unit conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<unit>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<unit>(node, Defaults.options)
     |> should equal (())

@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Parser.Malformed
+module MagnusOpera.PresqueYaml.Tests.Parser.Malformed
 
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 open NUnit.Framework
 open FsUnit
 

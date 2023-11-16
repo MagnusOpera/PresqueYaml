@@ -1,4 +1,4 @@
-namespace PresqueYaml.Serializer
+namespace MagnusOpera.PresqueYaml.Serializer
 open System
 open TypeCache
 

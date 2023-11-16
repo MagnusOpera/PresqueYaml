@@ -1,5 +1,5 @@
-namespace PresqueYaml.Serializer
-open PresqueYaml
+namespace MagnusOpera.PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
 open System
 
 type FSharpListConverter<'T>(options:YamlSerializerOptions) =

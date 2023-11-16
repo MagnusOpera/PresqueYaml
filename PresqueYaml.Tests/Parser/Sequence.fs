@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Parser.Sequence
+module MagnusOpera.PresqueYaml.Tests.Parser.Sequence
 
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 open NUnit.Framework
 open FsUnit
 

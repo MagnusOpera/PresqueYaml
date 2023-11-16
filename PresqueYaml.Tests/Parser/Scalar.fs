@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Parser.Scalar
+module MagnusOpera.PresqueYaml.Tests.Parser.Scalar
 
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 open NUnit.Framework
 open FsUnit
 

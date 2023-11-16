@@ -1,6 +1,6 @@
-namespace PresqueYaml.Serializer
+namespace MagnusOpera.PresqueYaml.Serializer
 open System.Collections.Generic
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 open System
 
 type ListConverter<'T>(options:YamlSerializerOptions) =

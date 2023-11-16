@@ -1,4 +1,4 @@
-module PresqueYaml.YamlParser
+module MagnusOpera.PresqueYaml.YamlParser
 open System
 open System.Collections.Generic
 open System.Text.RegularExpressions

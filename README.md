@@ -128,7 +128,7 @@ YamlNode.Mapping (Map [ // scalars
 
 # Usage
 `PresqueYaml` can be used both in F# and C#.
-F# is preferred of course to explore the representation model.
+F# is preferred of course to explore the representation model (exposed in `MagnusOpera.PresqueYaml` namespace).
 
 Representation model is:
 ```ocaml
@@ -144,7 +144,7 @@ type YamlNode =
 In order to convert a yaml document to a representation model, use:
 ```ocaml
 let yaml = "value: toto"
-let node = PresqueYaml.YamlParser.read yaml
+let node = MagnusOpera.PresqueYaml.YamlParser.read yaml
 // node is of type PresqueYaml.YamlNode
 ```
 
@@ -152,14 +152,14 @@ let node = PresqueYaml.YamlParser.read yaml
 To convert a representation model to an .net object model, use:
 ```ocaml
 let node = ... // representation model
-let map = PresqueYaml.YamlSerializer.Deserialize<Map<string, string>>(node, PresqueYaml.Defaults.options)
+let map = MagnusOpera.PresqueYaml.YamlSerializer.Deserialize<Map<string, string>>(node, Defaults.options)
 // map is of type Map<string, string>
 ```
 
 There is also a non-generic `Deserialize` method if you need more flexibility but for most cases, generic one shall be sufficient.
 
 ### Customization
-`YamlDeserializer` must be given a configuration. This configuration tells:
+`YamlDeserializer` must be given a configuration. This configuration instructs:
 * which mappers to use.
 * how to deserialize `YamlNode.None` regarding collections.
 

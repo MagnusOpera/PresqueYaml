@@ -1,5 +1,5 @@
-namespace PresqueYaml.Serializer
-open PresqueYaml
+namespace MagnusOpera.PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
 open System
 
 type NullableConverter<'T when 'T: (new: unit -> 'T) and 'T: struct and 'T :> ValueType>(options:YamlSerializerOptions) =

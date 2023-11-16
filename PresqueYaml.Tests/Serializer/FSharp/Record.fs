@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Serializer.Record
+module MagnusOpera.PresqueYaml.Tests.Serializer.Record
 
-open PresqueYaml
-open PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -34,7 +34,7 @@ let ``record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
     
-    YamlSerializer.Deserialize<Toto>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<Toto>(node, Defaults.options)
     |> should equal expected
 
 
@@ -57,5 +57,5 @@ let ``option record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
     
-    YamlSerializer.Deserialize<Toto option>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<Toto option>(node, Defaults.options)
     |> should equal expected
