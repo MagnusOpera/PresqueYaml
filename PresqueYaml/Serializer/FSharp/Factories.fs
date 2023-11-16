@@ -27,7 +27,7 @@ type FSharpCollectionsConverterFactory() =
         :?> YamlConverter
 
 
-type FSharpOptionConverterFactory() =
+type FSharpUnionConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
@@ -37,6 +37,7 @@ type FSharpOptionConverterFactory() =
                 let gen = typeToConvert.GetGenericTypeDefinition()
                 if gen = typedefof<option<_>> then true
                 elif gen = typedefof<voption<_>> then true
+                elif gen = typedefof<YamlNodeValue<_>> then true
                 else false
             else false
         | _ -> false

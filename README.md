@@ -9,7 +9,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Map representation model to an object model:
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
-  * YamlNode: this is useful for structure validation (object model driven schema).
+  * YamlNode/YamlNodeValue<>: this is useful for structure validation (object model driven schema).
 * Support for net7.0+ only !
 * Extensible
 * It is small and easily maintainable
@@ -165,6 +165,19 @@ let map = MagnusOpera.PresqueYaml.YamlSerializer.Deserialize<Map<string, string>
 ```
 
 There is also a non-generic `Deserialize` method if you need more flexibility but for most cases, generic one shall be sufficient.
+
+### Special types
+
+By default, `PresqueYaml` manages:
+* Byte, Char, Int16, UInt16, Int32, UInt32, Int64, UInt64, String
+* C# Array, List<_>, Dictionary<string, _>, Nullable<_>, class (must define primary constructor only)
+* F# list<_>, Set<_>, Map<string, _>, option, unit, record
+* YamlNode and YamlNodeValue<_>
+
+`YamlNodeValue<_>` allows to discover if a value:
+* has not been provided (Undefined)
+* has not been set (None)
+* has been set (Value)
 
 ### Customization
 `YamlDeserializer` must be given a configuration. This configuration instructs:

@@ -11,8 +11,7 @@ type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
 
     let defaultParameters =
         parameters
-        |> Array.map (fun parameter ->
-            YamlSerializer.Deserialize(YamlNode.None, parameter.ParameterType, options))
+        |> Array.map (fun parameter -> YamlSerializer.Default(parameter.ParameterType, options))
 
     let parameterIndices =
         parameters

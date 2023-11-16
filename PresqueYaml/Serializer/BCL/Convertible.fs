@@ -5,6 +5,10 @@ open System
 type ConvertibleConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T>()
 
+    override _.Default _ =
+        if options.NoneIsEmpty then Unchecked.defaultof<'T>
+        else failwith "Failed to convert None to convertible"
+
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->

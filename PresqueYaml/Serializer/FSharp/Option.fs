@@ -7,7 +7,7 @@ type FSharpOptionConverter<'T>(options:YamlSerializerOptions) =
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
-        | YamlNode.None -> None
+        | YamlNode.None -> Option.None
         | _ ->
             let data = YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
             Some data

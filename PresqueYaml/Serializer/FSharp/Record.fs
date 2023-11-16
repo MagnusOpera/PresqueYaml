@@ -13,8 +13,7 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
 
     let defaultFields =
         fields
-        |> Array.map (fun field ->
-            YamlSerializer.Deserialize(YamlNode.None, field.PropertyType, options))
+        |> Array.map (fun field -> YamlSerializer.Default(field.PropertyType, options))
 
     let fieldIndices =
         fields

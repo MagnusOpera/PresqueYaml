@@ -6,6 +6,10 @@ open System
 type ListConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<List<'T>>()
 
+    override _.Default _ =
+        if options.NoneIsEmpty then List<'T>()
+        else null
+
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
@@ -20,6 +24,10 @@ type ListConverter<'T>(options:YamlSerializerOptions) =
 type DictionaryConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<Dictionary<string, 'T>>()
 
+    override _.Default _ =
+        if options.NoneIsEmpty then Dictionary<string, 'T>()
+        else null
+
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
@@ -31,8 +39,12 @@ type DictionaryConverter<'T>(options:YamlSerializerOptions) =
             |> Dictionary<string, 'T>
         | _ -> failwith $"Failed to convert to {typeToConvert.Name}"
 
-type ArrayConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
+type ArrayConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T[]>()
+
+    override _.Default _ =
+        if options.NoneIsEmpty then Array.empty
+        else null
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
