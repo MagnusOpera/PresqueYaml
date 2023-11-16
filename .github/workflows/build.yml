@@ -25,7 +25,7 @@ jobs:
         if: success() || failure()
         with:
           name: Unit Tests Report
-          path: **/*.trx
+          path: '**/*.trx'
           reporter: jest-junit
 
       - name: Build test Nuget
