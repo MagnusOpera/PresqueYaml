@@ -54,12 +54,12 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.300
+          dotnet-version: 7.0.400
 
       - name: Build nuget
-        run: make nuget config=Release version=${GITHUB_REF#refs/tags/} 
+        run: make nuget config=Release version=${GITHUB_REF#refs/tags/}
 
       - name: publish nuget
         run: make publish nugetkey=${{secrets.NUGET_KEY}}
