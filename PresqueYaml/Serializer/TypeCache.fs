@@ -1,4 +1,4 @@
-module TypeCache
+module private TypeCache
 open System.Reflection
 open FSharp.Reflection
 open System.Collections.Generic

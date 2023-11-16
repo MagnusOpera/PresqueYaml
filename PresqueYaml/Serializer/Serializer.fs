@@ -1,6 +1,6 @@
-namespace PresqueYaml.Serializer
+namespace MagnusOpera.PresqueYaml
 open System
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 
 type YamlConverter() =
     abstract CanConvert: typeToConvert:Type -> bool

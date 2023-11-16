@@ -1,5 +1,6 @@
-namespace PresqueYaml.Serializer
+namespace MagnusOpera.PresqueYaml.Serializer
 open System
+open MagnusOpera.PresqueYaml
 
 type FSharpCollectionsConverterFactory() =
     inherit YamlConverterFactory()
@@ -44,7 +45,7 @@ type FSharpOptionConverterFactory() =
         match TypeCache.getKind typeToConvert with
         | TypeCache.TypeKind.FsUnion ->
             let converterType = typedefof<FSharpOptionConverter<_>>
-            
+
             converterType
                 .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
                 .GetConstructor([| typeof<YamlSerializerOptions> |])

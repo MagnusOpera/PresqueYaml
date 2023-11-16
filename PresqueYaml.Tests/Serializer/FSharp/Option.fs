@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Serializer.FSharpOption
+module MagnusOpera.PresqueYaml.Tests.Serializer.FSharpOption
 
-open PresqueYaml
-open PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -11,7 +11,7 @@ open FsUnit
 let ``option some conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<int option>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<int option>(node, Defaults.options)
     |> should equal (Some 42)
 
 // ####################################################################################################################
@@ -20,5 +20,5 @@ let ``option some conversion``() =
 let ``option none conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<int option>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<int option>(node, Defaults.options)
     |> should equal None

@@ -1,4 +1,4 @@
-﻿namespace PresqueYaml
+﻿namespace MagnusOpera.PresqueYaml
 
 [<RequireQualifiedAccess>]
 type YamlNode =

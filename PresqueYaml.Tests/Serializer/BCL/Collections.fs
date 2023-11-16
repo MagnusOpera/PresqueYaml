@@ -1,8 +1,8 @@
-module PresqueYaml.Tests.Serializer.Collections
+module MagnusOpera.PresqueYaml.Tests.Serializer.Collections
 
 open System.Collections.Generic
-open PresqueYaml
-open PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -19,7 +19,7 @@ let ``list conversion``() =
         YamlNode.Scalar "4"
     ]
     
-    YamlSerializer.Deserialize<List<int>>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<List<int>>(node, Defaults.options)
     |> should equal expected
 
 // ####################################################################################################################
@@ -28,7 +28,7 @@ let ``list conversion``() =
 let ``empty list conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<List<string>>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<List<string>>(node, Defaults.options)
     |> should be Empty
 
 // ####################################################################################################################
@@ -44,7 +44,7 @@ let ``array conversion``() =
         YamlNode.Scalar "4"
     ]
     
-    YamlSerializer.Deserialize<int[]>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<int[]>(node, Defaults.options)
     |> should equal expected
 
 // ####################################################################################################################
@@ -53,7 +53,7 @@ let ``array conversion``() =
 let ``empty array conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<string[]>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<string[]>(node, Defaults.options)
     |> should be Empty
 
 // ####################################################################################################################
@@ -68,7 +68,7 @@ let ``dictionary conversion``() =
     let node = YamlNode.Mapping (Map ["toto", YamlNode.Scalar "42"
                                       "titi", YamlNode.Scalar "666"])
     
-    YamlSerializer.Deserialize<Dictionary<string, int>>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<Dictionary<string, int>>(node, Defaults.options)
     |> should equal expected
 
 // ####################################################################################################################
@@ -77,5 +77,5 @@ let ``dictionary conversion``() =
 let ``empty dictionary conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<Dictionary<string, int>>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<Dictionary<string, int>>(node, Defaults.options)
     |> should be Empty

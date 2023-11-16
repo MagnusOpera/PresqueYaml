@@ -1,6 +1,6 @@
-module PresqueYaml.Tests.Parser.Scalar
+module MagnusOpera.PresqueYaml.Tests.Parser.Scalar
 
-open PresqueYaml
+open MagnusOpera.PresqueYaml
 open NUnit.Framework
 open FsUnit
 
@@ -12,7 +12,7 @@ let ``scalar only is valid``() =
 
     let yaml = "toto"
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -26,7 +26,7 @@ toto
 titi"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -40,7 +40,7 @@ let ``multiline folded scalar is valid``() =
     titi"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -54,7 +54,7 @@ let ``multiline literal scalar is valid``() =
    titi"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -65,7 +65,7 @@ let ``scalar only with spaces is valid``() =
 
     let yaml = "  toto     "
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -80,7 +80,7 @@ toto: >
     Doe  "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 
@@ -94,5 +94,5 @@ let ``compact literal scalar is valid in mapping``() =
 toto:  John"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected

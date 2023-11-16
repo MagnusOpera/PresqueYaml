@@ -1,6 +1,6 @@
-// module PresqueYaml.Tests.Parser.Write
+// module MagnusOpera.PresqueYaml.Tests.Parser.Write
 
-// open PresqueYaml
+// open MagnusOpera.PresqueYaml
 // open NUnit.Framework
 // open FsUnit
 

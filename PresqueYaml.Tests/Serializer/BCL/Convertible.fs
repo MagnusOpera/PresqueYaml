@@ -1,7 +1,7 @@
-module PresqueYaml.Tests.Serializer.Convertible
+module MagnusOpera.PresqueYaml.Tests.Serializer.Convertible
 
-open PresqueYaml
-open PresqueYaml.Serializer
+open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -11,7 +11,7 @@ open FsUnit
 let ``short conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int16>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.Int16>(node, Defaults.options)
     |> should equal 42s
 
 // ####################################################################################################################
@@ -20,7 +20,7 @@ let ``short conversion``() =
 let ``ushort conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt16>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.UInt16>(node, Defaults.options)
     |> should equal 42us
 
 // ####################################################################################################################
@@ -29,7 +29,7 @@ let ``ushort conversion``() =
 let ``int conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int32>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.Int32>(node, Defaults.options)
     |> should equal 42
 
 // ####################################################################################################################
@@ -38,7 +38,7 @@ let ``int conversion``() =
 let ``default int conversion``() =
     let node = YamlNode.None
     
-    YamlSerializer.Deserialize<System.Int32>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.Int32>(node, Defaults.options)
     |> should equal 0
 
 // ####################################################################################################################
@@ -47,7 +47,7 @@ let ``default int conversion``() =
 let ``uint conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt32>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.UInt32>(node, Defaults.options)
     |> should equal 42u
 
 // ####################################################################################################################
@@ -56,7 +56,7 @@ let ``uint conversion``() =
 let ``long conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.Int64>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.Int64>(node, Defaults.options)
     |> should equal 42L
 
 // ####################################################################################################################
@@ -65,7 +65,7 @@ let ``long conversion``() =
 let ``ulong conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<System.UInt64>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<System.UInt64>(node, Defaults.options)
     |> should equal 42UL
 
 // ####################################################################################################################
@@ -74,7 +74,7 @@ let ``ulong conversion``() =
 let ``string conversion``() =
     let node = YamlNode.Scalar "42"
     
-    YamlSerializer.Deserialize<string>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<string>(node, Defaults.options)
     |> should equal "42"
 
 // ####################################################################################################################
@@ -83,7 +83,7 @@ let ``string conversion``() =
 let ``char conversion``() =
     let node = YamlNode.Scalar "A"
     
-    YamlSerializer.Deserialize<char>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<char>(node, Defaults.options)
     |> should equal 'A'
 
 
@@ -93,5 +93,5 @@ let ``char conversion``() =
 let ``byte conversion``() =
     let node = YamlNode.Scalar "A"
     
-    YamlSerializer.Deserialize<char>(node, PresqueYaml.Defaults.options)
+    YamlSerializer.Deserialize<char>(node, Defaults.options)
     |> should equal 65uy
