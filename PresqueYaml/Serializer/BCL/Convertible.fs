@@ -1,4 +1,4 @@
-namespace MagnusOpera.PresqueYaml.Serializer
+namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 open System
 

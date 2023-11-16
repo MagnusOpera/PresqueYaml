@@ -1,7 +1,6 @@
 module MagnusOpera.PresqueYaml.Tests.Serializer.Convertible
 
 open MagnusOpera.PresqueYaml
-open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -10,7 +9,7 @@ open FsUnit
 [<Test>]
 let ``short conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.Int16>(node, Defaults.options)
     |> should equal 42s
 
@@ -19,7 +18,7 @@ let ``short conversion``() =
 [<Test>]
 let ``ushort conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.UInt16>(node, Defaults.options)
     |> should equal 42us
 
@@ -28,7 +27,7 @@ let ``ushort conversion``() =
 [<Test>]
 let ``int conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.Int32>(node, Defaults.options)
     |> should equal 42
 
@@ -37,7 +36,7 @@ let ``int conversion``() =
 [<Test>]
 let ``default int conversion``() =
     let node = YamlNode.None
-    
+
     YamlSerializer.Deserialize<System.Int32>(node, Defaults.options)
     |> should equal 0
 
@@ -46,7 +45,7 @@ let ``default int conversion``() =
 [<Test>]
 let ``uint conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.UInt32>(node, Defaults.options)
     |> should equal 42u
 
@@ -55,7 +54,7 @@ let ``uint conversion``() =
 [<Test>]
 let ``long conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.Int64>(node, Defaults.options)
     |> should equal 42L
 
@@ -64,7 +63,7 @@ let ``long conversion``() =
 [<Test>]
 let ``ulong conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<System.UInt64>(node, Defaults.options)
     |> should equal 42UL
 
@@ -73,7 +72,7 @@ let ``ulong conversion``() =
 [<Test>]
 let ``string conversion``() =
     let node = YamlNode.Scalar "42"
-    
+
     YamlSerializer.Deserialize<string>(node, Defaults.options)
     |> should equal "42"
 
@@ -82,7 +81,7 @@ let ``string conversion``() =
 [<Test>]
 let ``char conversion``() =
     let node = YamlNode.Scalar "A"
-    
+
     YamlSerializer.Deserialize<char>(node, Defaults.options)
     |> should equal 'A'
 
@@ -92,6 +91,6 @@ let ``char conversion``() =
 [<Test>]
 let ``byte conversion``() =
     let node = YamlNode.Scalar "A"
-    
+
     YamlSerializer.Deserialize<char>(node, Defaults.options)
     |> should equal 65uy

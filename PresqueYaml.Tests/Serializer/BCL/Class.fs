@@ -1,7 +1,6 @@
 module MagnusOpera.PresqueYaml.Tests.Serializer.Class
 
 open MagnusOpera.PresqueYaml
-open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -28,7 +27,7 @@ let ``class conversion``() =
                                       "Int", YamlNode.Scalar "42"
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
-    
+
     let result = YamlSerializer.Deserialize<Toto>(node, Defaults.options)
     result.String |> should equal expected.String
     result.StringOption |> should equal expected.StringOption
@@ -47,7 +46,7 @@ let ``option class conversion``() =
                                       "Int", YamlNode.Scalar "42"
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
-    
+
     let result = YamlSerializer.Deserialize<Toto option>(node, Defaults.options)
     result |> Option.map (fun x -> x.String) |> should equal (expected |> Option.map (fun x -> x.String))
     result |> Option.map (fun x -> x.StringOption) |> should equal (expected |> Option.map (fun x -> x.StringOption))

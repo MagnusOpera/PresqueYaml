@@ -1,7 +1,6 @@
 module MagnusOpera.PresqueYaml.Tests.Serializer.FSharpCollections
 
 open MagnusOpera.PresqueYaml
-open MagnusOpera.PresqueYaml.Serializer
 open NUnit.Framework
 open FsUnit
 
@@ -17,7 +16,7 @@ let ``list conversion``() =
         YamlNode.Scalar "3"
         YamlNode.Scalar "4"
     ]
-    
+
     YamlSerializer.Deserialize<int list>(node, Defaults.options)
     |> should equal expected
 
@@ -26,7 +25,7 @@ let ``list conversion``() =
 [<Test>]
 let ``empty list conversion``() =
     let node = YamlNode.None
-    
+
     YamlSerializer.Deserialize<string list>(node, Defaults.options)
     |> should be Empty
 
@@ -43,7 +42,7 @@ let ``set conversion``() =
         YamlNode.Scalar "1"
         YamlNode.Scalar "4"
     ]
-    
+
     YamlSerializer.Deserialize<Set<int>>(node, Defaults.options)
     |> should equal expected
 
@@ -52,7 +51,7 @@ let ``set conversion``() =
 [<Test>]
 let ``empty set conversion``() =
     let node = YamlNode.None
-    
+
     YamlSerializer.Deserialize<Set<string>>(node, Defaults.options)
     |> should be Empty
 
@@ -67,7 +66,7 @@ let ``map conversion``() =
 
     let node = YamlNode.Mapping (Map ["toto", YamlNode.Scalar "42"
                                       "titi", YamlNode.Scalar "666"])
-    
+
     YamlSerializer.Deserialize<Map<string, int>>(node, Defaults.options)
     |> should equal expected
 
@@ -76,6 +75,6 @@ let ``map conversion``() =
 [<Test>]
 let ``empty map conversion``() =
     let node = YamlNode.None
-    
+
     YamlSerializer.Deserialize<Map<string, int>>(node, Defaults.options)
     |> should be Empty
