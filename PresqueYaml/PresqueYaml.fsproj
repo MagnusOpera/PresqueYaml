@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,5 +21,23 @@
     <Compile Include="Serializer/FSharp/Factories.fs" />
     <Compile Include="Defaults.fs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\NUGET.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec -->
+    <PackageId>MagnusOpera.PresqueYaml</PackageId>
+    <Authors>Pierre Chalamet</Authors>
+    <Title>MagnusOpera.PresqueYaml</Title>
+    <Description>PresqueYaml: a simple Yaml parser and deserializer for C# and F#.</Description>
+    <Copyright>Copyright 2023 Magnus Opera</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MagnusOpera/PresqueYaml</PackageProjectUrl>
+    <RepositoryUrl>git@github.com:MagnusOpera/PresqueYaml.git</RepositoryUrl>
+    <PackageTags>yaml;F#;C#</PackageTags>
+    <PackageReadmeFile>NUGET.md</PackageReadmeFile>
+  </PropertyGroup>
 
 </Project>
