@@ -1,4 +1,6 @@
-# PresqueYaml
+# ✨ MagnusOpera.PresqueYaml
+
+[![Build status](https://github.com/MagnusOpera/PresqueYaml/workflows/build/badge.svg)](https://github.com/MagnusOpera/PresqueYaml/actions?query=workflow%3Abuild)
 
 In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
 
@@ -12,6 +14,12 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Support for net7.0+ only !
 * Extensible
 * It is small and easily maintainable
+
+# 📦 NuGet packages
+MagnusOpera.PresqueYaml: [![Nuget](https://img.shields.io/nuget/v/MagnusOpera.PresqueYaml)](https://nuget.org/packages/MagnusOpera.PresqueYaml)
+
+# Requirements
+`PresqueYaml` targets `netstandard2.1`. This practically means you can use .net 7.0 and more.
 
 # Key differences with Yaml 1.2
 Few list of differences. It's probably not exhaustive !
@@ -126,7 +134,7 @@ YamlNode.Mapping (Map [ // scalars
                                                                  "item2", YamlNode.Scalar "value2" ]) ])
 ```
 
-# Usage
+# 📚 Usage
 `PresqueYaml` can be used both in F# and C#.
 F# is preferred of course to explore the representation model (exposed in `MagnusOpera.PresqueYaml` namespace).
 
