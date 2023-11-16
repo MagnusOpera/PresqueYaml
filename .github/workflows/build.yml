@@ -26,7 +26,7 @@ jobs:
       - name: Upload Nuget
         uses: actions/upload-artifact@v1
         with:
-          name: nuget
+          name: MagnusOpera.PresqueYaml.nupkg
           path: out
 
   publish:
