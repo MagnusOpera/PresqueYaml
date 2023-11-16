@@ -20,6 +20,14 @@ jobs:
       - name: Build & Test
         run: make test config=Release
 
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Unit Tests Report
+          path: **/*.trx
+          reporter: jest-junit
+
       - name: Build test Nuget
         run: make nuget config=Release
 
