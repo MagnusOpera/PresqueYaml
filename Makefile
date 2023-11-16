@@ -5,7 +5,7 @@ build:
 	dotnet build -c $(config)
 
 test:
-	dotnet test -c $(config)
+	dotnet test -c $(config) --logger "trx;LogFileName=test-results.trx"
 
 nuget:
 	dotnet pack -c $(config) /p:Version=$(version) -o out

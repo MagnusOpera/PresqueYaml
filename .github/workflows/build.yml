@@ -1,0 +1,65 @@
+name: build
+
+on: [push]
+
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Info
+        run: echo 'Building ${{ github.ref }}'
+
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.400
+
+      - name: Build & Test
+        run: make test config=Release
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Unit Tests Report
+          path: ./**/*.trx
+          reporter: dotnet-trx
+
+      - name: Build test Nuget
+        run: make nuget config=Release
+
+      - name: Upload Nuget
+        uses: actions/upload-artifact@v1
+        with:
+          name: MagnusOpera.PresqueYaml.nupkg
+          path: out
+
+  publish:
+    if: contains(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Info
+        run: echo 'Building ${{ github.ref }}'
+
+      - uses: actions/checkout@v1
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.300
+
+      - name: Build nuget
+        run: make nuget config=Release version=${GITHUB_REF#refs/tags/} 
+
+      - name: publish nuget
+        run: make publish nugetkey=${{secrets.NUGET_KEY}}
