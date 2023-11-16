@@ -1,6 +1,6 @@
 namespace MagnusOpera.PresqueYaml.Serializer
 open System
-open TypeCache
+open MagnusOpera.PresqueYaml
 
 type CollectionConverterFactory() =
     inherit YamlConverterFactory()

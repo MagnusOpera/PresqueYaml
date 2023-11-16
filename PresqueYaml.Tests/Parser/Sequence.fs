@@ -14,7 +14,7 @@ let ``sequence only is valid``() =
 - titi"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -26,7 +26,7 @@ let ``compact sequence is valid``() =
     let yaml = "users: [ toto, titi ]"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -39,7 +39,7 @@ let ``values in sequence are trimmed``() =
 - titi   "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -58,7 +58,7 @@ languages:
   - Python"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -80,7 +80,7 @@ let ``mapping in sequence is valid``() =
     - Python"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -104,7 +104,7 @@ let ``nested inline sequence is valid``() =
 "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -114,5 +114,5 @@ let ``sequence fails if no spaces after hyphen``() =
     let yaml = "- toto
 -titi"
 
-    (fun () -> yaml |> YamlParser.read |> ignore)
+    (fun () -> yaml |> YamlParser.Read |> ignore)
     |> should (throwWithMessage "Expecting sequence (line 2, column 1)") typeof<System.Exception>

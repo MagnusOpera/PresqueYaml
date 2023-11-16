@@ -64,7 +64,7 @@ fruits:
 "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 
@@ -150,5 +150,5 @@ let allCapabilities() =
     "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected

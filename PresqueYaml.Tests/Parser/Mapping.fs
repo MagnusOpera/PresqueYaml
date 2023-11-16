@@ -12,7 +12,7 @@ let ``empty yaml is None and valid`` () =
 
     let yaml = ""
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -27,7 +27,7 @@ let ``mapping only is valid``() =
 age: 42"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -42,7 +42,7 @@ let ``mapping values are trimmed``() =
 age:   42   "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -58,7 +58,7 @@ let ``nested mappings indent is valid``() =
   age: 42"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -79,7 +79,7 @@ user2:
   age: 42"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -100,7 +100,7 @@ user2:
   age: 42"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -117,7 +117,7 @@ age: 666
 "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -133,7 +133,7 @@ age: 42
 age:"
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
@@ -152,7 +152,7 @@ user:
 "
 
     yaml
-    |> YamlParser.read
+    |> YamlParser.Read
     |> should equal expected
 
 // ####################################################################################################################
