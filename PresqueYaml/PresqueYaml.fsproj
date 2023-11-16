@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <None Include="..\NUGET.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -33,7 +34,7 @@
     <Title>MagnusOpera.PresqueYaml</Title>
     <Description>PresqueYaml: a simple Yaml parser and deserializer for C# and F#.</Description>
     <Copyright>Copyright 2023 Magnus Opera</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/MagnusOpera/PresqueYaml</PackageProjectUrl>
     <RepositoryUrl>git@github.com:MagnusOpera/PresqueYaml.git</RepositoryUrl>
     <PackageTags>yaml;F#;C#</PackageTags>
