@@ -26,7 +26,7 @@ jobs:
         with:
           name: Unit Tests Report
           path: '**/*.trx'
-          reporter: jest-junit
+          reporter: dotnet-trx
 
       - name: Build test Nuget
         run: make nuget config=Release
