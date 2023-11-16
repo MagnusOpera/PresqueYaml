@@ -14,8 +14,6 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Extensible
 * It is small and easily maintainable
 
-⚠️ `PresqueYaml` does not offer serialization back to yaml. It is planned in future release!
-
 # 🧐 Key differences with Yaml 1.2
 Few list of differences. It's probably not exhaustive !
 

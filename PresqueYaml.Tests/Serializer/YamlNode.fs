@@ -10,7 +10,7 @@ open FsUnit
 let ``yamlnode conversion``() =
     let node = YamlNode.Scalar "42"
 
-    YamlSerializer.Deserialize<YamlNode>(node, Defaults.options)
-    |> should equal node
+    YamlSerializer.Deserialize<YamlNode option>(node, Defaults.options)
+    |> should equal (Some node)
 
 // ####################################################################################################################
