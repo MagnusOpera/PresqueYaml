@@ -5,6 +5,10 @@ open System
 type FSharpListConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<list<'T>>()
 
+    override _.Default _ =
+        if options.NoneIsEmpty then List.empty
+        else failwith $"Failed to convert None to list"
+
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
         | YamlNode.None ->
@@ -17,6 +21,10 @@ type FSharpListConverter<'T>(options:YamlSerializerOptions) =
 
 type FSharpSetConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
     inherit YamlConverter<Set<'T>>()
+
+    override _.Default _ =
+        if options.NoneIsEmpty then Set.empty
+        else failwith $"Failed to convert None to set"
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with
@@ -31,6 +39,10 @@ type FSharpSetConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
 
 type FSharpMapConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<Map<string, 'T>>()
+
+    override _.Default _ =
+        if options.NoneIsEmpty then Map.empty
+        else failwith $"Failed to convert None to map"
 
     override _.Read(node:YamlNode, typeToConvert:Type) =
         match node with

@@ -16,7 +16,7 @@
     <Compile Include="Serializer/FSharp/Option.fs" />
     <Compile Include="Serializer/FSharp/Unit.fs" />
     <Compile Include="Serializer/FSharp/Record.fs" />
-    <Compile Include="Serializer\YamlNode.fs" />
+    <Compile Include="Serializer/YamlNode.fs" />
     <Compile Include="Parser/Wellformed.fs" />
     <Compile Include="Parser/Malformed.fs" />
     <Compile Include="Parser/Scalar.fs" />

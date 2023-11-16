@@ -1,6 +1,7 @@
 module MagnusOpera.PresqueYaml.Tests.Serializer.Record
 
 open MagnusOpera.PresqueYaml
+open MagnusOpera.PresqueYaml.Converters
 open NUnit.Framework
 open FsUnit
 
@@ -14,6 +15,13 @@ type Toto = {
     IntOption: int option
     // IntVOption: int voption
 }
+
+type Titi = {
+    String: YamlNodeValue<string>
+    Int: int
+}
+
+
 // ####################################################################################################################
 
 [<Test>]
@@ -63,7 +71,9 @@ let ``option record conversion``() =
 
 [<Test>]
 let ``none option record conversion``() =
-    let node = YamlNode.None
+    let expected = { Titi.String = YamlNodeValue.Undefined; Titi.Int = 42 }
 
-    YamlSerializer.Deserialize<Toto>(node, Defaults.options)
-    |> should equal "toto"
+    let node = YamlNode.Mapping (Map [ "Int", YamlNode.Scalar "42" ])
+
+    YamlSerializer.Deserialize<Titi>(node, Defaults.options)
+    |> should equal expected

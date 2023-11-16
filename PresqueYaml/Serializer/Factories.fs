@@ -1,30 +1,17 @@
 namespace MagnusOpera.PresqueYaml.Converters
-open MagnusOpera.PresqueYaml
 open System
+open MagnusOpera.PresqueYaml
 
-type YamlNodeConverter() =
-    inherit YamlConverter<YamlNode>()
+type YamlNodeConverterFactory() =
+    inherit YamlConverterFactory()
 
-    override _.CanConvert(typeToConvert:Type) =
+    override _.CanConvert (typeToConvert:Type) =
         typeToConvert = typeof<YamlNode>
 
-    override _.Read(node:YamlNode, typeToConvert:Type) =
-        node
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+        YamlNodeConverter()
 
-
-type YamlOption<'T> =
-    | Undefined
-    | None
-    | Some of value:'T
-
-type YamlOptionConverter<'T>() =
-    inherit YamlConverter<YamlOption<'T>>()
-
-    override _.Read(node:YamlNode, typeToConvert:Type) =
-        Undefined
-
-
-type YamlOptionConverterFactory() =
+type YamlNodeValueConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
@@ -32,16 +19,14 @@ type YamlOptionConverterFactory() =
         | TypeCache.TypeKind.FsUnion ->
             if typeToConvert.IsGenericType then
                 let gen = typeToConvert.GetGenericTypeDefinition()
-                if gen = typedefof<YamlOption<_>> then true
-                else false
+                gen = typedefof<YamlNodeValue<_>>
             else false
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         match TypeCache.getKind typeToConvert with
         | TypeCache.TypeKind.FsUnion ->
-            let converterType = typedefof<YamlOptionConverter<_>>
-
+            let converterType = typedefof<YamlNodeConverter<_>>
             converterType
                 .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
                 .GetConstructor([| typeof<YamlSerializerOptions> |])

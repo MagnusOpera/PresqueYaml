@@ -5,14 +5,16 @@ let options =
     let options = YamlSerializerOptions()
     options.Converters <-
         [
-            YamlNodeConverter()
+            YamlNodeConverterFactory()
+            YamlNodeValueConverterFactory()
+            YamlNodeValueConverterFactory()
             ConvertibleConverterFactory()
             NullableConverterFactory()
             ArrayConverterFactory()
             CollectionConverterFactory()
             ClassConverterFactory()
             FSharpCollectionsConverterFactory()
-            FSharpOptionConverterFactory()
+            FSharpUnionConverterFactory()
             FSharpRecordConverterFactory()
             FSharpUnitConverterFactory()
         ]
