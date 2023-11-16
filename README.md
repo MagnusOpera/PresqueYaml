@@ -1,4 +1,4 @@
-# PresqueYaml
+# ✨ MagnusOpera.PresqueYaml
 
 In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
 
@@ -13,7 +13,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Extensible
 * It is small and easily maintainable
 
-# Key differences with Yaml 1.2
+# 🧐 Key differences with Yaml 1.2
 Few list of differences. It's probably not exhaustive !
 
 <table><tr><td>Again, `PresqueYaml` does not offer complete yaml support, you have been warned if you heavily rely on this.</td></tr></table>
@@ -41,7 +41,7 @@ Few list of differences. It's probably not exhaustive !
 * no schema support.
 * no tag support.
 
-# Supported feature example
+# 🚀 Supported feature example
 Anyway, most Yaml documents do not used advanced features.
 Here is a document showing `PresqueYaml` capabilities:
 
@@ -91,7 +91,7 @@ nestedMapping: item1: value1
 
 ```
 
-Corresponding representation model is:
+F# representation model:
 ```ocaml
 YamlNode.Mapping (Map [ // scalars
                         "scalar", YamlNode.Scalar "this is a scalar"
@@ -126,9 +126,24 @@ YamlNode.Mapping (Map [ // scalars
                                                                  "item2", YamlNode.Scalar "value2" ]) ])
 ```
 
-# Usage
+# 📚 Api
 `PresqueYaml` can be used both in F# and C#.
 F# is preferred of course to explore the representation model (exposed in `MagnusOpera.PresqueYaml` namespace).
+
+## Availability
+[![Nuget](https://img.shields.io/nuget/v/MagnusOpera.PresqueYaml)](https://nuget.org/packages/MagnusOpera.PresqueYaml)
+[![Build status](https://github.com/MagnusOpera/PresqueYaml/workflows/build/badge.svg)](https://github.com/MagnusOpera/PresqueYaml/actions?query=workflow%3Abuild)
+
+## Requirements
+`PresqueYaml` targets `netstandard2.1`. This practically means you can use .net 7.0 and more.
+
+## Parser
+In order to convert a yaml document to a representation model, use:
+```ocaml
+let yaml = "value: toto"
+let node = MagnusOpera.PresqueYaml.YamlParser.read yaml
+// node is of type PresqueYaml.YamlNode
+```
 
 Representation model is:
 ```ocaml
@@ -138,14 +153,6 @@ type YamlNode =
     | Scalar of string
     | Sequence of YamlNode list
     | Mapping of Map<string, YamlNode>
-```
-
-## Parser
-In order to convert a yaml document to a representation model, use:
-```ocaml
-let yaml = "value: toto"
-let node = MagnusOpera.PresqueYaml.YamlParser.read yaml
-// node is of type PresqueYaml.YamlNode
 ```
 
 ## Deserialization
