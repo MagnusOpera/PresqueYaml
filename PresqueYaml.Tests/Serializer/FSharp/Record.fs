@@ -58,3 +58,12 @@ let ``option record conversion``() =
 
     YamlSerializer.Deserialize<Toto option>(node, Defaults.options)
     |> should equal expected
+
+// ####################################################################################################################
+
+[<Test>]
+let ``none option record conversion``() =
+    let node = YamlNode.None
+
+    YamlSerializer.Deserialize<Toto>(node, Defaults.options)
+    |> should equal "toto"
