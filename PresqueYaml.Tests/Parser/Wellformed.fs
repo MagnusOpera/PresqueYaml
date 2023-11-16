@@ -84,10 +84,10 @@ let allCapabilities() =
                                                                 YamlNode.Scalar "item2"
                                                                 YamlNode.None
                                                                 YamlNode.Scalar "item3" ]
-                                "compactSequence", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "item11"
-                                                                                           YamlNode.Scalar "item12" ]
-                                                                       YamlNode.Sequence [ YamlNode.Scalar "item21"
-                                                                                           YamlNode.Scalar "item22" ] ]
+                                "nestedSequence", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "item11"
+                                                                                          YamlNode.Scalar "item12" ]
+                                                                      YamlNode.Sequence [ YamlNode.Scalar "item21"
+                                                                                          YamlNode.Scalar "item22" ] ]
                                 "flowSequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
                                                                     YamlNode.Scalar "item2"
                                                                     YamlNode.Scalar "item3" ]
@@ -99,9 +99,9 @@ let allCapabilities() =
                                 // mappings
                                 "mapping", YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
                                                                    "item2", YamlNode.Scalar "value2"
-                                                                   "item3", YamlNode.None ]) ])
-
-
+                                                                   "item3", YamlNode.None ])
+                                "nestedMapping", YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
+                                                                         "item2", YamlNode.Scalar "value2" ]) ])
 
     let yaml = "
 
@@ -127,7 +127,7 @@ let allCapabilities() =
      - item2
      -
      - item3
-    compactSequence:
+    nestedSequence:
       - - item11
         - item12
       - - item21
@@ -144,7 +144,8 @@ let allCapabilities() =
       item1: value1
       item2: value2
       item3:
-
+    nestedMapping: item1: value1
+                   item2: value2
 
     "
 

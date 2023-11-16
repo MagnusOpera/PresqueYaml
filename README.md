@@ -10,22 +10,27 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
 * Support for net7.0+ only !
+* It is small and easily maintainable
 
 # Key differences with Yaml 1.2
-Few list of differences. Probably more !
+Few list of differences. It's probably not exhaustive !
 
 <table><tr><td>Again, `PresqueYaml` does not offer complete yaml support, you have been warned if you heavily rely on this.</td></tr></table>
 
 ## Scalars
 * single and double quoted strings are handled exactely the same.
 * quoted string keys are not allowed - they are of string type and not scalar type.
-* scalar are either compact (single line), folded or literal. You must choose one form.
+* scalar are either compact (single line), folded or literal. You must choose one.
 * only escapes `\n`, `\r`, `\t`and `\s` are supported.
 * representation model is always using `string`type - it does not attempt to identify types: that's mapper responsibility.
+
+## Sequences
+* compact sequences do not support quoted strings - only raw content.
 
 ## Mappings
 * mapping can have duplicated keys (last key wins).
 * compact mappings (single line) are not supported.
+* mappings can be nested.
 
 ## Comments
 * a line is either empty, comment or content. Mixed content is not supported.
@@ -36,8 +41,8 @@ Few list of differences. Probably more !
 * no tag support.
 
 # Supported feature example
-Anyway, most Yaml document do not used advanced features.
-All in all, here is a document showing all `PresqueYaml` capabilities:
+Anyway, most Yaml documents do not used advanced features.
+Here is a document showing `PresqueYaml` capabilities:
 
 ```yaml
 
@@ -63,7 +68,7 @@ sequence:
   - item2
   -
   - item3
-compactSequence:
+nestedSequence:
   - - item11
     - item12
   - - item21
@@ -80,7 +85,8 @@ mapping:
   item1: value1
   item2: value2
   item3:
-
+nestedMapping: item1: value1
+               item2: value2
 
 ```
 
@@ -99,10 +105,10 @@ YamlNode.Mapping (Map [ // scalars
                                                         YamlNode.Scalar "item2"
                                                         YamlNode.None
                                                         YamlNode.Scalar "item3" ]
-                        "compactSequence", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "item11"
-                                                                                   YamlNode.Scalar "item12" ]
-                                                               YamlNode.Sequence [ YamlNode.Scalar "item21"
-                                                                                   YamlNode.Scalar "item22" ] ]
+                        "nestedSequence", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "item11"
+                                                                                  YamlNode.Scalar "item12" ]
+                                                              YamlNode.Sequence [ YamlNode.Scalar "item21"
+                                                                                  YamlNode.Scalar "item22" ] ]
                         "flowSequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
                                                             YamlNode.Scalar "item2"
                                                             YamlNode.Scalar "item3" ]
@@ -114,7 +120,9 @@ YamlNode.Mapping (Map [ // scalars
                         // mappings
                         "mapping", YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
                                                            "item2", YamlNode.Scalar "value2"
-                                                           "item3", YamlNode.None ]) ])
+                                                           "item3", YamlNode.None ])
+                        "nestedMapping", YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
+                                                                 "item2", YamlNode.Scalar "value2" ]) ])
 ```
 
 # Usage
