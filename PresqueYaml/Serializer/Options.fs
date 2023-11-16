@@ -1,2 +1,0 @@
-module PresqueYaml.Serializer.Options
-
