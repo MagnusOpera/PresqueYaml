@@ -1,4 +1,4 @@
-module PresqueYaml.Parser
+module PresqueYaml.YamlParser
 open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
@@ -171,7 +171,7 @@ let read (yamlString: string) : YamlNode =
                                 newValue, blockContent.Length - newValue.Length
                         let value = value.TrimEnd()
                         state.Add(value)
-                        parseNode states accept (currentBlock.Indent+shiftIndent) (currentLineNumber+1)
+                        parseNode states accept (currentColNumber+shiftIndent) (currentLineNumber+1)
 
                     let sequenceBlock (state: List<YamlNode>) =
                         match blockContent with

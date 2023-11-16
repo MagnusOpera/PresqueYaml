@@ -2,78 +2,162 @@
 
 In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
 
-<table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented.</td></tr></table>
+<table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented as I consider them either misleading or niche cases.</td></tr></table>
 
 `PresqueYaml` is written in F# and offers:
-* Yaml deserialization to a representation model (AST).
-* Map representation model to an object model.
-* C# support: List<>, Dictionary<,>, Nullable<> and POCO (via unique constructor).
-* F# support: list, map, option, unit and record.
+* Yaml deserialization to a representation model.
+* Map representation model to an object model:
+  * F# support: list, map, option, unit and record.
+  * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
 
-Again, `PresqueYaml` does not offer complete yaml support.
+# Key differences with Yaml 1.2
+Few list of differences. Probably more !
 
-Here are some key differences:
-* quoted strings are either single or double quoted strings - they are the same.
-* quoted string keys are not allowed.
+<table><tr><td>Again, `PresqueYaml` does not offer complete yaml support, you have been warned if you heavily rely on this.</td></tr></table>
+
+## Scalars
+* single and double quoted strings are handled exactely the same.
+* quoted string keys are not allowed - they are of string type and not scalar type.
+* scalar are either compact (single line), folded or literal. You must choose one form.
+* only escapes `\n`, `\r`, `\t`and `\s` are supported.
+* representation model is always using `string`type - it does not attempt to identify types: that's mapper responsibility.
+
+## Mappings
 * mapping can have duplicated keys (last key wins).
+* compact mappings (single line) are not supported.
+
+## Comments
+* a line is either empty, comment or content. Mixed content is not supported.
+
+## Documents
 * no support for multiple document in one yaml file.
 * no schema support.
+* no tag support.
 
-All in all, `PresqueYaml` does support this kind of document (⏎ to highlight spaces in document):
+# Supported feature example
+Anyway, most Yaml document do not used advanced features.
+All in all, here is a document showing all `PresqueYaml` capabilities:
+
 ```yaml
-⏎
-#     user 1⏎
-user1:⏎
-      ⏎
-  name: John Doe⏎
-⏎
-  age:⏎
-  comment: this is a comment\\n😃    ⏎
-  languages: [ Python  , ,F# ]  ⏎
-    ⏎
-⏎
-   # this is a comment⏎
-user2:⏎
-  firstname: 'J a n e '    ⏎
-  lastname:   Doe  ⏎
-  ⏎
-  age: 42⏎
-  languages:⏎
-    - F#⏎
-    -   Python⏎
-⏎
-user2:⏎
-  firstname: Toto⏎
-⏎
-  age: 666⏎
-  languages: [ F# |> ❤️,⏎
-             Python ]⏎
-   ⏎
-categories:⏎
-  - - toto   ⏎
-    - titi   ⏎
-  ⏎
-fruits:⏎
-  - cherry: red⏎
-  - banana: yellow⏎
- ⏎
-⏎
+
+# scalars
+scalar: this is a scalar
+noneScalar:
+scalarSingleQuoted: '  this is a single quoted \\nscalar  '
+scalarDoubleQuoted: \"  this is a double quoted \\nscalar  \"
+scalarFolded: |
+  this
+    is
+      a
+        scalar
+scalarLiteral: >
+  this
+    is
+      a
+        scalar
+
+# sequences
+sequence:
+  - item1
+  - item2
+  -
+  - item3
+compactSequence:
+  - - item11
+    - item12
+  - - item21
+    - item22
+flowSequence: [   item1, item2, item3   ]
+mappingInSequence:
+  - item1: value1
+    item2: value2
+  - item3: value3
+    item4:
+
+# mappings
+mapping:
+  item1: value1
+  item2: value2
+  item3:
+
+
 ```
 
-Corresponding AST is:
+Corresponding representation model is:
 ```ocaml
-YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
-                                                         "age", YamlNode.None
-                                                         "comment", YamlNode.Scalar "this is a comment\n😃"
-                                                         "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
-                                                                                          YamlNode.None
-                                                                                          YamlNode.Scalar "F#" ] ] )
-                        "user2", YamlNode.Mapping (Map [ "firstname", YamlNode.Scalar "Toto"
-                                                         "age", YamlNode.Scalar "666"
-                                                         "languages", YamlNode.Sequence [ YamlNode.Scalar "F# |> ❤️"
-                                                                                          YamlNode.Scalar "Python" ] ] )
-                        "categories", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "toto"
-                                                                              YamlNode.Scalar "titi"] ]
-                        "fruits", YamlNode.Sequence [ YamlNode.Mapping (Map [ "cherry", YamlNode.Scalar "red" ])
-                                                      YamlNode.Mapping (Map [ "banana", YamlNode.Scalar "yellow" ]) ] ])
+YamlNode.Mapping (Map [ // scalars
+                        "scalar", YamlNode.Scalar "this is a scalar"
+                        "noneScalar", YamlNode.None
+                        "scalarSingleQuoted", YamlNode.Scalar "  this is a single quoted \nscalar  "
+                        "scalarDoubleQuoted", YamlNode.Scalar "  this is a double quoted \nscalar  "
+                        "scalarFolded", YamlNode.Scalar "this\n  is\n    a\n      scalar"
+                        "scalarLiteral", YamlNode.Scalar "this   is     a       scalar"
+
+                        // sequences
+                        "sequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
+                                                        YamlNode.Scalar "item2"
+                                                        YamlNode.None
+                                                        YamlNode.Scalar "item3" ]
+                        "compactSequence", YamlNode.Sequence [ YamlNode.Sequence [ YamlNode.Scalar "item11"
+                                                                                   YamlNode.Scalar "item12" ]
+                                                               YamlNode.Sequence [ YamlNode.Scalar "item21"
+                                                                                   YamlNode.Scalar "item22" ] ]
+                        "flowSequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
+                                                            YamlNode.Scalar "item2"
+                                                            YamlNode.Scalar "item3" ]
+                        "mappingInSequence", YamlNode.Sequence [ YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
+                                                                                         "item2", YamlNode.Scalar "value2" ])
+                                                                 YamlNode.Mapping (Map [ "item3", YamlNode.Scalar "value3"
+                                                                                         "item4", YamlNode.None ]) ]
+
+                        // mappings
+                        "mapping", YamlNode.Mapping (Map [ "item1", YamlNode.Scalar "value1"
+                                                           "item2", YamlNode.Scalar "value2"
+                                                           "item3", YamlNode.None ]) ])
 ```
+
+# Usage
+`PresqueYaml` can be used both in F# and C#.
+F# is preferred of course to explore the representation model.
+
+Representation model is:
+```ocaml
+[<RequireQualifiedAccess>]
+type YamlNode =
+    | None
+    | Scalar of string
+    | Sequence of YamlNode list
+    | Mapping of Map<string, YamlNode>
+```
+
+## Parser
+In order to convert a yaml document to a representation model, use:
+```ocaml
+let yaml = "value: toto"
+let node = PresqueYaml.YamlParser.read yaml
+// node is of type PresqueYaml.YamlNode
+```
+
+## Deserialization
+To convert a representation model to an .net object model, use:
+```ocaml
+let node = ... // representation model
+let map = PresqueYaml.YamlSerializer.Deserialize<Map<string, string>>(node, PresqueYaml.Defaults.options)
+// map is of type Map<string, string>
+```
+
+There is also a non-generic `Deserialize` method if you need more flexibility but for most cases, generic one shall be sufficient.
+
+### Customization
+`YamlDeserializer` must be given a configuration. This configuration tells:
+* which mappers to use.
+* how to deserialize `YamlNode.None` regarding collections.
+
+There is a default configuration provided (`PresqueYaml.Defaults.options`):
+* Include all F# and C# types
+* `YamlNode.None` forces empty collections.
+
+| Property    | Default           | Description                                   |
+|-------------|-------------------|-----------------------------------------------|
+| Converters  | F# and C# mappers | List of converters to use for deserialization |
+| NoneIsEmpty | true              | Convert YamlNode.None to empty collection     |

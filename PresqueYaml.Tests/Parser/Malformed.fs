@@ -12,7 +12,7 @@ let ``mapping must be on same indentation``() =
  toto:
 titi: tralala"
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Indentation error (line 2, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -23,7 +23,7 @@ let ``mapping must have same indentation 1/2``() =
   titi: tralala
  tutu: pouet"
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -36,7 +36,7 @@ titi:
     tutu: pouet
    tata: ddqddwqwd"
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Indentation error (line 5, column 4)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -49,7 +49,7 @@ let ``children sequence of mapping must have same indentation``() =
 
 "
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -62,7 +62,7 @@ languages:
 - F#
 - Python"
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Expecting mapping (line 4, column 1)") typeof<System.Exception>
 
 // ####################################################################################################################
@@ -72,5 +72,5 @@ let ``mapping type mismatch is error``() =
     let yaml = "users: 42
 - toto"
 
-    (fun () -> yaml |> Parser.read |> ignore)
+    (fun () -> yaml |> YamlParser.read |> ignore)
     |> should (throwWithMessage "Expecting mapping (line 2, column 1)") typeof<System.Exception>
