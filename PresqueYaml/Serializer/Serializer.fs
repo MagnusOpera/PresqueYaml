@@ -25,6 +25,12 @@ and [<AbstractClass>] YamlConverterFactory() =
 
     abstract CreateConverter: typeToConvert:Type * options:YamlSerializerOptions -> YamlConverter
 
+[<RequireQualifiedAccess>]
+type YamlNodeValue<'T> =
+    | Undefined
+    | None
+    | Value of 'T
+
 [<AbstractClass; Sealed>]
 type YamlSerializer() =
 

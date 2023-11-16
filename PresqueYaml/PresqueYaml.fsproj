@@ -9,8 +9,6 @@
     <Compile Include="Parser/YamlParser.fs" />
     <Compile Include="Serializer/TypeCache.fs" />
     <Compile Include="Serializer/Serializer.fs" />
-    <Compile Include="Serializer/YamlNodeValue.fs" />
-    <Compile Include="Serializer/Factories.fs" />
     <Compile Include="Serializer/BCL/Convertible.fs" />
     <Compile Include="Serializer/BCL/Collections.fs" />
     <Compile Include="Serializer/BCL/Class.fs" />
@@ -21,6 +19,8 @@
     <Compile Include="Serializer/FSharp/Option.fs" />
     <Compile Include="Serializer/FSharp/Unit.fs" />
     <Compile Include="Serializer/FSharp/Factories.fs" />
+    <Compile Include="Serializer\Yaml\YamlNodeValue.fs" />
+    <Compile Include="Serializer\Yaml\Factories.fs" />
     <Compile Include="Defaults.fs" />
   </ItemGroup>
 

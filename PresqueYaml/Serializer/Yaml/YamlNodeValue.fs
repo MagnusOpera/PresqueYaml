@@ -9,12 +9,6 @@ type YamlNodeConverter() =
     override _.Read(node:YamlNode, typeToConvert:Type) =
         node
 
-[<RequireQualifiedAccess>]
-type YamlNodeValue<'T> =
-    | Undefined
-    | None
-    | Value of 'T
-
 type YamlNodeConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<YamlNodeValue<'T>>()
 

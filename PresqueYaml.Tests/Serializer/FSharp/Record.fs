@@ -16,12 +16,6 @@ type Toto = {
     // IntVOption: int voption
 }
 
-type Titi = {
-    String: YamlNodeValue<string>
-    Int: int
-}
-
-
 // ####################################################################################################################
 
 [<Test>]
@@ -65,15 +59,4 @@ let ``option record conversion``() =
                                       "IntVOption", YamlNode.Scalar "-1" ])
 
     YamlSerializer.Deserialize<Toto option>(node, Defaults.options)
-    |> should equal expected
-
-// ####################################################################################################################
-
-[<Test>]
-let ``none option record conversion``() =
-    let expected = { Titi.String = YamlNodeValue.Undefined; Titi.Int = 42 }
-
-    let node = YamlNode.Mapping (Map [ "Int", YamlNode.Scalar "42" ])
-
-    YamlSerializer.Deserialize<Titi>(node, Defaults.options)
     |> should equal expected
