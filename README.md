@@ -9,6 +9,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Map representation model to an object model:
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
+* Support for net7.0+ only !
 
 # Key differences with Yaml 1.2
 Few list of differences. Probably more !
