@@ -8,7 +8,7 @@ type YamlNodeConverterFactory() =
     override _.CanConvert (typeToConvert:Type) =
         typeToConvert = typeof<YamlNode>
 
-    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+    override _.CreateConverter (typeToConvert: Type) =
         YamlNodeConverter()
 
 type YamlNodeValueConverterFactory() =
@@ -23,14 +23,14 @@ type YamlNodeValueConverterFactory() =
             else false
         | _ -> false
 
-    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
+    override _.CreateConverter (typeToConvert: Type) =
         match TypeCache.getKind typeToConvert with
         | TypeCache.TypeKind.FsUnion ->
             let converterType = typedefof<YamlNodeConverter<_>>
             converterType
                 .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-                .GetConstructor([| typeof<YamlSerializerOptions> |])
-                .Invoke([| options |])
+                .GetConstructor([| |])
+                .Invoke([| |])
             :?> YamlConverter
 
         | _ -> failwith "Unknown type"

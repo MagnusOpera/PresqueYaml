@@ -10,7 +10,7 @@ open FsUnit
 let ``option some conversion``() =
     let node = YamlNode.Scalar "42"
 
-    YamlSerializer.Deserialize<int option>(node, Defaults.options)
+    YamlSerializer.Deserialize<int option>(node)
     |> should equal (Some 42)
 
 // ####################################################################################################################
@@ -19,5 +19,5 @@ let ``option some conversion``() =
 let ``option none conversion``() =
     let node = YamlNode.None
 
-    YamlSerializer.Deserialize<int option>(node, Defaults.options)
+    YamlSerializer.Deserialize<int option>(node)
     |> should equal None

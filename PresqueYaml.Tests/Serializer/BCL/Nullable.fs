@@ -11,7 +11,7 @@ open System
 let ``nullable some conversion``() =
     let node = YamlNode.Scalar "42"
 
-    YamlSerializer.Deserialize<Nullable<int>>(node, Defaults.options)
+    YamlSerializer.Deserialize<Nullable<int>>(node)
     |> should equal (Nullable<int>(42))
 
 // ####################################################################################################################
@@ -20,5 +20,5 @@ let ``nullable some conversion``() =
 let ``nullable none conversion``() =
     let node = YamlNode.None
 
-    YamlSerializer.Deserialize<Nullable<int>>(node, Defaults.options)
+    YamlSerializer.Deserialize<Nullable<int>>(node)
     |> should equal (Nullable<int>())
