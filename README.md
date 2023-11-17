@@ -10,7 +10,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
   * YamlNode/YamlNodeValue<>: this is useful for structure validation (object model driven schema).
-* Support netstandard2.1
+* Support net7.0+
 * Extensible
 * It is small and easily maintainable
 
@@ -136,7 +136,7 @@ F# is preferred of course to explore the representation model (exposed in `Magnu
 [![Build status](https://github.com/MagnusOpera/PresqueYaml/workflows/build/badge.svg)](https://github.com/MagnusOpera/PresqueYaml/actions?query=workflow%3Abuild)
 
 ## Requirements
-`PresqueYaml` targets `netstandard2.1` only. Check [.NET Standard documentation](https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-1-0) for more information.
+`PresqueYaml` targets `net7.0` and more.
 
 ## Parser
 In order to convert a yaml document to a representation model, use:

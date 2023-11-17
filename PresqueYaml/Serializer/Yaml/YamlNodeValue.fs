@@ -6,18 +6,19 @@ open Microsoft.FSharp.Core
 type YamlNodeConverter() =
     inherit YamlConverter<YamlNode>()
 
-    override _.Read(node:YamlNode, typeToConvert:Type) =
+    override _.Read(node:YamlNode, typeToConvert:Type, _) =
         node
 
-type YamlNodeConverter<'T>(options:YamlSerializerOptions) =
+type YamlNodeConverter<'T>() =
     inherit YamlConverter<YamlNodeValue<'T>>()
 
-    override _.Default _ = YamlNodeValue.Undefined
+    override _.Default (_, _) =
+        YamlNodeValue.Undefined
 
-    override _.Read(node:YamlNode, typeToConvert:Type) =
+    override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
         match node with
         | YamlNode.None ->
             YamlNodeValue<'T>.None
         | _ ->
-            let data = YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
+            let data = serializer.Deserialize("YamlNode", node, typeof<'T>) :?> 'T
             YamlNodeValue<'T>.Value data

@@ -18,7 +18,7 @@ let ``list conversion``() =
         YamlNode.Scalar "4"
     ]
 
-    YamlSerializer.Deserialize<List<int>>(node, Defaults.options)
+    YamlSerializer.Deserialize<List<int>>(node)
     |> should equal expected
 
 // ####################################################################################################################
@@ -27,7 +27,7 @@ let ``list conversion``() =
 let ``empty list conversion``() =
     let node = YamlNode.None
 
-    YamlSerializer.Deserialize<List<string>>(node, Defaults.options)
+    YamlSerializer.Deserialize<List<string>>(node)
     |> should be Empty
 
 // ####################################################################################################################
@@ -43,7 +43,7 @@ let ``array conversion``() =
         YamlNode.Scalar "4"
     ]
 
-    YamlSerializer.Deserialize<int[]>(node, Defaults.options)
+    YamlSerializer.Deserialize<int[]>(node)
     |> should equal expected
 
 // ####################################################################################################################
@@ -52,7 +52,7 @@ let ``array conversion``() =
 let ``empty array conversion``() =
     let node = YamlNode.None
 
-    YamlSerializer.Deserialize<string[]>(node, Defaults.options)
+    YamlSerializer.Deserialize<string[]>(node)
     |> should be Empty
 
 // ####################################################################################################################
@@ -67,7 +67,7 @@ let ``dictionary conversion``() =
     let node = YamlNode.Mapping (Map ["toto", YamlNode.Scalar "42"
                                       "titi", YamlNode.Scalar "666"])
 
-    YamlSerializer.Deserialize<Dictionary<string, int>>(node, Defaults.options)
+    YamlSerializer.Deserialize<Dictionary<string, int>>(node)
     |> should equal expected
 
 // ####################################################################################################################
@@ -76,5 +76,5 @@ let ``dictionary conversion``() =
 let ``empty dictionary conversion``() =
     let node = YamlNode.None
 
-    YamlSerializer.Deserialize<Dictionary<string, int>>(node, Defaults.options)
+    YamlSerializer.Deserialize<Dictionary<string, int>>(node)
     |> should be Empty

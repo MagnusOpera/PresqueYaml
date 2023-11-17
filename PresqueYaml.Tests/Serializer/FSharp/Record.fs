@@ -13,6 +13,7 @@ type Toto = {
     // StringVOption: string voption
     Int: int
     IntOption: int option
+    List: string list
     // IntVOption: int voption
 }
 
@@ -26,6 +27,7 @@ let ``record conversion``() =
         // StringVOption = ValueSome "pouet"
         Int = 42
         IntOption = Some 666
+        List = []
         // IntVOption = ValueSome -1
     }
 
@@ -35,7 +37,7 @@ let ``record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
 
-    YamlSerializer.Deserialize<Toto>(node, Defaults.options)
+    YamlSerializer.Deserialize<Toto>(node)
     |> should equal expected
 
 
@@ -49,6 +51,7 @@ let ``option record conversion``() =
         // StringVOption = ValueSome "pouet"
         Int = 42
         IntOption = Some 666
+        List = []
         // IntVOption = ValueSome -1
     }
 
@@ -58,5 +61,5 @@ let ``option record conversion``() =
                                       "IntOption", YamlNode.Scalar "666"
                                       "IntVOption", YamlNode.Scalar "-1" ])
 
-    YamlSerializer.Deserialize<Toto option>(node, Defaults.options)
+    YamlSerializer.Deserialize<Toto option>(node)
     |> should equal expected

@@ -15,5 +15,5 @@ type Pouet = {
 let ``unit conversion``() =
     let node = YamlNode.Scalar "42"
 
-    YamlSerializer.Deserialize<unit>(node, Defaults.options)
+    YamlSerializer.Deserialize<unit>(node)
     |> should equal (())

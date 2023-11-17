@@ -16,7 +16,7 @@ type Titi = {
 let ``yamlnode conversion``() =
     let node = YamlNode.Scalar "42"
 
-    YamlSerializer.Deserialize<YamlNode option>(node, Defaults.options)
+    YamlSerializer.Deserialize<YamlNode option>(node)
     |> should equal (Some node)
 
 // ####################################################################################################################
@@ -27,5 +27,5 @@ let ``none option record conversion``() =
 
     let node = YamlNode.Mapping (Map [ "Int", YamlNode.Scalar "42" ])
 
-    YamlSerializer.Deserialize<Titi>(node, Defaults.options)
+    YamlSerializer.Deserialize<Titi>(node)
     |> should equal expected

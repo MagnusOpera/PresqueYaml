@@ -6,6 +6,6 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Map representation model to an object model:
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
-* Support netstandard2.1
+* Support .net7.0+
 * Extensible
 * It is small and easily maintainable
