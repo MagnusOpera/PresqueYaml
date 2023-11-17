@@ -136,7 +136,7 @@ F# is preferred of course to explore the representation model (exposed in `Magnu
 [![Build status](https://github.com/MagnusOpera/PresqueYaml/workflows/build/badge.svg)](https://github.com/MagnusOpera/PresqueYaml/actions?query=workflow%3Abuild)
 
 ## Requirements
-`PresqueYaml` targets `net7.0` and more only since it uses NRT for deserialization.
+`PresqueYaml` targets `net7.0` and more.
 
 ## Parser
 In order to convert a yaml document to a representation model, use:
