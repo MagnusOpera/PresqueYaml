@@ -1,9 +1,6 @@
 namespace MagnusOpera.PresqueYaml.Converters
-open System.Reflection
 open MagnusOpera.PresqueYaml
-open System
 open Microsoft.FSharp.Reflection
-
 
 type FSharpRecordConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
@@ -14,9 +11,9 @@ type FSharpRecordConverter<'T when 'T : null>() =
 
     let parameterRequired =
         fields
-        |> Array.map TypeCache.getPropertyRequired
+        |> Array.map TypeHelpers.getPropertyRequired
 
-    override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
+    override _.Read(node:YamlNode, serializer) =
         let fieldRequired = Array.copy parameterRequired
 
         let fieldValues =
@@ -30,17 +27,14 @@ type FSharpRecordConverter<'T when 'T : null>() =
 
         match node with
         | YamlNode.Mapping mapping ->
-            for (KeyValue(name, node)) in mapping do
-                match node with
-                | YamlNode.None -> ()
-                | _ ->
-                    match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
-                    | Some index ->
-                        let propType = fields[index].PropertyType
-                        let data = serializer.Deserialize(fields[index].Name, node, propType)
-                        fieldValues[index] <- data
-                        fieldRequired[index] <- false
-                    | _ -> ()
+            for KeyValue(name, node) in mapping do
+                match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
+                | Some index ->
+                    let propType = fields[index].PropertyType
+                    let data = serializer.Deserialize(fields[index].Name, node, propType)
+                    fieldValues[index] <- data
+                    fieldRequired[index] <- false
+                | _ -> ()
 
             let requiredIndex = fieldRequired |> Array.tryFindIndex id
             match requiredIndex with

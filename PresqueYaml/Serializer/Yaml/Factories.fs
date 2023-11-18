@@ -15,8 +15,8 @@ type YamlNodeValueConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsUnion ->
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsUnion ->
             if typeToConvert.IsGenericType then
                 let gen = typeToConvert.GetGenericTypeDefinition()
                 gen = typedefof<YamlNodeValue<_>>
@@ -24,8 +24,8 @@ type YamlNodeValueConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsUnion ->
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsUnion ->
             let converterType = typedefof<YamlNodeConverter<_>>
             converterType
                 .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])

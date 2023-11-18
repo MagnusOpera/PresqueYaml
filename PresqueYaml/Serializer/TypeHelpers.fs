@@ -1,4 +1,4 @@
-module private TypeCache
+module private TypeHelpers
 open System.Reflection
 open FSharp.Reflection
 open System.Collections.Generic
@@ -68,14 +68,18 @@ let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
             // F# null allowed ?
             match ty.GetCustomAttribute(typeof<AllowNullLiteralAttribute>) with
             | null ->
+                // provide some nullability for few F# types
                 if ty.IsGenericType then
                     let gen = ty.GetGenericTypeDefinition()
                     if gen = typedefof<option<_>> then false
                     elif gen = typedefof<voption<_>> then false
                     elif gen = typedefof<YamlNodeValue<_>> then false
+                    elif gen = typedefof<list<_>> then false
+                    elif gen = typedefof<Set<_>> then false
+                    elif gen = typedefof<Map<string,_>> then false
                     else true
                 else
-                    false
+                    true
             | _ -> false
 
 let getPropertyRequired (propInfo: PropertyInfo) =

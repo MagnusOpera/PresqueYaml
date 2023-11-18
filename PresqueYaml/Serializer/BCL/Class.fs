@@ -1,7 +1,5 @@
 namespace MagnusOpera.PresqueYaml.Converters
-open System.Reflection
 open MagnusOpera.PresqueYaml
-open System
 
 type ClassConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
@@ -12,9 +10,9 @@ type ClassConverter<'T when 'T : null>() =
 
     let parameterRequired =
         parameters
-        |> Array.map TypeCache.getParameterRequired
+        |> Array.map TypeHelpers.getParameterRequired
 
-    override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
+    override _.Read(node:YamlNode, serializer) =
         let parameterRequired = Array.copy parameterRequired
 
         let parameterValues =
@@ -30,16 +28,13 @@ type ClassConverter<'T when 'T : null>() =
         | YamlNode.None -> null
         | YamlNode.Mapping mapping ->
             for KeyValue(name, node) in mapping do
-                match node with
-                | YamlNode.None -> ()
-                | _ ->
-                    match parameterIndices |> Map.tryFind (name.ToLowerInvariant()) with
-                    | Some index ->
-                        let propType = parameters[index].ParameterType
-                        let data = serializer.Deserialize(parameters[index].Name, node, propType)
-                        parameterValues[index] <- data
-                        parameterRequired[index] <- false
-                    | _ -> ()
+                match parameterIndices |> Map.tryFind (name.ToLowerInvariant()) with
+                | Some index ->
+                    let propType = parameters[index].ParameterType
+                    let data = serializer.Deserialize(parameters[index].Name, node, propType)
+                    parameterValues[index] <- data
+                    parameterRequired[index] <- false
+                | _ -> ()
 
             let requiredIndex = parameterRequired |> Array.tryFindIndex id
             match requiredIndex with

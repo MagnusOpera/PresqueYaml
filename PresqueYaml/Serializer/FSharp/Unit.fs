@@ -1,12 +1,11 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
-open System
 
 type FSharpUnitConverter() =
     inherit YamlConverter<obj>()
 
-    override _.Default (_, _) =
+    override _.Default _ =
         Unchecked.defaultof<unit>
 
-    override _.Read(node:YamlNode, typeToConvert:Type, _): obj =
+    override _.Read(node:YamlNode, _): obj =
         Unchecked.defaultof<unit>

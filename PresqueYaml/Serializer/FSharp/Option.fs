@@ -1,11 +1,10 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
-open System
 
 type FSharpOptionConverter<'T>() =
     inherit YamlConverter<'T option>()
 
-    override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
+    override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None -> Option.None
         | _ ->

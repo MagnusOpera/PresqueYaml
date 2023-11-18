@@ -6,18 +6,18 @@ type FSharpCollectionsConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsList -> true
-        | TypeCache.TypeKind.FsSet -> true
-        | TypeCache.TypeKind.FsMap -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsList -> true
+        | TypeHelpers.TypeKind.FsSet -> true
+        | TypeHelpers.TypeKind.FsMap -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
         let converterType, idx =
-            match TypeCache.getKind typeToConvert with
-            | TypeCache.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
-            | TypeCache.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
-            | TypeCache.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
+            match TypeHelpers.getKind typeToConvert with
+            | TypeHelpers.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
+            | TypeHelpers.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
+            | TypeHelpers.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
             | _ -> failwith "Unknown type"
 
         converterType
@@ -31,8 +31,8 @@ type FSharpUnionConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsUnion ->
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsUnion ->
             if typeToConvert.IsGenericType then
                 let gen = typeToConvert.GetGenericTypeDefinition()
                 if gen = typedefof<option<_>> then true
@@ -43,8 +43,8 @@ type FSharpUnionConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsUnion ->
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsUnion ->
             let converterType = typedefof<FSharpOptionConverter<_>>
 
             converterType
@@ -60,8 +60,8 @@ type FSharpRecordConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsRecord -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsRecord -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
@@ -77,8 +77,8 @@ type FSharpUnitConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.FsUnit -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.FsUnit -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =

@@ -3,8 +3,6 @@ open System
 open MagnusOpera.PresqueYaml
 
 
-
-
 type YamlSerializerException(msg:string, innerEx:Exception) =
     inherit Exception(msg, innerEx)
 
@@ -24,15 +22,15 @@ type YamlSerializerContext(options:YamlSerializerOptions) =
         member this.Default(returnType: Type): obj =
             let serializer = this :> IYamlSerializer
             let converter = getConverter returnType
-            let defaultMethodInfo = converter.GetType() |> TypeCache.getDefault
-            defaultMethodInfo.Invoke(converter, [| returnType; serializer.Options |])
+            let defaultMethodInfo = converter.GetType() |> TypeHelpers.getDefault
+            defaultMethodInfo.Invoke(converter, [| serializer.Options |])
 
         member this.Deserialize(context: string, node: YamlNode, returnType: Type): obj =
             this.Contexts.Push(context)
             let serializer = this :> IYamlSerializer
             let converter = getConverter returnType
-            let readMethodInfo = converter.GetType() |> TypeCache.getRead
-            let res = readMethodInfo.Invoke(converter, [| node; returnType; serializer |])
+            let readMethodInfo = converter.GetType() |> TypeHelpers.getRead
+            let res = readMethodInfo.Invoke(converter, [| node; serializer |])
             this.Contexts.Pop() |> ignore
             res
 

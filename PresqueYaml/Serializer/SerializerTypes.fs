@@ -1,6 +1,5 @@
 namespace MagnusOpera.PresqueYaml
 open System
-open System.Reflection
 open MagnusOpera.PresqueYaml
 
 
@@ -27,7 +26,7 @@ and YamlConverter() = class end
 
 and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
-    abstract Read: node:YamlNode * typeToConvert:Type * serializer:IYamlSerializer -> 'T
+    abstract Read: node:YamlNode * serializer:IYamlSerializer -> 'T
 
-    abstract Default: returnType:Type * options:YamlSerializerOptions -> obj
-    default _.Default (returnType:Type, options:YamlSerializerOptions): obj = null
+    abstract Default: options:YamlSerializerOptions -> obj
+    default _.Default (options:YamlSerializerOptions): obj = null
