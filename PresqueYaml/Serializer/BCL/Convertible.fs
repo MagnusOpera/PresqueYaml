@@ -6,7 +6,7 @@ type ConvertibleConverter<'T>() =
     inherit YamlConverter<'T>()
 
     override _.Default options =
-        if options.NoneIsEmpty then null
+        if options.NoneIsEmpty then Unchecked.defaultof<'T>
         else failwith "Failed to convert None to convertible"
 
     override _.Read(node:YamlNode, serializer) =

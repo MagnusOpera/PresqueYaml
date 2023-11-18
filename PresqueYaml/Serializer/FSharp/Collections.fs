@@ -2,16 +2,16 @@ namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
 type FSharpListConverter<'T>() =
-    inherit YamlConverter<list<'T>>()
+    inherit YamlConverter<'T list>()
 
     override _.Default options =
-        if options.NoneIsEmpty then list<'T>.Empty
+        if options.NoneIsEmpty then List.empty
         else failwith $"Failed to convert None to list"
 
     override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None ->
-            if serializer.Options.NoneIsEmpty then list<'T>.Empty
+            if serializer.Options.NoneIsEmpty then List.empty
             else failwith $"Failed to convert None to list"
         | YamlNode.Sequence sequence ->
             sequence
@@ -21,7 +21,7 @@ type FSharpListConverter<'T>() =
 type FSharpSetConverter<'T when 'T: comparison>() =
     inherit YamlConverter<Set<'T>>()
 
-    override _.Default options: obj =
+    override _.Default options =
         if options.NoneIsEmpty then Set.empty
         else failwith $"Failed to convert None to set"
 

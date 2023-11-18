@@ -28,5 +28,5 @@ and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
     abstract Read: node:YamlNode * serializer:IYamlSerializer -> 'T
 
-    abstract Default: options:YamlSerializerOptions -> obj
-    default _.Default (options:YamlSerializerOptions): obj = null
+    abstract Default: options:YamlSerializerOptions -> 'T
+    default _.Default (options:YamlSerializerOptions) = Unchecked.defaultof<'T>
