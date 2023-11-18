@@ -1,9 +1,6 @@
 namespace MagnusOpera.PresqueYaml.Converters
-open System.Reflection
 open MagnusOpera.PresqueYaml
-open System
 open Microsoft.FSharp.Reflection
-
 
 type FSharpRecordConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
@@ -12,41 +9,34 @@ type FSharpRecordConverter<'T when 'T : null>() =
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
     let fields = FSharpType.GetRecordFields(recordType, true)
 
-    override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
-        let nrtContext = NullabilityInfoContext()
+    let parameterRequired =
+        fields
+        |> Array.map TypeHelpers.getPropertyRequired
 
-        let requiredFields =
-            fields
-            |> Array.map (fun parameter ->
-                let nrtInfo = nrtContext.Create(parameter)
-                nrtInfo.ReadState = NullabilityState.NotNull)
+    override _.Read(node:YamlNode, serializer) =
+        let fieldRequired = Array.copy parameterRequired
 
-        let defaultFields =
+        let fieldValues =
             fields
-            |> Array.map (fun field -> serializer.Default(field.PropertyType))
+            |> Array.map (fun info -> serializer.Default(info.PropertyType))
 
         let fieldIndices =
             fields
             |> Seq.mapi (fun idx pi  -> pi.Name.ToLowerInvariant(), idx)
             |> Map
 
-        let fieldValues = Array.copy defaultFields
-
         match node with
         | YamlNode.Mapping mapping ->
-            for (KeyValue(name, node)) in mapping do
-                match node with
-                | YamlNode.None -> ()
-                | _ ->
-                    match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
-                    | Some index ->
-                        let propType = fields[index].PropertyType
-                        let data = serializer.Deserialize(fields[index].Name, node, propType)
-                        fieldValues[index] <- data
-                        requiredFields[index] <- false
-                    | _ -> ()
+            for KeyValue(name, node) in mapping do
+                match fieldIndices |> Map.tryFind (name.ToLowerInvariant()) with
+                | Some index ->
+                    let propType = fields[index].PropertyType
+                    let data = serializer.Deserialize(fields[index].Name, node, propType)
+                    fieldValues[index] <- data
+                    fieldRequired[index] <- false
+                | _ -> ()
 
-            let requiredIndex = requiredFields |> Array.tryFindIndex id
+            let requiredIndex = fieldRequired |> Array.tryFindIndex id
             match requiredIndex with
             | Some idx -> failwith $"Parameter {fields[idx].Name} must be provided"
             | _ -> ctor fieldValues :?> 'T

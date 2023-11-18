@@ -19,7 +19,6 @@ and [<AbstractClass>] YamlConverterFactory() =
 and IYamlSerializer =
     abstract member Options: YamlSerializerOptions
     abstract member Default: returnType:Type -> obj
-    abstract member Default: unit -> 'T
     abstract member Deserialize: context:string * node:YamlNode * returnType:Type -> obj
     abstract member Deserialize: context:string * node:YamlNode -> 'T
 
@@ -27,14 +26,7 @@ and YamlConverter() = class end
 
 and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
-    abstract Read: node:YamlNode * typeToConvert:Type * serializer:IYamlSerializer -> 'T
+    abstract Read: node:YamlNode * serializer:IYamlSerializer -> 'T
 
-    abstract Default: typeToConvert:Type * options:YamlSerializerOptions -> 'T
-    default _.Default (_, _) = Unchecked.defaultof<'T>
-
-
-[<RequireQualifiedAccess>]
-type YamlNodeValue<'T> =
-    | Undefined
-    | None
-    | Value of 'T
+    abstract Default: options:YamlSerializerOptions -> obj
+    default _.Default (options:YamlSerializerOptions): obj = null

@@ -6,17 +6,17 @@ type CollectionConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.List
-        | TypeCache.TypeKind.Dictionary -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.List
+        | TypeHelpers.TypeKind.Dictionary -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert:Type) =
 
         let converterType, idx =
-            match TypeCache.getKind typeToConvert with
-            | TypeCache.TypeKind.List -> typedefof<ListConverter<_>>, 0
-            | TypeCache.TypeKind.Dictionary -> typedefof<DictionaryConverter<_>>, 1
+            match TypeHelpers.getKind typeToConvert with
+            | TypeHelpers.TypeKind.List -> typedefof<ListConverter<_>>, 0
+            | TypeHelpers.TypeKind.Dictionary -> typedefof<DictionaryConverter<_>>, 1
             | _ -> failwith "Unknown type"
 
         converterType
@@ -30,8 +30,8 @@ type ArrayConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.Array -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.Array -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert:Type) =
@@ -75,8 +75,8 @@ type NullableConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.Nullable -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.Nullable -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert:Type) =
@@ -94,8 +94,8 @@ type ClassConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeCache.getKind typeToConvert with
-        | TypeCache.TypeKind.Other -> true
+        match TypeHelpers.getKind typeToConvert with
+        | TypeHelpers.TypeKind.Other -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
