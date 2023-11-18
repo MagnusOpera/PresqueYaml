@@ -30,3 +30,8 @@ and [<AbstractClass>] YamlConverter<'T>() =
 
     abstract Default: options:YamlSerializerOptions -> 'T
     default _.Default (options:YamlSerializerOptions) = Unchecked.defaultof<'T>
+
+type YamlSerializerException(msg:string, ?innerEx:Exception) =
+    inherit Exception(msg, innerEx |> Option.defaultValue null)
+
+    static member Raise(msg) = YamlSerializerException(msg) |> raise

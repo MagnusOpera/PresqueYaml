@@ -13,7 +13,7 @@ let ``mapping must be on same indentation``() =
 titi: tralala"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 2, column 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 2, column 2)") typeof<YamlParserException>
 
 // ####################################################################################################################
 
@@ -24,7 +24,7 @@ let ``mapping must have same indentation 1/2``() =
  tutu: pouet"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<YamlParserException>
 
 // ####################################################################################################################
 
@@ -37,7 +37,7 @@ titi:
    tata: ddqddwqwd"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 5, column 4)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 5, column 4)") typeof<YamlParserException>
 
 // ####################################################################################################################
 
@@ -50,7 +50,7 @@ let ``children sequence of mapping must have same indentation``() =
 "
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<System.Exception>
+    |> should (throwWithMessage "Indentation error (line 3, column 2)") typeof<YamlParserException>
 
 // ####################################################################################################################
 
@@ -63,7 +63,7 @@ languages:
 - Python"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Expecting mapping (line 4, column 1)") typeof<System.Exception>
+    |> should (throwWithMessage "Expecting mapping (line 4, column 1)") typeof<YamlParserException>
 
 // ####################################################################################################################
 
@@ -73,4 +73,4 @@ let ``mapping type mismatch is error``() =
 - toto"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Expecting mapping (line 2, column 1)") typeof<System.Exception>
+    |> should (throwWithMessage "Expecting mapping (line 2, column 1)") typeof<YamlParserException>

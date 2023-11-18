@@ -115,4 +115,4 @@ let ``sequence fails if no spaces after hyphen``() =
 -titi"
 
     (fun () -> yaml |> YamlParser.Read |> ignore)
-    |> should (throwWithMessage "Expecting sequence (line 2, column 1)") typeof<System.Exception>
+    |> should (throwWithMessage "Expecting sequence (line 2, column 1)") typeof<YamlParserException>

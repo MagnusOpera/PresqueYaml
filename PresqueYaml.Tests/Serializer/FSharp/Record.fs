@@ -1,7 +1,5 @@
 module MagnusOpera.PresqueYaml.Tests.Serializer.Record
-
 open MagnusOpera.PresqueYaml
-open MagnusOpera.PresqueYaml.Converters
 open NUnit.Framework
 open FsUnit
 
@@ -63,3 +61,5 @@ let ``option record conversion``() =
 
     YamlSerializer.Deserialize<Toto option>(node)
     |> should equal expected
+
+// ####################################################################################################################

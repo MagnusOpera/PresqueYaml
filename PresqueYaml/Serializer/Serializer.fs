@@ -3,10 +3,6 @@ open System
 open MagnusOpera.PresqueYaml
 
 
-type YamlSerializerException(msg:string, innerEx:Exception) =
-    inherit Exception(msg, innerEx)
-
-
 type YamlSerializerContext(options:YamlSerializerOptions) =
     let getConverter (returnType:Type) =
         let factory = options.GetConverter returnType
@@ -45,12 +41,19 @@ type YamlSerializer() =
     static member Deserialize (node:YamlNode, returnType:Type, options:YamlSerializerOptions): obj =
         let serializer = YamlSerializerContext(options)
         try
-            (serializer :> IYamlSerializer).Deserialize ("root", node, returnType)
+            (serializer :> IYamlSerializer).Deserialize (returnType.Name, node, returnType)
         with
         | ex ->
-            let path = String.Join(" >> ", serializer.Contexts |> Seq.rev)
-            let msg = $"Error while deserialization {path}"
-            YamlSerializerException(msg, ex) |> raise
+            let rec findSerializerException (innerEx: Exception) =
+                match innerEx with
+                | :? YamlSerializerException -> innerEx
+                | null -> ex
+                | _ -> findSerializerException innerEx.InnerException
+
+            let meaningfulEx = findSerializerException ex
+            let path = String.Join(".", serializer.Contexts |> Seq.rev)
+            let msg = $"Error while deserializing {path}"
+            YamlSerializerException(msg, meaningfulEx) |> raise
 
     static member Deserialize<'T>(node:YamlNode, options:YamlSerializerOptions): 'T =
         YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
