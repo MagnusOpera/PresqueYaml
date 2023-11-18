@@ -1,6 +1,7 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open System
 open MagnusOpera.PresqueYaml
+open TypeHelpers
 
 type YamlNodeConverterFactory() =
     inherit YamlConverterFactory()
@@ -15,22 +16,14 @@ type YamlNodeValueConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsUnion ->
-            if typeToConvert.IsGenericType then
-                let gen = typeToConvert.GetGenericTypeDefinition()
-                gen = typedefof<YamlNodeValue<_>>
-            else false
+        match getKind typeToConvert with
+        | TypeKind.YamlNodeValue -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsUnion ->
-            let converterType = typedefof<YamlNodeConverter<_>>
-            converterType
-                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-                .GetConstructor([| |])
-                .Invoke([| |])
-            :?> YamlConverter
-
-        | _ -> failwith "Unknown type"
+        let converterType = typedefof<YamlNodeConverter<_>>
+        converterType
+            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+            .GetConstructor([| |])
+            .Invoke([| |])
+        :?> YamlConverter

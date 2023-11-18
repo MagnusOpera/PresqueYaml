@@ -1,23 +1,24 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open System
 open MagnusOpera.PresqueYaml
+open TypeHelpers
 
 type FSharpCollectionsConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsList -> true
-        | TypeHelpers.TypeKind.FsSet -> true
-        | TypeHelpers.TypeKind.FsMap -> true
+        match getKind typeToConvert with
+        | TypeKind.FsList
+        | TypeKind.FsSet
+        | TypeKind.FsMap -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
         let converterType, idx =
-            match TypeHelpers.getKind typeToConvert with
-            | TypeHelpers.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
-            | TypeHelpers.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
-            | TypeHelpers.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
+            match getKind typeToConvert with
+            | TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
+            | TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
+            | TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
             | _ -> YamlSerializerException.Raise "unknown type"
 
         converterType
@@ -31,37 +32,26 @@ type FSharpUnionConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsUnion ->
-            if typeToConvert.IsGenericType then
-                let gen = typeToConvert.GetGenericTypeDefinition()
-                if gen = typedefof<option<_>> then true
-                elif gen = typedefof<voption<_>> then true
-                elif gen = typedefof<YamlNodeValue<_>> then true
-                else false
-            else false
+        match getKind typeToConvert with
+        | TypeKind.FsOption
+        | TypeKind.FsVOption -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsUnion ->
-            let converterType = typedefof<FSharpOptionConverter<_>>
+        let converterType = typedefof<FSharpOptionConverter<_>>
 
-            converterType
-                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-                .GetConstructor([| |])
-                .Invoke([| |])
-            :?> YamlConverter
-
-        | _ -> YamlSerializerException.Raise "unknown type"
-
+        converterType
+            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+            .GetConstructor([| |])
+            .Invoke([| |])
+        :?> YamlConverter
 
 type FSharpRecordConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsRecord -> true
+        match getKind typeToConvert with
+        | TypeKind.FsRecord -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =
@@ -77,8 +67,8 @@ type FSharpUnitConverterFactory() =
     inherit YamlConverterFactory()
 
     override _.CanConvert (typeToConvert:Type) =
-        match TypeHelpers.getKind typeToConvert with
-        | TypeHelpers.TypeKind.FsUnit -> true
+        match getKind typeToConvert with
+        | TypeKind.FsUnit -> true
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type) =

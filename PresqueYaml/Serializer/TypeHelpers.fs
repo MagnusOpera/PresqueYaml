@@ -1,8 +1,8 @@
 module private TypeHelpers
-open System.Reflection
-open FSharp.Reflection
-open System.Collections.Generic
 open System
+open System.Reflection
+open System.Collections.Generic
+open FSharp.Reflection
 open MagnusOpera.PresqueYaml
 
 type TypeKind =
@@ -13,11 +13,15 @@ type TypeKind =
     | FsMap = 4
     | FsTuple = 5
     | FsUnit = 6
+    | FsOption = 7
+    | FsVOption = 8
     | List = 50
     | Array = 51
     | Dictionary = 52
     | Nullable = 53
-    | Other = 100
+    | YamlNode = 100
+    | YamlNodeValue = 101
+    | Other = 200
 
 let private fslistTy = typedefof<_ list>
 let private fssetTy = typedefof<Set<_>>
@@ -26,6 +30,9 @@ let private listTy = typedefof<List<_>>
 let private dictionaryTy = typedefof<Dictionary<_, _>>
 let private nullableTy = typedefof<Nullable<_>>
 let private fsunit = typeof<unit>
+let private fsoptionTy = typedefof<option<_>>
+let private fsvoptionTy = typedefof<voption<_>>
+let private yamlnodevalueTy = typedefof<YamlNodeValue<_>>
 
 let private matchType (ty: Type) =
     if ty.IsGenericType && ty.GetGenericTypeDefinition() = fslistTy then TypeKind.FsList
@@ -35,7 +42,15 @@ let private matchType (ty: Type) =
     elif ty.IsGenericType && ty.GetGenericTypeDefinition() = dictionaryTy then TypeKind.Dictionary
     elif ty.IsGenericType && ty.GetGenericTypeDefinition() = nullableTy then TypeKind.Nullable
     elif FSharpType.IsTuple(ty) then TypeKind.FsTuple
-    elif FSharpType.IsUnion(ty, true) then TypeKind.FsUnion
+    elif FSharpType.IsUnion(ty, true) then
+        if ty.IsGenericType then
+            let gen = ty.GetGenericTypeDefinition()
+            if gen = fsoptionTy then TypeKind.FsOption
+            elif gen = fsvoptionTy then TypeKind.FsVOption
+            elif gen = yamlnodevalueTy then TypeKind.YamlNodeValue
+            else TypeKind.FsUnion
+        else
+            TypeKind.FsUnion
     elif FSharpType.IsRecord(ty, true) then TypeKind.FsRecord
     elif ty = fsunit then TypeKind.FsUnit
     elif ty.IsArray then TypeKind.Array
@@ -44,13 +59,13 @@ let private matchType (ty: Type) =
 let private readMethod (ty: Type) = ty.GetMethod("Read")
 let private defaultMethod (ty: Type) = ty.GetMethod("Default")
 
-let private cache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, TypeKind>()
+let private cache = System.Collections.Concurrent.ConcurrentDictionary<Type, TypeKind>()
 let getKind ty = cache.GetOrAdd(ty, matchType)
 
-let private readCache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, MethodInfo>()
+let private readCache = System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo>()
 let getRead ty = readCache.GetOrAdd(ty, readMethod)
 
-let private defaultCache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, MethodInfo>()
+let private defaultCache = System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo>()
 let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
 
 
@@ -69,16 +84,15 @@ let getRequired (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
             match ty.GetCustomAttribute(typeof<AllowNullLiteralAttribute>) with
             | null ->
                 // provide some nullability for few F# types
-                if ty.IsGenericType then
-                    let gen = ty.GetGenericTypeDefinition()
-                    if gen = typedefof<option<_>> then false
-                    elif gen = typedefof<voption<_>> then false
-                    elif gen = typedefof<YamlNodeValue<_>> then false
-                    elif gen = typedefof<list<_>> then false
-                    elif gen = typedefof<Set<_>> then false
-                    elif gen = typedefof<Map<string,_>> then false
-                    else true
-                else
+                match getKind ty with
+                | TypeKind.FsOption
+                | TypeKind.FsVOption
+                | TypeKind.YamlNodeValue
+                | TypeKind.FsList
+                | TypeKind.FsSet
+                | TypeKind.FsMap ->
+                    false
+                | _ ->
                     true
             | _ -> false
 
