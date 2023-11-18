@@ -10,9 +10,9 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
   * F# support: list, map, option, unit and record.
   * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
   * YamlNode/YamlNodeValue<>: this is useful for structure validation (object model driven schema).
-* Support net7.0+
-* Extensible
-* It is small and easily maintainable
+* Support net7.0+.
+* Extensible.
+* It is small and easily maintainable.
 
 # 🧐 Key differences with Yaml 1.2
 Few list of differences. It's probably not exhaustive !
@@ -174,7 +174,7 @@ By default, `PresqueYaml` manages:
 * F# list<_>, Set<_>, Map<string, _>, option, unit, record
 * YamlNode and YamlNodeValue<_>
 
-`YamlNodeValue<_>` allows to discover if a value:
+`YamlNodeValue<_>` allows to discover if a value is provided:
 * has not been provided (Undefined)
 * has not been set (None)
 * has been set (Value)
