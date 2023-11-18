@@ -1,18 +1,17 @@
 # ✨ MagnusOpera.PresqueYaml
 
-In French, "presque" means "almost". If you understand it right, `PresqueYaml` is a yaml subset serialization library 😃.
+In French, "presque" means "almost". If you understand it right, `PresqueYaml` is not a fully compliant yaml parser. Don't worry, it does support most features!
 
 <table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented as I consider them either misleading or niche cases.</td></tr></table>
 
 `PresqueYaml` is written in F# and offers:
 * Yaml deserialization to a representation model.
 * Map representation model to an object model:
-  * F# support: list, map, option, unit and record.
-  * C# support: List<>, Dictionary<,>, Nullable<> and class (via unique constructor).
-  * YamlNode/YamlNodeValue<>: this is useful for structure validation (object model driven schema).
-* Support net7.0+.
-* Extensible.
-* It is small and easily maintainable.
+  * F# support: list<>, map<string,>, option<>, unit and record.
+  * C# support: List<>, Dictionary<string,>, Nullable<> and class (via unique constructor).
+  * YamlNode/YamlNodeValue<>: useful for structure validation (object model driven schema 😅).
+* Support net7.0+ and NRT (Nullable Reference Types).
+* Extensible, small and easily maintainable.
 
 # 🧐 Key differences with Yaml 1.2
 Few list of differences. It's probably not exhaustive !
