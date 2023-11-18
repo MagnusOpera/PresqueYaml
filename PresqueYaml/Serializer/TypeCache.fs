@@ -3,6 +3,7 @@ open System.Reflection
 open FSharp.Reflection
 open System.Collections.Generic
 open System
+open MagnusOpera.PresqueYaml
 
 type TypeKind =
     | FsRecord = 0
@@ -51,3 +52,34 @@ let getRead ty = readCache.GetOrAdd(ty, readMethod)
 
 let private defaultCache = System.Collections.Concurrent.ConcurrentDictionary<System.Type, MethodInfo>()
 let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
+
+
+let nrtContext = NullabilityInfoContext()
+
+let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
+    match nrtInfo.ReadState with
+    | NullabilityState.Nullable -> false
+    | NullabilityState.NotNull -> true
+    | _ ->
+        // F# type ?
+        match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
+        | null -> false
+        | _ ->
+            // F# null allowed ?
+            match ty.GetCustomAttribute(typeof<AllowNullLiteralAttribute>) with
+            | null ->
+                if ty.IsGenericType then
+                    let gen = ty.GetGenericTypeDefinition()
+                    if gen = typedefof<option<_>> then false
+                    elif gen = typedefof<voption<_>> then false
+                    elif gen = typedefof<YamlNodeValue<_>> then false
+                    else true
+                else
+                    false
+            | _ -> false
+
+let getPropertyRequired (propInfo: PropertyInfo) =
+    getRequired propInfo.PropertyType (nrtContext.Create(propInfo))
+
+let getParameterRequired (paramInfo: ParameterInfo) =
+    getRequired paramInfo.ParameterType (nrtContext.Create(paramInfo))

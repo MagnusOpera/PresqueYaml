@@ -27,10 +27,6 @@ type YamlSerializerContext(options:YamlSerializerOptions) =
             let defaultMethodInfo = converter.GetType() |> TypeCache.getDefault
             defaultMethodInfo.Invoke(converter, [| returnType; serializer.Options |])
 
-        member this.Default(): 'T =
-            let serializer = this :> IYamlSerializer
-            serializer.Default(typeof<'T>) :?> 'T
-
         member this.Deserialize(context: string, node: YamlNode, returnType: Type): obj =
             this.Contexts.Push(context)
             let serializer = this :> IYamlSerializer

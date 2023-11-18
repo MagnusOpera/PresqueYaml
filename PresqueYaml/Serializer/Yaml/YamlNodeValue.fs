@@ -13,7 +13,7 @@ type YamlNodeConverter<'T>() =
     inherit YamlConverter<YamlNodeValue<'T>>()
 
     override _.Default (_, _) =
-        YamlNodeValue.Undefined
+        YamlNodeValue<'T>.Undefined
 
     override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
         match node with

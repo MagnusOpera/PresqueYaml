@@ -10,25 +10,21 @@ type ClassConverter<'T when 'T : null>() =
     let ctor = classType.GetConstructors() |> Seq.exactlyOne
     let parameters = ctor.GetParameters()
 
+    let parameterRequired =
+        parameters
+        |> Array.map TypeCache.getParameterRequired
+
     override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
-        let nrtContext = NullabilityInfoContext()
+        let parameterRequired = Array.copy parameterRequired
 
-        let requiredParameters =
+        let parameterValues =
             parameters
-            |> Array.map (fun parameter ->
-                let nrtInfo = nrtContext.Create(parameter)
-                nrtInfo.ReadState = NullabilityState.NotNull)
-
-        let defaultParameters =
-            parameters
-            |> Array.map (fun parameter -> serializer.Default(parameter.ParameterType))
+            |> Array.map (fun info -> serializer.Default(info.ParameterType))
 
         let parameterIndices =
             parameters
             |> Seq.mapi (fun idx pi  -> pi.Name.ToLowerInvariant(), idx)
             |> Map
-
-        let parameterValues = Array.copy defaultParameters
 
         match node with
         | YamlNode.None -> null
@@ -42,10 +38,10 @@ type ClassConverter<'T when 'T : null>() =
                         let propType = parameters[index].ParameterType
                         let data = serializer.Deserialize(parameters[index].Name, node, propType)
                         parameterValues[index] <- data
-                        requiredParameters[index] <- false
+                        parameterRequired[index] <- false
                     | _ -> ()
 
-            let requiredIndex = requiredParameters |> Array.tryFindIndex id
+            let requiredIndex = parameterRequired |> Array.tryFindIndex id
             match requiredIndex with
             | Some idx -> failwith $"Parameter {parameters[idx].Name} must be provided"
             | _ -> ctor.Invoke(parameterValues) :?> 'T

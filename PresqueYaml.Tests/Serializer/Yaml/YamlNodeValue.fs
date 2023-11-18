@@ -7,6 +7,7 @@ open FsUnit
 
 type Titi = {
     String: YamlNodeValue<string>
+    StringOption: string option
     Int: int
 }
 
@@ -23,7 +24,7 @@ let ``yamlnode conversion``() =
 
 [<Test>]
 let ``none option record conversion``() =
-    let expected = { Titi.String = YamlNodeValue.Undefined; Titi.Int = 42 }
+    let expected = { Titi.String = YamlNodeValue.Undefined; Titi.StringOption = None; Titi.Int = 42 }
 
     let node = YamlNode.Mapping (Map [ "Int", YamlNode.Scalar "42" ])
 

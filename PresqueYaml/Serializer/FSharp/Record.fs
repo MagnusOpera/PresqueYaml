@@ -12,25 +12,21 @@ type FSharpRecordConverter<'T when 'T : null>() =
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
     let fields = FSharpType.GetRecordFields(recordType, true)
 
+    let parameterRequired =
+        fields
+        |> Array.map TypeCache.getPropertyRequired
+
     override _.Read(node:YamlNode, typeToConvert:Type, serializer) =
-        let nrtContext = NullabilityInfoContext()
+        let fieldRequired = Array.copy parameterRequired
 
-        let requiredFields =
+        let fieldValues =
             fields
-            |> Array.map (fun parameter ->
-                let nrtInfo = nrtContext.Create(parameter)
-                nrtInfo.ReadState = NullabilityState.NotNull)
-
-        let defaultFields =
-            fields
-            |> Array.map (fun field -> serializer.Default(field.PropertyType))
+            |> Array.map (fun info -> serializer.Default(info.PropertyType))
 
         let fieldIndices =
             fields
             |> Seq.mapi (fun idx pi  -> pi.Name.ToLowerInvariant(), idx)
             |> Map
-
-        let fieldValues = Array.copy defaultFields
 
         match node with
         | YamlNode.Mapping mapping ->
@@ -43,10 +39,10 @@ type FSharpRecordConverter<'T when 'T : null>() =
                         let propType = fields[index].PropertyType
                         let data = serializer.Deserialize(fields[index].Name, node, propType)
                         fieldValues[index] <- data
-                        requiredFields[index] <- false
+                        fieldRequired[index] <- false
                     | _ -> ()
 
-            let requiredIndex = requiredFields |> Array.tryFindIndex id
+            let requiredIndex = fieldRequired |> Array.tryFindIndex id
             match requiredIndex with
             | Some idx -> failwith $"Parameter {fields[idx].Name} must be provided"
             | _ -> ctor fieldValues :?> 'T
