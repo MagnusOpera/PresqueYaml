@@ -23,7 +23,6 @@ let ``check error reporting``() =
         Assert.Fail "Expecting deserialization failure"
     with
     | :? YamlSerializerException as ex ->
-        ex.Message |> should equal "Error while deserializing Toto.Titi"
-        ex.InnerException.Message |> should equal "Parameter Value must be provided"
+        ex.Message |> should equal "Error while deserializing Toto.Titi: parameter Value must be provided"
     | _ ->
         Assert.Fail "Unexpected deserialization failure"

@@ -18,7 +18,7 @@ type FSharpCollectionsConverterFactory() =
             | TypeHelpers.TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
             | TypeHelpers.TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
             | TypeHelpers.TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
-            | _ -> YamlSerializerException.Raise "Unknown type"
+            | _ -> YamlSerializerException.Raise "unknown type"
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
@@ -53,7 +53,7 @@ type FSharpUnionConverterFactory() =
                 .Invoke([| |])
             :?> YamlConverter
 
-        | _ -> YamlSerializerException.Raise "Unknown type"
+        | _ -> YamlSerializerException.Raise "unknown type"
 
 
 type FSharpRecordConverterFactory() =

@@ -38,7 +38,7 @@ type ClassConverter<'T when 'T : null>() =
 
             let requiredIndex = parameterRequired |> Array.tryFindIndex id
             match requiredIndex with
-            | Some idx -> YamlSerializerException.Raise $"Parameter {parameters[idx].Name} must be provided"
+            | Some idx -> YamlSerializerException.Raise $"parameter {parameters[idx].Name} must be provided"
             | _ -> ctor.Invoke(parameterValues) :?> 'T
 
-        | _ -> YamlSerializerException.Raise "Can't convert sequence or mapping to record"
+        | _ -> YamlSerializerException.Raise "can't convert sequence or mapping to record"

@@ -38,6 +38,6 @@ type FSharpRecordConverter<'T when 'T : null>() =
 
             let requiredIndex = fieldRequired |> Array.tryFindIndex id
             match requiredIndex with
-            | Some idx -> YamlSerializerException.Raise $"Parameter {fields[idx].Name} must be provided"
+            | Some idx -> YamlSerializerException.Raise $"parameter {fields[idx].Name} must be provided"
             | _ -> ctor fieldValues :?> 'T
-        | _ -> YamlSerializerException.Raise "Can't convert None, Sequence or Mapping to record"
+        | _ -> YamlSerializerException.Raise "can't convert None, Sequence or Mapping to record"

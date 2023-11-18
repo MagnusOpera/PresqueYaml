@@ -52,8 +52,8 @@ type YamlSerializer() =
 
             let meaningfulEx = findSerializerException ex
             let path = String.Join(".", serializer.Contexts |> Seq.rev)
-            let msg = $"Error while deserializing {path}"
-            YamlSerializerException(msg, meaningfulEx) |> raise
+            let msg = $"Error while deserializing {path}: {meaningfulEx.Message}"
+            YamlSerializerException(msg, meaningfulEx.InnerException) |> raise
 
     static member Deserialize<'T>(node:YamlNode, options:YamlSerializerOptions): 'T =
         YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
