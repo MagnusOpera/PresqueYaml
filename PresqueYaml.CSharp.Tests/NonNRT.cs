@@ -18,17 +18,6 @@ public class TestCSharpNonNRT
     public void CheckNonNRT() {
         var yaml = "firstName: John";
         var node = YamlParser.Read(yaml);
-        var person = YamlSerializer.Deserialize<PersonNonNRT>(node);
-        Assert.That(person.FirstName, Is.EqualTo("John"));
-        Assert.That(person.LastName, Is.Null);
-    }
-
-    [Test]
-    public void CheckNonNRTRequired() {
-        var yaml = "lastName: Doe";
-        var node = YamlParser.Read(yaml);
-        var person = YamlSerializer.Deserialize<PersonNonNRT>(node);
-        Assert.That(person.LastName, Is.EqualTo("Doe"));
-        Assert.That(person.FirstName, Is.Null);
+        Assert.That(() => YamlSerializer.Deserialize<PersonNonNRT>(node), Throws.Exception);
     }
 }

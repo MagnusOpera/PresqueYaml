@@ -63,7 +63,7 @@ let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
     | _ ->
         // F# type ?
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
-        | null -> false
+        | null -> true
         | _ ->
             // F# null allowed ?
             match ty.GetCustomAttribute(typeof<AllowNullLiteralAttribute>) with
