@@ -163,6 +163,13 @@ let map = YamlSerializer.Deserialize<Map<string, string>>(node)
 // map is of type Map<string, string>
 ```
 
+### Specific behaviors
+By default, following types have a default value:
+* reference types: null if NRT enabled and type is nullable
+* Collections (both F# and C#): empty
+* Option: None
+* YamlNodeValue: Undefined
+
 ### Special types
 
 By default, `PresqueYaml` manages:

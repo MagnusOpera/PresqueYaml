@@ -40,7 +40,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/MagnusOpera/PresqueYaml</PackageProjectUrl>
     <RepositoryUrl>git@github.com:MagnusOpera/PresqueYaml.git</RepositoryUrl>
-    <PackageTags>yaml;F#;C#</PackageTags>
+    <PackageTags>yaml;parser;serialization;F#;C#</PackageTags>
     <PackageReadmeFile>NUGET.md</PackageReadmeFile>
   </PropertyGroup>
 
