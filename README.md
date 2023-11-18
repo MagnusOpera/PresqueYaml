@@ -141,7 +141,7 @@ F# is preferred of course to explore the representation model (exposed in `Magnu
 In order to convert a yaml document to a representation model, use:
 ```ocaml
 let yaml = "value: toto"
-let node = MagnusOpera.PresqueYaml.YamlParser.Read yaml
+let node = YamlParser.Read yaml
 // node is of type PresqueYaml.YamlNode
 ```
 
@@ -159,11 +159,9 @@ type YamlNode =
 To convert a representation model to an .net object model, use:
 ```ocaml
 let node = ... // representation model
-let map = MagnusOpera.PresqueYaml.YamlSerializer.Deserialize<Map<string, string>>(node, Defaults.options)
+let map = YamlSerializer.Deserialize<Map<string, string>>(node)
 // map is of type Map<string, string>
 ```
-
-There is also a non-generic `Deserialize` method if you need more flexibility but for most cases, generic one shall be sufficient.
 
 ### Special types
 
