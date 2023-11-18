@@ -63,6 +63,7 @@ let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
     | _ ->
         // F# type ?
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
+        // better sad than sorry: no clues about nullability and not F# so in doubt force required
         | null -> true
         | _ ->
             // F# null allowed ?
