@@ -55,8 +55,7 @@ let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
 
 
 let nrtContext = NullabilityInfoContext()
-
-let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
+let getRequired (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
     match nrtInfo.ReadState with
     | NullabilityState.Nullable -> false
     | NullabilityState.NotNull -> true
@@ -83,8 +82,8 @@ let getRequired (ty: Type) (nrtInfo: NullabilityInfo): bool =
                     true
             | _ -> false
 
-let getPropertyRequired (propInfo: PropertyInfo) =
-    getRequired propInfo.PropertyType (nrtContext.Create(propInfo))
+let private propInfoRequiredCache = System.Collections.Concurrent.ConcurrentDictionary<PropertyInfo, bool>()
+let getPropertyRequired (propInfo: PropertyInfo) = propInfoRequiredCache.GetOrAdd(propInfo, getRequired propInfo.PropertyType (nrtContext.Create(propInfo)))
 
-let getParameterRequired (paramInfo: ParameterInfo) =
-    getRequired paramInfo.ParameterType (nrtContext.Create(paramInfo))
+let private paramInfoRequiredCache = System.Collections.Concurrent.ConcurrentDictionary<ParameterInfo, bool>()
+let getParameterRequired (paramInfo: ParameterInfo) = paramInfoRequiredCache.GetOrAdd(paramInfo, getRequired paramInfo.ParameterType (nrtContext.Create(paramInfo)))
