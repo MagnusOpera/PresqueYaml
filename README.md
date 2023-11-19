@@ -81,6 +81,10 @@ scalarLiteral: >
     is
       a
         scalar
+implicitFoldedScalarMultiline: this
+                               is
+                               a
+                               scalar 
 
 # sequences
 sequence:

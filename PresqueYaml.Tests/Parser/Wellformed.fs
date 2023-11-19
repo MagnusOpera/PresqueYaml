@@ -78,6 +78,7 @@ let allCapabilities() =
                                 "scalarDoubleQuoted", YamlNode.Scalar "  this is a double quoted \nscalar  "
                                 "scalarFolded", YamlNode.Scalar "this\n  is\n    a\n      scalar"
                                 "scalarLiteral", YamlNode.Scalar "this   is     a       scalar"
+                                "implicitFoldedScalarMultiline", YamlNode.Scalar "this is a scalar"
 
                                 // sequences
                                 "sequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
@@ -120,6 +121,10 @@ let allCapabilities() =
         is
           a
             scalar
+    implicitFoldedScalarMultiline: this
+                                   is
+                                   a
+                                   scalar
 
     # sequences
     sequence:
