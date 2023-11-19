@@ -160,6 +160,7 @@ F# is preferred of course to explore the representation model (exposed in `Magnu
 
 ## Availability
 [![Nuget](https://img.shields.io/nuget/v/MagnusOpera.PresqueYaml)](https://nuget.org/packages/MagnusOpera.PresqueYaml)
+
 [![Build status](https://github.com/MagnusOpera/PresqueYaml/workflows/build/badge.svg)](https://github.com/MagnusOpera/PresqueYaml/actions?query=workflow%3Abuild)
 
 ## Requirements
