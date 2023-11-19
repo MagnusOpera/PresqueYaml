@@ -1,5 +1,7 @@
 # ✨ MagnusOpera.PresqueYaml
 
+`PresqueYaml` is a Yaml parser and deserializer.
+
 In French, "presque" means "almost". If you understand it right, `PresqueYaml` is not a fully compliant yaml parser. Don't worry, it does support most features!
 
 <table><tr><td>If you want a strict 1.2 yaml parser, do not use this project: missing features will probably never be implemented as I consider them either misleading or niche cases.</td></tr></table>
