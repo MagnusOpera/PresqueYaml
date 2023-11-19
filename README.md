@@ -52,7 +52,7 @@ A block can either be a mapping, sequence or scalar. In any cases, explicitness 
 * quoted string keys are not allowed - they are of string type (without any spaces) and ends with `:` character.
 * mapping can have duplicated keys (last key wins).
 * compact mappings (single line) are not supported.
-* mappings can be nested on same line (think explicit block) - it's not encouraged since it's a clear departure from Yaml.
+* mappings can be nested on same line (think nested block) - it's not encouraged since it's a clear departure from Yaml.
 
 ## Comments
 * a line is either empty, comment or content. Mixed content is not supported.
