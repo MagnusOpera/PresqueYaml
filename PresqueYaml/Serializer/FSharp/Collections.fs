@@ -8,7 +8,7 @@ type FSharpListConverter<'T>() =
 
     override _.Default options =
         if options.NoneIsEmpty then List.empty
-        else failwith $"Failed to convert None to list"
+        else Unchecked.defaultof<'T list>
 
     override _.Read(node:YamlNode, serializer) =
         match node with
@@ -27,7 +27,7 @@ type FSharpSetConverter<'T when 'T: comparison>() =
 
     override _.Default options =
         if options.NoneIsEmpty then Set.empty
-        else failwith $"Failed to convert None to set"
+        else Unchecked.defaultof<Set<'T>>
 
     override _.Read(node:YamlNode, serializer) =
         match node with
@@ -47,7 +47,7 @@ type FSharpMapConverter<'T>() =
 
     override _.Default options =
         if options.NoneIsEmpty then Map.empty
-        else failwith $"Failed to convert None to map"
+        else Unchecked.defaultof<Map<string, 'T>>
 
     override _.Read(node:YamlNode, serializer) =
         match node with
