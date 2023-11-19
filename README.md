@@ -40,19 +40,19 @@ A block can either be a mapping, sequence or scalar. In any cases, explicitness 
 
 ## Scalars
 * single and double quoted strings are handled exactely the same.
-* quoted string keys are not allowed - they are of string type and not scalar type.
-* scalar are either compact (single line), folded or literal. You must choose one.
+* scalar are either compact (and multilines with same indentation), folded or literal. Implicit flow scalar with dedent is not supported for eg.
 * only escapes `\n`, `\r`, `\t`and `\s` are supported.
-* representation model is always using `string`type - it does not attempt to identify types: that's mapper responsibility.
+* representation model is always using `string`type - it does not attempt to identify types: that's subsequent analyzer or deserializer responsibility.
 
 ## Sequences
 * compact sequences do not support quoted strings - only raw content.
-* Sequence must be indented respective to parent node.
+* Sequence must be strictly indented respective to parent node.
 
 ## Mappings
+* quoted string keys are not allowed - they are of string type (without any spaces) and ends with `:` character.
 * mapping can have duplicated keys (last key wins).
 * compact mappings (single line) are not supported.
-* mappings can be nested.
+* mappings can be nested on same line (think explicit block).
 
 ## Comments
 * a line is either empty, comment or content. Mixed content is not supported.
