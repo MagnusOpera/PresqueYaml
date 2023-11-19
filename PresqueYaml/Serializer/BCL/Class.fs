@@ -2,17 +2,19 @@ namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
 [<Sealed>]
-type ClassConverter<'T when 'T : null>() =
+type ClassConverter<'T when 'T : null>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T>()
 
     let classType = typeof<'T>
     let ctor = classType.GetConstructors() |> Seq.exactlyOne
     let parameters = ctor.GetParameters()
 
+    let parameterRequired =
+        parameters
+        |> Array.map (TypeHelpers.getParameterRequired options.NoneIsEmpty)
+
     override _.Read(node:YamlNode, serializer) =
-        let parameterRequired =
-            parameters
-            |> Array.map (TypeHelpers.getParameterRequired serializer.Options.NoneIsEmpty)
+        let parameterRequired = Array.copy parameterRequired
 
         let parameterValues =
             parameters

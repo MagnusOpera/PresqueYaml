@@ -12,7 +12,7 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
             |> List.tryFind (fun converter -> converter.CanConvert returnType)
         match factory with
         | Some factory ->
-            let converter = factory.CreateConverter(returnType)
+            let converter = factory.CreateConverter(returnType, options)
             converter
         | _ ->
             YamlParserException.Raise $"type {returnType.Name} has no registered converter"
@@ -20,14 +20,10 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
     member val Contexts = System.Collections.Generic.Stack<string>()
 
     interface IYamlSerializer with
-        member _.Options: YamlSerializerOptions =
-            options
-
         member this.Default(returnType: Type): obj =
-            let serializer = this :> IYamlSerializer
             let converter = getConverter returnType
             let defaultMethodInfo = converter.GetType() |> TypeHelpers.getDefault
-            defaultMethodInfo.Invoke(converter, [| serializer.Options |])
+            defaultMethodInfo.Invoke(converter, [| |])
 
         member this.Deserialize(context: string, node: YamlNode, returnType: Type): obj =
             this.Contexts.Push(context)

@@ -14,7 +14,7 @@ type FSharpCollectionsConverterFactory() =
         | TypeKind.FsMap -> true
         | _ -> false
 
-    override _.CreateConverter (typeToConvert: Type) =
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType, idx =
             match getKind typeToConvert with
             | TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
@@ -24,8 +24,8 @@ type FSharpCollectionsConverterFactory() =
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
         :?> YamlConverter
 
 
@@ -39,7 +39,7 @@ type FSharpUnionConverterFactory() =
         | TypeKind.FsVOption -> true
         | _ -> false
 
-    override _.CreateConverter (typeToConvert: Type) =
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType = typedefof<FSharpOptionConverter<_>>
 
         converterType
@@ -58,12 +58,12 @@ type FSharpRecordConverterFactory() =
         | TypeKind.FsRecord -> true
         | _ -> false
 
-    override _.CreateConverter (typeToConvert: Type) =
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType = typedefof<FSharpRecordConverter<_>>
         converterType
             .MakeGenericType([| typeToConvert |])
-            .GetConstructor([| |])
-            .Invoke([| |])
+            .GetConstructor([| typeof<YamlSerializerOptions> |])
+            .Invoke([| options |])
         :?> YamlConverter
 
 
@@ -76,5 +76,5 @@ type FSharpUnitConverterFactory() =
         | TypeKind.FsUnit -> true
         | _ -> false
 
-    override _.CreateConverter (typeToConvert: Type) =
+    override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         FSharpUnitConverter()

@@ -14,13 +14,10 @@ type YamlSerializerOptions() =
 
 and [<AbstractClass>] YamlConverterFactory() =
     abstract CanConvert: typeToConvert:Type -> bool
-    default _.CanConvert(_) = true
-
-    abstract CreateConverter: typeToConvert:Type -> YamlConverter
+    abstract CreateConverter: typeToConvert:Type * options:YamlSerializerOptions -> YamlConverter
 
 
 type IYamlSerializer =
-    abstract member Options: YamlSerializerOptions
     abstract member Default: returnType:Type -> obj
     abstract member Deserialize: context:string * node:YamlNode * returnType:Type -> obj
 
@@ -28,8 +25,8 @@ and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
     abstract Read: node:YamlNode * serializer:IYamlSerializer -> 'T
 
-    abstract Default: options:YamlSerializerOptions -> 'T
-    default _.Default (options:YamlSerializerOptions) = Unchecked.defaultof<'T>
+    abstract Default: 'T
+    default _.Default = Unchecked.defaultof<'T>
 
 
 type YamlSerializerException(msg:string, ?innerEx:Exception) =

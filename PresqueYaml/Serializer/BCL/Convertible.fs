@@ -4,13 +4,13 @@ open System
 
 
 [<Sealed>]
-type ConvertibleConverter<'T>() =
+type ConvertibleConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T>()
 
     override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None ->
-            if serializer.Options.NoneIsEmpty then Unchecked.defaultof<'T>
+            if options.NoneIsEmpty then Unchecked.defaultof<'T>
             else YamlSerializerException.Raise "failed to convert None to convertible"
         | YamlNode.Scalar data -> Convert.ChangeType(data, typeof<'T>) :?> 'T
         | _ -> YamlSerializerException.Raise $"failed to convert to {typeof<'T>.Name}"

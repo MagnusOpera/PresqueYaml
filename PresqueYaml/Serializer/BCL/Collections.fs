@@ -4,17 +4,17 @@ open MagnusOpera.PresqueYaml
 
 
 [<Sealed>]
-type ListConverter<'T>() =
+type ListConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<List<'T>>()
 
-    override _.Default options =
+    override _.Default =
         if options.NoneIsEmpty then List<'T>()
         else null
 
     override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None ->
-            if serializer.Options.NoneIsEmpty then List<'T>()
+            if options.NoneIsEmpty then List<'T>()
             else failwith $"Failed to convert None to list"
         | YamlNode.Sequence sequence ->
             sequence
@@ -24,17 +24,17 @@ type ListConverter<'T>() =
 
 
 [<Sealed>]
-type DictionaryConverter<'T>() =
+type DictionaryConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<Dictionary<string, 'T>>()
 
-    override _.Default options =
+    override _.Default =
         if options.NoneIsEmpty then Dictionary<string, 'T>()
         else null
 
     override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None ->
-            if serializer.Options.NoneIsEmpty then Dictionary<string, 'T>()
+            if options.NoneIsEmpty then Dictionary<string, 'T>()
             else failwith $"Failed to convert None to dictionary"
         | YamlNode.Mapping mapping ->
             mapping
@@ -44,17 +44,17 @@ type DictionaryConverter<'T>() =
 
 
 [<Sealed>]
-type ArrayConverter<'T>() =
+type ArrayConverter<'T>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T[]>()
 
-    override _.Default options =
+    override _.Default =
         if options.NoneIsEmpty then Array.empty
         else null
 
     override _.Read(node:YamlNode, serializer) =
         match node with
         | YamlNode.None ->
-            if serializer.Options.NoneIsEmpty then Array.empty
+            if options.NoneIsEmpty then Array.empty
             else failwith $"Failed to convert None to array"
         | YamlNode.Sequence sequence ->
             sequence
