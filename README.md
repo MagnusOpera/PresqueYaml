@@ -207,8 +207,8 @@ By default, following types have a default value:
 | Type                         | Default value                                |
 |------------------------------|----------------------------------------------|
 | reference types              | `null` if NRT enabled and type is nullable   |
-| Collections (both F# and C#) | empty                                        |
-| YamlNodeValue                | YamlNodeValue.Undefined                      |
+| Collections (both F# and C#) | `empty`                                      |
+| YamlNodeValue                | `YamlNodeValue.Undefined`                    |
 
 This behavior can be changed by providing a `YamlDeserializationOptions` on `Deserialize`.
 
