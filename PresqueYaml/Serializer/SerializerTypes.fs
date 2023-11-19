@@ -2,8 +2,10 @@ namespace MagnusOpera.PresqueYaml
 open System
 open MagnusOpera.PresqueYaml
 
+[<AbstractClass>]
 type YamlConverter() = class end
 
+[<Sealed>]
 type YamlSerializerOptions() =
     member val Converters: YamlConverterFactory list = [] with get, set
     member val NoneIsEmpty: bool = true with get, set

@@ -1,12 +1,14 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
+[<Sealed>]
 type YamlNodeConverter() =
     inherit YamlConverter<YamlNode>()
 
     override _.Read(node:YamlNode, _) =
         node
 
+[<Sealed>]
 type YamlNodeConverter<'T>() =
     inherit YamlConverter<YamlNodeValue<'T>>()
 

@@ -1,6 +1,7 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
+[<Sealed>]
 type FSharpListConverter<'T>() =
     inherit YamlConverter<'T list>()
 
@@ -18,6 +19,7 @@ type FSharpListConverter<'T>() =
             |> List.map (fun node -> serializer.Deserialize("list", node, typeof<'T>) :?> 'T)
         | _ -> failwith $"Failed to convert to {typeof<list<'T>>.Name}"
 
+[<Sealed>]
 type FSharpSetConverter<'T when 'T: comparison>() =
     inherit YamlConverter<Set<'T>>()
 
@@ -36,6 +38,7 @@ type FSharpSetConverter<'T when 'T: comparison>() =
             |> Set
         | _ -> failwith $"Failed to convert to {typeof<Set<'T>>.Name}"
 
+[<Sealed>]
 type FSharpMapConverter<'T>() =
     inherit YamlConverter<Map<string, 'T>>()
 

@@ -2,6 +2,8 @@ namespace MagnusOpera.PresqueYaml.Converters
 open System
 open MagnusOpera.PresqueYaml
 
+
+[<Sealed>]
 type CollectionConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -26,6 +28,7 @@ type CollectionConverterFactory() =
         :?> YamlConverter
 
 
+[<Sealed>]
 type ArrayConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -44,6 +47,7 @@ type ArrayConverterFactory() =
         :?> YamlConverter
 
 
+[<Sealed>]
 type ConvertibleConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -71,6 +75,7 @@ type ConvertibleConverterFactory() =
         else failwith "Unknown type"
 
 
+[<Sealed>]
 type NullableConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -90,6 +95,7 @@ type NullableConverterFactory() =
         :?> YamlConverter
 
 
+[<Sealed>]
 type ClassConverterFactory() =
     inherit YamlConverterFactory()
 

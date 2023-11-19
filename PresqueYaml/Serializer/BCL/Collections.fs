@@ -2,6 +2,8 @@ namespace MagnusOpera.PresqueYaml.Converters
 open System.Collections.Generic
 open MagnusOpera.PresqueYaml
 
+
+[<Sealed>]
 type ListConverter<'T>() =
     inherit YamlConverter<List<'T>>()
 
@@ -20,6 +22,8 @@ type ListConverter<'T>() =
             |> List
         | _ -> failwith $"Failed to convert to {typeof<List<'T>>.Name}"
 
+
+[<Sealed>]
 type DictionaryConverter<'T>() =
     inherit YamlConverter<Dictionary<string, 'T>>()
 
@@ -38,6 +42,8 @@ type DictionaryConverter<'T>() =
             |> Dictionary<string, 'T>
         | _ -> failwith $"Failed to convert to {typeof<Dictionary<string, 'T>>.Name}"
 
+
+[<Sealed>]
 type ArrayConverter<'T>() =
     inherit YamlConverter<'T[]>()
 

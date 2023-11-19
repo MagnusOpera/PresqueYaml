@@ -2,6 +2,8 @@ namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 open Microsoft.FSharp.Reflection
 
+
+[<Sealed>]
 type FSharpRecordConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
 

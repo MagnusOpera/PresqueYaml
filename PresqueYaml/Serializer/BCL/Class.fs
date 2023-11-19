@@ -1,6 +1,7 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
+[<Sealed>]
 type ClassConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
 

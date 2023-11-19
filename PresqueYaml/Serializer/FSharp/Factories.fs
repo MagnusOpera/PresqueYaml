@@ -3,6 +3,7 @@ open System
 open MagnusOpera.PresqueYaml
 open TypeHelpers
 
+[<Sealed>]
 type FSharpCollectionsConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -28,6 +29,7 @@ type FSharpCollectionsConverterFactory() =
         :?> YamlConverter
 
 
+[<Sealed>]
 type FSharpUnionConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -46,6 +48,8 @@ type FSharpUnionConverterFactory() =
             .Invoke([| |])
         :?> YamlConverter
 
+
+[<Sealed>]
 type FSharpRecordConverterFactory() =
     inherit YamlConverterFactory()
 
@@ -63,6 +67,7 @@ type FSharpRecordConverterFactory() =
         :?> YamlConverter
 
 
+[<Sealed>]
 type FSharpUnitConverterFactory() =
     inherit YamlConverterFactory()
 

@@ -2,6 +2,8 @@ namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 open System
 
+
+[<Sealed>]
 type ConvertibleConverter<'T>() =
     inherit YamlConverter<'T>()
 

@@ -2,7 +2,9 @@ namespace MagnusOpera.PresqueYaml
 open System
 open MagnusOpera.PresqueYaml
 
-type YamlSerializerContext(options:YamlSerializerOptions) =
+
+[<Sealed>]
+type private YamlSerializerContext(options:YamlSerializerOptions) =
     let getConverter (returnType:Type) =
         let factory =
             options.Converters

@@ -1,6 +1,8 @@
 namespace MagnusOpera.PresqueYaml.Converters
 open MagnusOpera.PresqueYaml
 
+
+[<Sealed>]
 type FSharpOptionConverter<'T>() =
     inherit YamlConverter<'T option>()
 
