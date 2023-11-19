@@ -2,12 +2,17 @@ namespace MagnusOpera.PresqueYaml
 open System
 open MagnusOpera.PresqueYaml
 
-
 type YamlSerializerContext(options:YamlSerializerOptions) =
     let getConverter (returnType:Type) =
-        let factory = options.GetConverter returnType
-        let converter = factory.CreateConverter(returnType)
-        converter
+        let factory =
+            options.Converters
+            |> List.tryFind (fun converter -> converter.CanConvert returnType)
+        match factory with
+        | Some factory ->
+            let converter = factory.CreateConverter(returnType)
+            converter
+        | _ ->
+            YamlParserException.Raise $"type {returnType.Name} has no registered converter"
 
     member val Contexts = System.Collections.Generic.Stack<string>()
 
