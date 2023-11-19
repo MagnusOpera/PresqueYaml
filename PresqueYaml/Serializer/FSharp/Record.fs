@@ -8,8 +8,8 @@ type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
     inherit YamlConverter<'T>()
 
     let recordType = typeof<'T>
-    let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
-    let fields = FSharpType.GetRecordFields(recordType, true)
+    let ctor = FSharpValue.PreComputeRecordConstructor(recordType)
+    let fields = FSharpType.GetRecordFields(recordType)
 
     let fieldRequired =
         fields
