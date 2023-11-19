@@ -22,13 +22,13 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 
 ```
 +--[block1]-------------x
-|                 
+|
 |  +--[block2]----------x
-|  |              
-|  x              
-|         
+|  |
+|  x
+|
 |  +--[block3]----------x
-|  |         
+|  |
 |  |
 |  x
 |
@@ -68,6 +68,10 @@ Here is a document showing `PresqueYaml` capabilities:
 
 # scalars
 scalar: this is a scalar
+implicitFoldedScalarMultiline: this
+                               is
+                               a
+                               scalar
 noneScalar:
 scalarSingleQuoted: '  this is a single quoted \\nscalar  '
 scalarDoubleQuoted: \"  this is a double quoted \\nscalar  \"
@@ -81,10 +85,6 @@ scalarLiteral: >
     is
       a
         scalar
-implicitFoldedScalarMultiline: this
-                               is
-                               a
-                               scalar 
 
 # sequences
 sequence:
@@ -118,6 +118,7 @@ F# representation model:
 ```ocaml
 YamlNode.Mapping (Map [ // scalars
                         "scalar", YamlNode.Scalar "this is a scalar"
+                        "implicitFoldedScalarMultiline", YamlNode.Scalar "this is a scalar"
                         "noneScalar", YamlNode.None
                         "scalarSingleQuoted", YamlNode.Scalar "  this is a single quoted \nscalar  "
                         "scalarDoubleQuoted", YamlNode.Scalar "  this is a double quoted \nscalar  "

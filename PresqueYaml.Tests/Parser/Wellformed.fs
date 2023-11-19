@@ -73,12 +73,12 @@ let allCapabilities() =
     let expected =
         YamlNode.Mapping (Map [ // scalars
                                 "scalar", YamlNode.Scalar "this is a scalar"
+                                "implicitFoldedScalarMultiline", YamlNode.Scalar "this is a scalar"
                                 "noneScalar", YamlNode.None
                                 "scalarSingleQuoted", YamlNode.Scalar "  this is a single quoted \nscalar  "
                                 "scalarDoubleQuoted", YamlNode.Scalar "  this is a double quoted \nscalar  "
                                 "scalarFolded", YamlNode.Scalar "this\n  is\n    a\n      scalar"
                                 "scalarLiteral", YamlNode.Scalar "this   is     a       scalar"
-                                "implicitFoldedScalarMultiline", YamlNode.Scalar "this is a scalar"
 
                                 // sequences
                                 "sequence", YamlNode.Sequence [ YamlNode.Scalar "item1"
@@ -108,6 +108,10 @@ let allCapabilities() =
 
     # scalars
     scalar: this is a scalar
+    implicitFoldedScalarMultiline: this
+                                   is
+                                   a
+                                   scalar
     noneScalar:
     scalarSingleQuoted: '  this is a single quoted \\nscalar  '
     scalarDoubleQuoted: \"  this is a double quoted \\nscalar  \"
@@ -121,10 +125,6 @@ let allCapabilities() =
         is
           a
             scalar
-    implicitFoldedScalarMultiline: this
-                                   is
-                                   a
-                                   scalar
 
     # sequences
     sequence:
