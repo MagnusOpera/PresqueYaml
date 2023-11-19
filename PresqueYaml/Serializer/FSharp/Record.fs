@@ -4,19 +4,17 @@ open Microsoft.FSharp.Reflection
 
 
 [<Sealed>]
-type FSharpRecordConverter<'T when 'T : null>(options:YamlSerializerOptions) =
+type FSharpRecordConverter<'T when 'T : null>() =
     inherit YamlConverter<'T>()
 
     let recordType = typeof<'T>
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType)
     let fields = FSharpType.GetRecordFields(recordType)
 
-    let fieldRequired =
-        fields
-        |> Array.map (TypeHelpers.getPropertyRequired options.NoneIsEmpty)
-
-    override _.Read(node:YamlNode, serializer) =
-        let fieldRequired = Array.copy fieldRequired
+    override _.Read(node, options, serializer) =
+        let fieldRequired =
+            fields
+            |> Array.map (TypeHelpers.getPropertyRequired options.NoneIsEmpty)
 
         let fieldValues =
             fields

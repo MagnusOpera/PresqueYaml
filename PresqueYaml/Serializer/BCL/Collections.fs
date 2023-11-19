@@ -4,14 +4,14 @@ open MagnusOpera.PresqueYaml
 
 
 [<Sealed>]
-type ListConverter<'T>(options:YamlSerializerOptions) =
+type ListConverter<'T>() =
     inherit YamlConverter<List<'T>>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then List<'T>()
         else null
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then List<'T>()
@@ -24,14 +24,14 @@ type ListConverter<'T>(options:YamlSerializerOptions) =
 
 
 [<Sealed>]
-type DictionaryConverter<'T>(options:YamlSerializerOptions) =
+type DictionaryConverter<'T>() =
     inherit YamlConverter<Dictionary<string, 'T>>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then Dictionary<string, 'T>()
         else null
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Dictionary<string, 'T>()
@@ -44,14 +44,14 @@ type DictionaryConverter<'T>(options:YamlSerializerOptions) =
 
 
 [<Sealed>]
-type ArrayConverter<'T>(options:YamlSerializerOptions) =
+type ArrayConverter<'T>() =
     inherit YamlConverter<'T[]>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then Array.empty
         else null
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Array.empty

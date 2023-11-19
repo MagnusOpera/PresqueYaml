@@ -23,14 +23,14 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
         member this.Default(returnType: Type): obj =
             let converter = getConverter returnType
             let defaultMethodInfo = converter.GetType() |> TypeHelpers.getDefault
-            defaultMethodInfo.Invoke(converter, [| |])
+            defaultMethodInfo.Invoke(converter, [| options |])
 
         member this.Deserialize(context: string, node: YamlNode, returnType: Type): obj =
             this.Contexts.Push(context)
             let serializer = this :> IYamlSerializer
             let converter = getConverter returnType
             let readMethodInfo = converter.GetType() |> TypeHelpers.getRead
-            let res = readMethodInfo.Invoke(converter, [| node; serializer |])
+            let res = readMethodInfo.Invoke(converter, [| node; options; serializer |])
             this.Contexts.Pop() |> ignore
             res
 

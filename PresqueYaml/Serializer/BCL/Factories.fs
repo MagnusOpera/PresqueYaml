@@ -23,8 +23,8 @@ type CollectionConverterFactory() =
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
+            .GetConstructor([| |])
+            .Invoke([| |])
         :?> YamlConverter
 
 
@@ -42,8 +42,8 @@ type ArrayConverterFactory() =
 
         converterType
             .MakeGenericType([| typeToConvert.GetElementType() |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
+            .GetConstructor([| |])
+            .Invoke([| |])
         :?> YamlConverter
 
 
@@ -63,15 +63,15 @@ type ConvertibleConverterFactory() =
         || typeToConvert = typeof<String>
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-        if typeToConvert = typeof<Int16> then ConvertibleConverter<Int16>(options)
-        elif typeToConvert = typeof<UInt16> then ConvertibleConverter<UInt16>(options)
-        elif typeToConvert = typeof<Int32> then ConvertibleConverter<Int32>(options)
-        elif typeToConvert = typeof<UInt32> then ConvertibleConverter<UInt32>(options)
-        elif typeToConvert = typeof<Int64> then ConvertibleConverter<Int64>(options)
-        elif typeToConvert = typeof<UInt64> then ConvertibleConverter<UInt64>(options)
-        elif typeToConvert = typeof<Char> then ConvertibleConverter<Char>(options)
-        elif typeToConvert = typeof<Byte> then ConvertibleConverter<Byte>(options)
-        elif typeToConvert = typeof<String> then ConvertibleConverter<String>(options)
+        if typeToConvert = typeof<Int16> then ConvertibleConverter<Int16>()
+        elif typeToConvert = typeof<UInt16> then ConvertibleConverter<UInt16>()
+        elif typeToConvert = typeof<Int32> then ConvertibleConverter<Int32>()
+        elif typeToConvert = typeof<UInt32> then ConvertibleConverter<UInt32>()
+        elif typeToConvert = typeof<Int64> then ConvertibleConverter<Int64>()
+        elif typeToConvert = typeof<UInt64> then ConvertibleConverter<UInt64>()
+        elif typeToConvert = typeof<Char> then ConvertibleConverter<Char>()
+        elif typeToConvert = typeof<Byte> then ConvertibleConverter<Byte>()
+        elif typeToConvert = typeof<String> then ConvertibleConverter<String>()
         else failwith "Unknown type"
 
 
@@ -108,6 +108,6 @@ type ClassConverterFactory() =
         let converterType = typedefof<ClassConverter<_>>
         converterType
             .MakeGenericType([| typeToConvert |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
+            .GetConstructor([| |])
+            .Invoke([| |])
         :?> YamlConverter

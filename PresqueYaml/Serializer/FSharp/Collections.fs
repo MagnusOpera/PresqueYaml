@@ -3,14 +3,14 @@ open MagnusOpera.PresqueYaml
 
 
 [<Sealed>]
-type FSharpListConverter<'T>(options:YamlSerializerOptions) =
+type FSharpListConverter<'T>() =
     inherit YamlConverter<'T list>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then List.empty
         else Unchecked.defaultof<'T list>
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then List.empty
@@ -22,14 +22,14 @@ type FSharpListConverter<'T>(options:YamlSerializerOptions) =
 
 
 [<Sealed>]
-type FSharpSetConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
+type FSharpSetConverter<'T when 'T: comparison>() =
     inherit YamlConverter<Set<'T>>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then Set.empty
         else Unchecked.defaultof<Set<'T>>
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Set.empty
@@ -42,14 +42,14 @@ type FSharpSetConverter<'T when 'T: comparison>(options:YamlSerializerOptions) =
 
 
 [<Sealed>]
-type FSharpMapConverter<'T>(options:YamlSerializerOptions) =
+type FSharpMapConverter<'T>() =
     inherit YamlConverter<Map<string, 'T>>()
 
-    override _.Default =
+    override _.Default options =
         if options.NoneIsEmpty then Map.empty
         else Unchecked.defaultof<Map<string, 'T>>
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Map.empty

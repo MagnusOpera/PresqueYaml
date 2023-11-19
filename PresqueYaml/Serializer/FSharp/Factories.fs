@@ -24,8 +24,8 @@ type FSharpCollectionsConverterFactory() =
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
+            .GetConstructor([| |])
+            .Invoke([| |])
         :?> YamlConverter
 
 
@@ -62,8 +62,8 @@ type FSharpRecordConverterFactory() =
         let converterType = typedefof<FSharpRecordConverter<_>>
         converterType
             .MakeGenericType([| typeToConvert |])
-            .GetConstructor([| typeof<YamlSerializerOptions> |])
-            .Invoke([| options |])
+            .GetConstructor([| |])
+            .Invoke([| |])
         :?> YamlConverter
 
 

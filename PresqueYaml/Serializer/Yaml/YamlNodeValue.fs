@@ -6,10 +6,10 @@ open MagnusOpera.PresqueYaml
 type YamlNodeConverter() =
     inherit YamlConverter<YamlNode>()
 
-    override _.Default =
+    override _.Default options =
         YamlNode.None
 
-    override _.Read(node:YamlNode, _) =
+    override _.Read(node, _, _) =
         node
 
 
@@ -17,10 +17,10 @@ type YamlNodeConverter() =
 type YamlNodeConverter<'T>() =
     inherit YamlConverter<YamlNodeValue<'T>>()
 
-    override _.Default =
+    override _.Default options =
         YamlNodeValue<'T>.Undefined
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             YamlNodeValue<'T>.None

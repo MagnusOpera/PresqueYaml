@@ -57,7 +57,7 @@ let private matchType (ty: Type) =
     else TypeKind.Other
 
 let private readMethod (ty: Type) = ty.GetMethod("Read")
-let private defaultMethod (ty: Type) = ty.GetProperty("Default").GetMethod
+let private defaultMethod (ty: Type) = ty.GetMethod("Default")
 
 let private cache = System.Collections.Concurrent.ConcurrentDictionary<Type, TypeKind>()
 let getKind ty = cache.GetOrAdd(ty, matchType)

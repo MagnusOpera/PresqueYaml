@@ -23,10 +23,10 @@ type IYamlSerializer =
 
 and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
-    abstract Read: node:YamlNode * serializer:IYamlSerializer -> 'T
+    abstract Read: node:YamlNode * options:YamlSerializerOptions * serializer:IYamlSerializer -> 'T
 
-    abstract Default: 'T
-    default _.Default = Unchecked.defaultof<'T>
+    abstract Default: options:YamlSerializerOptions -> 'T
+    default _.Default (options:YamlSerializerOptions) = Unchecked.defaultof<'T>
 
 
 type YamlSerializerException(msg:string, ?innerEx:Exception) =

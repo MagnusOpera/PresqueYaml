@@ -4,10 +4,10 @@ open System
 
 
 [<Sealed>]
-type ConvertibleConverter<'T>(options:YamlSerializerOptions) =
+type ConvertibleConverter<'T>() =
     inherit YamlConverter<'T>()
 
-    override _.Read(node:YamlNode, serializer) =
+    override _.Read(node, options, serializer) =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Unchecked.defaultof<'T>

@@ -6,5 +6,5 @@ open MagnusOpera.PresqueYaml
 type FSharpUnitConverter() =
     inherit YamlConverter<obj>()
 
-    override _.Read(node:YamlNode, _): obj =
+    override _.Read(node, _, _): obj =
         Unchecked.defaultof<unit>
