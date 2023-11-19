@@ -70,34 +70,51 @@ let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
 
 
 let nrtContext = NullabilityInfoContext()
-let getRequired (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
+let getRequired noneIsEmpty (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
     match nrtInfo.ReadState with
     | NullabilityState.Nullable -> false
     | NullabilityState.NotNull -> true
     | _ ->
         // F# type ?
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
-        // better sad than sorry: no clues about nullability and not F# so in doubt force required
-        | null -> true
+        | null ->
+            match getKind ty with
+            // provide some nullability for few BCP types
+            | TypeKind.Nullable ->
+                false
+            // nullability on collection depends on NRT
+            | TypeKind.List
+            | TypeKind.Dictionary
+            | TypeKind.Array ->
+                noneIsEmpty |> not
+            // better sad than sorry: no clues about nullability and not F# so in doubt force required
+            | _ ->
+                true
         | _ ->
             // F# null allowed ?
             match ty.GetCustomAttribute(typeof<AllowNullLiteralAttribute>) with
             | null ->
-                // provide some nullability for few F# types
                 match getKind ty with
+                // provide some nullability for few F# types
+                | TypeKind.FsUnit
                 | TypeKind.FsOption
                 | TypeKind.FsVOption
-                | TypeKind.YamlNodeValue
+                | TypeKind.YamlNode
+                | TypeKind.YamlNodeValue ->
+                    false
+                // nullability on collection depends on NRT
                 | TypeKind.FsList
                 | TypeKind.FsSet
                 | TypeKind.FsMap ->
-                    false
+                    noneIsEmpty |> not
+                // all other F# types are mandatory
                 | _ ->
                     true
-            | _ -> false
+            | _ ->
+                false
 
 let private propInfoRequiredCache = System.Collections.Concurrent.ConcurrentDictionary<PropertyInfo, bool>()
-let getPropertyRequired (propInfo: PropertyInfo) = propInfoRequiredCache.GetOrAdd(propInfo, getRequired propInfo.PropertyType (nrtContext.Create(propInfo)))
+let getPropertyRequired noneIsEmpty (propInfo: PropertyInfo) = propInfoRequiredCache.GetOrAdd(propInfo, getRequired noneIsEmpty propInfo.PropertyType (nrtContext.Create(propInfo)))
 
 let private paramInfoRequiredCache = System.Collections.Concurrent.ConcurrentDictionary<ParameterInfo, bool>()
-let getParameterRequired (paramInfo: ParameterInfo) = paramInfoRequiredCache.GetOrAdd(paramInfo, getRequired paramInfo.ParameterType (nrtContext.Create(paramInfo)))
+let getParameterRequired noneIsEmpty (paramInfo: ParameterInfo) = paramInfoRequiredCache.GetOrAdd(paramInfo, getRequired noneIsEmpty paramInfo.ParameterType (nrtContext.Create(paramInfo)))

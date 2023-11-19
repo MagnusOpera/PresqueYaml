@@ -11,12 +11,10 @@ type FSharpRecordConverter<'T when 'T : null>() =
     let ctor = FSharpValue.PreComputeRecordConstructor(recordType, true)
     let fields = FSharpType.GetRecordFields(recordType, true)
 
-    let parameterRequired =
-        fields
-        |> Array.map TypeHelpers.getPropertyRequired
-
     override _.Read(node:YamlNode, serializer) =
-        let fieldRequired = Array.copy parameterRequired
+        let fieldRequired =
+            fields
+            |> Array.map (TypeHelpers.getPropertyRequired serializer.Options.NoneIsEmpty)
 
         let fieldValues =
             fields

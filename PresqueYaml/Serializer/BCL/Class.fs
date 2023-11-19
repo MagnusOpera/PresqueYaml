@@ -9,12 +9,10 @@ type ClassConverter<'T when 'T : null>() =
     let ctor = classType.GetConstructors() |> Seq.exactlyOne
     let parameters = ctor.GetParameters()
 
-    let parameterRequired =
-        parameters
-        |> Array.map TypeHelpers.getParameterRequired
-
     override _.Read(node:YamlNode, serializer) =
-        let parameterRequired = Array.copy parameterRequired
+        let parameterRequired =
+            parameters
+            |> Array.map (TypeHelpers.getParameterRequired serializer.Options.NoneIsEmpty)
 
         let parameterValues =
             parameters

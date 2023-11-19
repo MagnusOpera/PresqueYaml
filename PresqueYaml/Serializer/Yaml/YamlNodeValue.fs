@@ -6,6 +6,9 @@ open MagnusOpera.PresqueYaml
 type YamlNodeConverter() =
     inherit YamlConverter<YamlNode>()
 
+    override _.Default _ =
+        YamlNode.None
+
     override _.Read(node:YamlNode, _) =
         node
 
