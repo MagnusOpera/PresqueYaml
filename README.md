@@ -39,7 +39,7 @@ x
 A block can either be a mapping, sequence or scalar. In any cases, explicitness is mandatory - this is a key difference with Yaml specification (where implicit flow literal with dedent is allowed for eg).
 
 ## Scalars
-* single and double quoted strings are handled exactely the same.
+* single and double quoted strings are handled exactly the same.
 * scalar are either compact (and multilines with same indentation), folded or literal. Implicit flow scalar with dedent is not supported for eg.
 * only escapes `\n`, `\r`, `\t`and `\s` are supported.
 * representation model is always using `string`type - it does not attempt to identify types: that's subsequent analyzer or deserializer responsibility.
