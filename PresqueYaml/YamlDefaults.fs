@@ -1,5 +1,6 @@
-module MagnusOpera.PresqueYaml.Defaults
+module MagnusOpera.PresqueYaml.YamlDefaults
 open MagnusOpera.PresqueYaml.Converters
+
 
 let options =
     let options = YamlSerializerOptions()

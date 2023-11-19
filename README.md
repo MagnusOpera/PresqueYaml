@@ -168,7 +168,7 @@ In order to convert a yaml document to a representation model, use:
 ```ocaml
 let yaml = "value: toto"
 let node = YamlParser.Read yaml
-// node is of type PresqueYaml.YamlNode
+// node is of type YamlNode
 ```
 
 Representation model is:
@@ -203,10 +203,12 @@ By default, `PresqueYaml` manages:
 
 ### Specific behaviors
 By default, following types have a default value:
-* reference types: null if NRT enabled and type is nullable
-* Collections (both F# and C#): empty
-* Option: None
-* YamlNodeValue: Undefined
+
+| Type                         | Default value                                |
+|------------------------------|----------------------------------------------|
+| reference types              | `null` if NRT enabled and type is nullable   |
+| Collections (both F# and C#) | empty                                        |
+| YamlNodeValue                | YamlNodeValue.Undefined                      |
 
 This behavior can be changed by providing a `YamlDeserializationOptions` on `Deserialize`.
 
@@ -215,7 +217,7 @@ This behavior can be changed by providing a `YamlDeserializationOptions` on `Des
 * which mappers to use.
 * how to deserialize `YamlNode.None` regarding collections.
 
-There is a default configuration provided (`PresqueYaml.Defaults.options`):
+There is a default configuration provided (`YamlDefaults.options`):
 * Include all F# and C# types
 * `YamlNode.None` forces empty collections.
 

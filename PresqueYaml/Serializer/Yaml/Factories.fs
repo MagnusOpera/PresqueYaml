@@ -3,6 +3,7 @@ open System
 open MagnusOpera.PresqueYaml
 open TypeHelpers
 
+
 [<Sealed>]
 type YamlNodeConverterFactory() =
     inherit YamlConverterFactory()
@@ -12,6 +13,7 @@ type YamlNodeConverterFactory() =
 
     override _.CreateConverter (typeToConvert: Type) =
         YamlNodeConverter()
+
 
 [<Sealed>]
 type YamlNodeValueConverterFactory() =

@@ -21,7 +21,7 @@
     <Compile Include="Serializer/FSharp/Factories.fs" />
     <Compile Include="Serializer/Yaml/YamlNodeValue.fs" />
     <Compile Include="Serializer/Yaml/Factories.fs" />
-    <Compile Include="Defaults.fs" />
+    <Compile Include="YamlDefaults.fs" />
     <Compile Include="Serializer/Serializer.fs" />
   </ItemGroup>
 

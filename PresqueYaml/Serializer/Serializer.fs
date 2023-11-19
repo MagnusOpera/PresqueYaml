@@ -37,10 +37,6 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
             this.Contexts.Pop() |> ignore
             res
 
-        member this.Deserialize(context: string, node: YamlNode): 'T =
-            let serializer = this :> IYamlSerializer
-            serializer.Deserialize(context, node, typeof<'T>) :?> 'T
-
 
 [<AbstractClass; Sealed>]
 type YamlSerializer() =
@@ -66,4 +62,4 @@ type YamlSerializer() =
         YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
 
     static member Deserialize<'T>(node:YamlNode): 'T =
-        YamlSerializer.Deserialize(node, typeof<'T>, Defaults.options) :?> 'T
+        YamlSerializer.Deserialize(node, typeof<'T>, YamlDefaults.options) :?> 'T
