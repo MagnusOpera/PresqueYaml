@@ -13,10 +13,28 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 * Support net7.0+ and NRT (Nullable Reference Types).
 * Extensible, small and easily maintainable.
 
-# 🧐 Key differences with Yaml 1.2
-Few list of differences. It's probably not exhaustive !
+# 🧐 Key differences with Yaml (all versions)
 
-<table><tr><td>Again, `PresqueYaml` does not offer complete yaml support, you have been warned if you heavily rely on this.</td></tr></table>
+<table><tr><td>It's probably not exhaustive ! Again, `PresqueYaml` does not pretend to support full Yaml specification. You have been warned if you heavily rely on this.</td></tr></table>
+
+## Blocks
+`PresqueYaml` only provides an implementation of explicit nested blocks, like as follow.
+
+```
++--[block1]-------------x
+|                 
+|  +--[block2]----------x
+|  |              
+|  x              
+|         
+|  +--[block3]----------x
+|  |         
+|  |
+|  x
+|
+x
+```
+A block can either be a mapping, sequence or scalar. In any cases, explicitness is mandatory - this is a key difference with Yaml specification (where implicit flow literal with dedent is allowed for eg).
 
 ## Scalars
 * single and double quoted strings are handled exactely the same.
@@ -27,6 +45,7 @@ Few list of differences. It's probably not exhaustive !
 
 ## Sequences
 * compact sequences do not support quoted strings - only raw content.
+* Sequence must be indented respective to parent node.
 
 ## Mappings
 * mapping can have duplicated keys (last key wins).
@@ -163,15 +182,7 @@ let map = YamlSerializer.Deserialize<Map<string, string>>(node)
 // map is of type Map<string, string>
 ```
 
-### Specific behaviors
-By default, following types have a default value:
-* reference types: null if NRT enabled and type is nullable
-* Collections (both F# and C#): empty
-* Option: None
-* YamlNodeValue: Undefined
-
 ### Special types
-
 By default, `PresqueYaml` manages:
 * Byte, Char, Int16, UInt16, Int32, UInt32, Int64, UInt64, String
 * C# Array, List<_>, Dictionary<string, _>, Nullable<_>, class (must define primary constructor only)
@@ -182,6 +193,15 @@ By default, `PresqueYaml` manages:
 * has not been provided (Undefined)
 * has not been set (None)
 * has been set (Value)
+
+### Specific behaviors
+By default, following types have a default value:
+* reference types: null if NRT enabled and type is nullable
+* Collections (both F# and C#): empty
+* Option: None
+* YamlNodeValue: Undefined
+
+This behavior can be changed by providing a `YamlDeserializationOptions` on `Deserialize`.
 
 ### Customization
 `YamlDeserializer` must be given a configuration. This configuration instructs:
