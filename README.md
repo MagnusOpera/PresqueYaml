@@ -63,7 +63,7 @@ A block can either be a mapping, sequence or scalar. In any cases, explicitness 
 * no tag support.
 
 # 🚀 Supported feature example
-Anyway, most Yaml documents do not used advanced features.
+Anyway, most Yaml documents do not use advanced features.
 Here is a document showing `PresqueYaml` capabilities:
 
 ```yaml
@@ -111,6 +111,8 @@ mapping:
   item1: value1
   item2: value2
   item3:
+# note: this is something not valid in Yaml spec - usage is discouraged
+#       but it's valid per block definition in PresqueYaml
 nestedMapping: item1: value1
                item2: value2
 
