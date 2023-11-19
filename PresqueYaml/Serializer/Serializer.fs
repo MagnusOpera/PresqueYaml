@@ -1,6 +1,7 @@
 namespace MagnusOpera.PresqueYaml
 open System
 open MagnusOpera.PresqueYaml
+open System.Runtime.InteropServices
 
 
 [<Sealed>]
@@ -41,7 +42,9 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
 [<AbstractClass; Sealed>]
 type YamlSerializer() =
 
-    static member Deserialize (node:YamlNode, returnType:Type, options:YamlSerializerOptions): obj =
+    static member Deserialize (node:YamlNode, returnType:Type, [<Optional>] options:YamlSerializerOptions option): obj =
+        let options = options |> Option.defaultValue YamlDefaults.options
+
         let serializer = YamlSerializerContext(options)
         try
             (serializer :> IYamlSerializer).Deserialize (returnType.Name, node, returnType)
@@ -58,8 +61,5 @@ type YamlSerializer() =
             let msg = $"Error while deserializing {path}: {meaningfulEx.Message}"
             YamlSerializerException(msg, meaningfulEx.InnerException) |> raise
 
-    static member Deserialize<'T>(node:YamlNode, options:YamlSerializerOptions): 'T =
+    static member Deserialize<'T>(node:YamlNode, [<Optional>] options:YamlSerializerOptions option): 'T =
         YamlSerializer.Deserialize(node, typeof<'T>, options) :?> 'T
-
-    static member Deserialize<'T>(node:YamlNode): 'T =
-        YamlSerializer.Deserialize(node, typeof<'T>, YamlDefaults.options) :?> 'T
