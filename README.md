@@ -185,7 +185,7 @@ type YamlNode =
 ```
 
 ## Deserialization
-To convert a representation model to an .net object model, use:
+To convert a representation model to a .net object model, use:
 ```ocaml
 let node = ... // representation model
 let map = YamlSerializer.Deserialize<Map<string, string>>(node)
@@ -214,6 +214,12 @@ By default, following types have a default value:
 | YamlNodeValue                | `YamlNodeValue.Undefined`                    |
 
 This behavior can be changed by providing a `YamlDeserializationOptions` on `Deserialize`.
+
+**⚠️ NOTE:** NRT support is provided at runtime (it's reflection based).
+Depending on activation context, you may observe different behaviors:
+* C# + Nullable enable: NRT are enforced and reference types can be nullable
+* C# + Nullable disabled: NRT are disabled and reference types can't be nullable
+* F#: NRT are not supported and reference types can't be nullable
 
 ### Customization
 `YamlDeserializer` must be given a configuration. This configuration instructs:
