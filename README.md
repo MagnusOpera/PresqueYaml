@@ -156,7 +156,8 @@ YamlNode.Mapping (Map [ // scalars
 
 # 📚 Api
 `PresqueYaml` can be used both in F# and C#.
-F# is preferred of course to explore the representation model (exposed in `MagnusOpera.PresqueYaml` namespace).
+F# is preferred of course to explore the representation model. 
+Namespace of API is `MagnusOpera.PresqueYaml`.
 
 ## Availability
 [![Nuget](https://img.shields.io/nuget/v/MagnusOpera.PresqueYaml)](https://nuget.org/packages/MagnusOpera.PresqueYaml)
