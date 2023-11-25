@@ -79,7 +79,7 @@ let getRequired noneIsEmpty (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
         | null ->
             match getKind ty with
-            // provide some nullability for few BCP types
+            // provide some nullability for few BCL types
             | TypeKind.Nullable ->
                 false
             // nullability on collection depends on NRT
