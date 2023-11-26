@@ -20,7 +20,7 @@ In French, "presque" means "almost". If you understand it right, `PresqueYaml` i
 <table><tr><td>It's probably not exhaustive ! Again, `PresqueYaml` does not pretend to support full Yaml specification. You have been warned if you heavily rely on this.</td></tr></table>
 
 ## Blocks
-`PresqueYaml` only supports explicit nested blocks as follow.
+`PresqueYaml` only supports explicit and proper nested blocks as follow.
 
 ```
 +--[block1]-------------x
