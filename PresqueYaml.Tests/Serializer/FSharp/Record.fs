@@ -15,6 +15,14 @@ type Toto = {
     // IntVOption: int voption
 }
 
+
+type DotnetPublish = {
+    Configuration: string option
+    Trim: bool option
+    SingleFile: bool option
+    Runtime: string option
+}
+
 // ####################################################################################################################
 
 [<Test>]
@@ -60,6 +68,27 @@ let ``option record conversion``() =
                                       "IntVOption", YamlNode.Scalar "-1" ])
 
     YamlSerializer.Deserialize<Toto option>(node)
+    |> should equal expected
+
+// ####################################################################################################################
+
+// ####################################################################################################################
+
+[<Test>]
+let ``bool conversion``() =
+    let expected = {
+        Configuration = Some "Release"
+        Trim = Some true
+        SingleFile = Some true
+        Runtime = Some "linux-x64"
+    }
+
+    let node = YamlNode.Mapping (Map ["configuration", YamlNode.Scalar "Release"
+                                      "trim", YamlNode.Scalar "true"
+                                      "singleFile", YamlNode.Scalar "true"
+                                      "runtime", YamlNode.Scalar "linux-x64" ])
+
+    YamlSerializer.Deserialize<DotnetPublish>(node)
     |> should equal expected
 
 // ####################################################################################################################

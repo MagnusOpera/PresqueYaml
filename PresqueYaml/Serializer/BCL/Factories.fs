@@ -61,6 +61,7 @@ type ConvertibleConverterFactory() =
         || typeToConvert = typeof<Char>
         || typeToConvert = typeof<Byte>
         || typeToConvert = typeof<String>
+        || typeToConvert = typeof<Boolean>
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
         if typeToConvert = typeof<Int16> then ConvertibleConverter<Int16>()
@@ -72,6 +73,7 @@ type ConvertibleConverterFactory() =
         elif typeToConvert = typeof<Char> then ConvertibleConverter<Char>()
         elif typeToConvert = typeof<Byte> then ConvertibleConverter<Byte>()
         elif typeToConvert = typeof<String> then ConvertibleConverter<String>()
+        elif typeToConvert = typeof<Boolean> then ConvertibleConverter<Boolean>()
         else failwith "Unknown type"
 
 
