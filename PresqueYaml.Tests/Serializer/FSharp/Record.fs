@@ -92,3 +92,51 @@ let ``bool conversion``() =
     |> should equal expected
 
 // ####################################################################################################################
+
+
+type ExtensionConfig = {
+    Version: string option
+    Container: YamlNodeValue<string>
+    Parameters: Map<string, YamlNode>
+}
+
+type BuildConfig = {
+    Storage: string option
+    Extensions: Map<string, ExtensionConfig option>
+}
+
+[<Test>]
+let ``empty mapping allowed``() =
+    let expected = {
+            Storage = None
+            Extensions = Map [ "dotnet", Some { Version = None
+                                                Container = YamlNodeValue.Value "mcr.microsoft.com/dotnet/sdk:7.0"
+                                                Parameters = Map [ "configuration", YamlNode.Scalar "$(configuration)" ] }
+                               "terraform", Some { Version = None
+                                                   Container = YamlNodeValue.Undefined
+                                                   Parameters = Map [ "workspace", YamlNode.Scalar "$(workspace)" ] }
+                               "make", None
+                               "npm", None
+                               "docker", None ]
+        }
+
+    let yaml = "
+extensions:
+  dotnet:
+    container: mcr.microsoft.com/dotnet/sdk:7.0
+    parameters:
+      configuration: $(configuration)
+  terraform:
+    parameters:
+      workspace: $(workspace)
+  make:
+  npm:
+  docker:
+"
+
+    let nodes = yaml |> YamlParser.Read
+    printfn $"{nodes}"
+
+    nodes
+    |> YamlSerializer.Deserialize<BuildConfig>
+    |> should equal expected
