@@ -9,7 +9,7 @@ open FsUnit
 [<Test>]
 let ``empty lines are ignored``() =
     let expected =
-        YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "name", YamlNode.Scalar "John Doe"
+        YamlNode.Mapping (Map [ "user1", YamlNode.Mapping (Map [ "firstname/lastname", YamlNode.Scalar "John Doe"
                                                                  "age", YamlNode.None
                                                                  "comment", YamlNode.Scalar "this is a comment\n😃"
                                                                  "languages", YamlNode.Sequence [ YamlNode.Scalar "Python"
@@ -29,7 +29,7 @@ let ``empty lines are ignored``() =
 #     user 1
 user1:
 
-  name: John Doe
+  firstname/lastname: John Doe
 
   age:
   comment: this is a comment\\n😃
