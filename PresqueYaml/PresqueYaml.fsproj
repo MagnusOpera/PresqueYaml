@@ -1,7 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../../oss/fsharp/fsharp/UseLocalCompiler.Directory.Build.props"/>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <OtherFlags>$(OtherFlags) --checknulls</OtherFlags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -25,6 +25,7 @@ type CollectionConverterFactory() =
             .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
             .GetConstructor([| |])
             .Invoke([| |])
+        |> nonNull
         :?> YamlConverter
 
 
@@ -38,7 +39,7 @@ type ArrayConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-        let converterType = typedefof<ArrayConverter<_>>
+        let converterType = typedefof<ArrayConverter<_>> |> nonNull
 
         converterType
             .MakeGenericType([| typeToConvert.GetElementType() |])
@@ -88,7 +89,7 @@ type NullableConverterFactory() =
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
 
-        let converterType = typedefof<NullableConverter<_>>
+        let converterType = typedefof<NullableConverter<_>> |> nonNull
 
         converterType
             .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])

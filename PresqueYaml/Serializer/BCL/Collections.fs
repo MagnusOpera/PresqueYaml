@@ -5,7 +5,7 @@ open MagnusOpera.PresqueYaml
 
 [<Sealed>]
 type ListConverter<'T>() =
-    inherit YamlConverter<List<'T>>()
+    inherit YamlConverter<List<'T> | null>()
 
     override _.Default options =
         if options.NoneIsEmpty then List<'T>()
@@ -25,7 +25,7 @@ type ListConverter<'T>() =
 
 [<Sealed>]
 type DictionaryConverter<'T>() =
-    inherit YamlConverter<Dictionary<string, 'T>>()
+    inherit YamlConverter<Dictionary<string, 'T> | null>()
 
     override _.Default options =
         if options.NoneIsEmpty then Dictionary<string, 'T>()
@@ -45,7 +45,7 @@ type DictionaryConverter<'T>() =
 
 [<Sealed>]
 type ArrayConverter<'T>() =
-    inherit YamlConverter<'T[]>()
+    inherit YamlConverter<'T[] | null>()
 
     override _.Default options =
         if options.NoneIsEmpty then Array.empty

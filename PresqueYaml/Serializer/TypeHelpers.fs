@@ -56,14 +56,17 @@ let private matchType (ty: Type) =
     elif ty.IsArray then TypeKind.Array
     else TypeKind.Other
 
-let private readMethod (ty: Type) = ty.GetMethod("Read")
-let private defaultMethod (ty: Type) = ty.GetMethod("Default")
+let private readMethod (ty: Type) = ty.GetMethod("Read") |> nonNull
+
+let private defaultMethod (ty: Type) = ty.GetMethod("Default") |> nonNull
 
 let private cache = System.Collections.Concurrent.ConcurrentDictionary<Type, TypeKind>()
 let getKind ty = cache.GetOrAdd(ty, matchType)
 
 let private readCache = System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo>()
-let getRead ty = readCache.GetOrAdd(ty, readMethod)
+let getRead ty =
+    let mi: MethodInfo = readCache.GetOrAdd(ty, readMethod)
+    mi
 
 let private defaultCache = System.Collections.Concurrent.ConcurrentDictionary<Type, MethodInfo>()
 let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
