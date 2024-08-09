@@ -20,13 +20,11 @@ type CollectionConverterFactory() =
             | TypeHelpers.TypeKind.List -> typedefof<ListConverter<_>>, 0
             | TypeHelpers.TypeKind.Dictionary -> typedefof<DictionaryConverter<_>>, 1
             | _ -> failwith "Unknown type"
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        |> nonNull
-        :?> YamlConverter
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
@@ -40,12 +38,11 @@ type ArrayConverterFactory() =
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
         let converterType = typedefof<ArrayConverter<_>> |> nonNull
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetElementType() |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetElementType() |> nonNull |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
@@ -88,14 +85,13 @@ type NullableConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert:Type, options:YamlSerializerOptions) =
-
         let converterType = typedefof<NullableConverter<_>> |> nonNull
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+                .GetConstructor([| |]) |> nonNull
 
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
@@ -108,9 +104,9 @@ type ClassConverterFactory() =
         | _ -> false
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
-        let converterType = typedefof<ClassConverter<_>>
-        converterType
-            .MakeGenericType([| typeToConvert |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        let converterType = typedefof<ClassConverter<_>> |> nonNull
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter

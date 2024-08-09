@@ -15,17 +15,17 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
             let converter = factory.CreateConverter(returnType, options)
             converter
         | _ ->
-            YamlParserException.Raise $"type {returnType.Name} has no registered converter"
+            YamlParserException.Raise($"type {returnType.Name} has no registered converter")
 
     member val Contexts = System.Collections.Generic.Stack<string>()
 
     interface IYamlSerializer with
-        member this.Default(returnType: Type): obj =
+        member this.Default(returnType: Type): objnull =
             let converter = getConverter returnType
             let defaultMethodInfo = converter.GetType() |> TypeHelpers.getDefault
             defaultMethodInfo.Invoke(converter, [| options |])
 
-        member this.Deserialize(context: string, node: YamlNode, returnType: Type): obj =
+        member this.Deserialize(context: string, node: YamlNode, returnType: Type): objnull =
             this.Contexts.Push(context)
             let serializer = this :> IYamlSerializer
             let converter = getConverter returnType
@@ -38,7 +38,7 @@ type private YamlSerializerContext(options:YamlSerializerOptions) =
 [<AbstractClass; Sealed>]
 type YamlSerializer() =
 
-    static member Deserialize (node:YamlNode, returnType:Type, [<Optional>] options:YamlSerializerOptions option): obj =
+    static member Deserialize (node:YamlNode, returnType:Type, [<Optional>] options:YamlSerializerOptions option): objnull =
         let options = options |> Option.defaultValue YamlDefaults.options
 
         let serializer = YamlSerializerContext(options)
@@ -46,11 +46,11 @@ type YamlSerializer() =
             (serializer :> IYamlSerializer).Deserialize (returnType.Name, node, returnType)
         with
         | ex ->
-            let rec findSerializerException (innerEx: Exception) =
+            let rec findSerializerException (innerEx: Exception | null): Exception =
                 match innerEx with
-                | :? YamlSerializerException -> innerEx
+                | :? YamlSerializerException as innerEx -> innerEx
                 | null -> ex
-                | _ -> findSerializerException innerEx.InnerException
+                | innerEx -> findSerializerException innerEx.InnerException
 
             let meaningfulEx = findSerializerException ex
             let path = String.Join(".", serializer.Contexts |> Seq.rev)

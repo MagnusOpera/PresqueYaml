@@ -1,17 +1,22 @@
 config ?= Debug
 version ?= 0.0.0
 
+DOTNET=./.dotnet/dotnet
+
 
 build:
-	dotnet build -c $(config)
+	$(DOTNET) build -c $(config)
 
 dist:
-	dotnet pack -c $(config) /p:Version=$(version) -o .out
+	$(DOTNET) pack -c $(config) /p:Version=$(version) -o .out
 
 test: dist
-	dotnet test -c $(config) --logger "trx;LogFileName=test-results.trx"
+	$(DOTNET) test -c $(config) --logger "trx;LogFileName=test-results.trx"
 
 publish: .out/*.nupkg
 	@for file in $^ ; do \
-		dotnet nuget push $$file -k $(nugetkey) -s https://api.nuget.org/v3/index.json --skip-duplicate ; \
+		$(DOTNET) nuget push $$file -k $(nugetkey) -s https://api.nuget.org/v3/index.json --skip-duplicate ; \
     done
+
+install:
+	./scripts/dotnet-install.sh --channel 9.0.1xx --quality preview --install-dir .dotnet/

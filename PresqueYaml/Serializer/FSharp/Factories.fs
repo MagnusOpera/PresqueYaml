@@ -20,13 +20,12 @@ type FSharpCollectionsConverterFactory() =
             | TypeKind.FsList -> typedefof<FSharpListConverter<_>>, 0
             | TypeKind.FsSet -> typedefof<FSharpSetConverter<_>>, 0
             | TypeKind.FsMap -> typedefof<FSharpMapConverter<_>>, 1
-            | _ -> YamlSerializerException.Raise "unknown type"
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+            | _ -> YamlSerializerException.Raise("unknown type")
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[idx] |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
@@ -41,12 +40,11 @@ type FSharpUnionConverterFactory() =
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType = typedefof<FSharpOptionConverter<_>>
-
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
@@ -60,11 +58,11 @@ type FSharpRecordConverterFactory() =
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType = typedefof<FSharpRecordConverter<_>>
-        converterType
-            .MakeGenericType([| typeToConvert |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert |])
+                .GetConstructor([| |]) |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter
 
 
 [<Sealed>]
