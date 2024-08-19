@@ -75,9 +75,14 @@ let getDefault ty = defaultCache.GetOrAdd(ty, defaultMethod)
 let nrtContext = NullabilityInfoContext()
 let getRequired noneIsEmpty (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
     match nrtInfo.ReadState with
-    | NullabilityState.Nullable -> false
-    | NullabilityState.NotNull -> true
+    | NullabilityState.Nullable ->
+        printfn $"=== Nullable {ty.FullName} ==="
+        false
+    | NullabilityState.NotNull ->
+        printfn $"=== NotNull {ty.FullName} ==="
+        true
     | _ ->
+        printfn $"=== Other {ty.FullName} ==="
         // F# type ?
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
         | null ->
