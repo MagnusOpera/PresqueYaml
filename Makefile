@@ -20,3 +20,6 @@ publish: .out/*.nupkg
 
 install:
 	./scripts/dotnet-install.sh --channel 9.0.1xx --quality preview --install-dir .dotnet/
+
+install2:
+	ln -s ../../oss/fsharp/fsharp/.dotnet ./.dotnet
