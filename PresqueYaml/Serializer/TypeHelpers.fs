@@ -76,13 +76,13 @@ let nrtContext = NullabilityInfoContext()
 let getRequired noneIsEmpty (ty: Type) (nrtInfo: NullabilityInfo) _ : bool =
     match nrtInfo.ReadState with
     | NullabilityState.Nullable ->
-        printfn $"=== Nullable {ty.FullName} ==="
+        System.Console.WriteLine($"=== Nullable {ty.FullName} ===")
         false
     | NullabilityState.NotNull ->
-        printfn $"=== NotNull {ty.FullName} ==="
+        System.Console.WriteLine($"=== NotNull {ty.FullName} ===")
         true
     | _ ->
-        printfn $"=== Other {ty.FullName} ==="
+        System.Console.WriteLine($"=== Other {ty.FullName} ===")
         // F# type ?
         match ty.GetCustomAttribute(typeof<CompilationMappingAttribute>) with
         | null ->
