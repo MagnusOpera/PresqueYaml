@@ -18,8 +18,8 @@ and [<AbstractClass>] YamlConverterFactory() =
 
 
 type IYamlSerializer =
-    abstract member Default: returnType:Type -> obj
-    abstract member Deserialize: context:string * node:YamlNode * returnType:Type -> obj
+    abstract member Default: returnType:Type -> objnull
+    abstract member Deserialize: context:string * node:YamlNode * returnType:Type -> objnull
 
 and [<AbstractClass>] YamlConverter<'T>() =
     inherit YamlConverter()
@@ -29,7 +29,13 @@ and [<AbstractClass>] YamlConverter<'T>() =
     default _.Default (options:YamlSerializerOptions) = Unchecked.defaultof<'T>
 
 
-type YamlSerializerException(msg:string, ?innerEx:Exception) =
-    inherit Exception(msg, innerEx |> Option.defaultValue null)
+type YamlSerializerException(msg:string, innerEx: Exception | null) =
+    inherit Exception(msg, innerEx)
 
-    static member Raise(msg) = YamlSerializerException(msg) |> raise
+    static member Raise(msg, ?innerEx: Exception) =
+        let innerEx: Exception | null =
+            match innerEx with
+            | None -> null
+            | Some ex -> ex
+        YamlSerializerException(msg, innerEx)
+        |> raise

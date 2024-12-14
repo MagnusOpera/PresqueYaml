@@ -3,6 +3,18 @@ open System
 open System.Collections.Generic
 open System.Text.RegularExpressions
 
+type YamlParserException(msg:string, innerEx: Exception | null) =
+    inherit Exception(msg, innerEx)
+
+    static member Raise(msg, ?innerEx: Exception) =
+        let innerEx: Exception | null =
+            match innerEx with
+            | None -> null
+            | Some ex -> ex
+        YamlParserException(msg, innerEx)
+        |> raise
+
+
 [<RequireQualifiedAccess>]
 type private ScalarMode =
     | Folded // >: newline as space
@@ -22,11 +34,6 @@ type private NodeState = {
     BlockInfo: BlockInfo
 }
 
-type YamlParserException(msg:string, ?innerEx:Exception) =
-    inherit Exception(msg, innerEx |> Option.defaultValue null)
-
-    static member Raise(msg) = YamlParserException(msg) |> raise
-
 [<AbstractClass; Sealed>]
 type YamlParser() =
     static member Read(yamlString: string): YamlNode =
@@ -34,7 +41,7 @@ type YamlParser() =
 
         let rec parseNode (states: NodeState list) accept currentColNumber currentLineNumber : node:YamlNode * nextLineNumber:int =
 
-            let parsingError msg col = YamlParserException.Raise $"{msg} (line {currentLineNumber + 1}, column {col + 1})"
+            let parsingError msg col = YamlParserException.Raise($"{msg} (line {currentLineNumber + 1}, column {col + 1})")
 
             let (|Regex|_|) pattern input =
                 let m = Regex.Match(input, pattern)

@@ -26,8 +26,9 @@ type YamlNodeValueConverterFactory() =
 
     override _.CreateConverter (typeToConvert: Type, options:YamlSerializerOptions) =
         let converterType = typedefof<YamlNodeConverter<_>>
-        converterType
-            .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
-            .GetConstructor([| |])
-            .Invoke([| |])
-        :?> YamlConverter
+        let ctor =
+            converterType
+                .MakeGenericType([| typeToConvert.GetGenericArguments().[0] |])
+                .GetConstructor([| |])
+                |> nonNull
+        ctor.Invoke([| |]) :?> YamlConverter

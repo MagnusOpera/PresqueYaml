@@ -11,6 +11,6 @@ type ConvertibleConverter<'T>() =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Unchecked.defaultof<'T>
-            else YamlSerializerException.Raise "failed to convert None to convertible"
+            else YamlSerializerException.Raise("failed to convert None to convertible")
         | YamlNode.Scalar data -> Convert.ChangeType(data, typeof<'T>) :?> 'T
-        | _ -> YamlSerializerException.Raise $"failed to convert to {typeof<'T>.Name}"
+        | _ -> YamlSerializerException.Raise($"failed to convert to {typeof<'T>.Name}")

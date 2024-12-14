@@ -20,7 +20,8 @@ type ClassConverter<'T when 'T : null>() =
 
         let parameterIndices =
             parameters
-            |> Seq.mapi (fun idx pi  -> pi.Name.ToLowerInvariant(), idx)
+            |> Seq.mapi (fun idx pi  ->
+                (pi.Name |> nonNull).ToLowerInvariant(), idx)
             |> Map
 
         match node with
@@ -30,14 +31,15 @@ type ClassConverter<'T when 'T : null>() =
                 match parameterIndices |> Map.tryFind (name.ToLowerInvariant()) with
                 | Some index ->
                     let propType = parameters[index].ParameterType
-                    let data = serializer.Deserialize(parameters[index].Name, node, propType)
+                    let name = parameters[index].Name |> nonNull
+                    let data = serializer.Deserialize(name, node, propType)
                     parameterValues[index] <- data
                     parameterRequired[index] <- false
                 | _ -> ()
 
             let requiredIndex = parameterRequired |> Array.tryFindIndex id
             match requiredIndex with
-            | Some idx -> YamlSerializerException.Raise $"parameter {parameters[idx].Name} must be provided"
+            | Some idx -> YamlSerializerException.Raise($"parameter {parameters[idx].Name} must be provided")
             | _ -> ctor.Invoke(parameterValues) :?> 'T
 
-        | _ -> YamlSerializerException.Raise "can't convert sequence or mapping to record"
+        | _ -> YamlSerializerException.Raise("can't convert sequence or mapping to record")
