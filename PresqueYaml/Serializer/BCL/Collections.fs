@@ -7,11 +7,11 @@ open MagnusOpera.PresqueYaml
 type ListConverter<'T>() =
     inherit YamlConverter<List<'T> | null>()
 
-    override _.Default options =
+    override _.Default options: List<'T> | null =
         if options.NoneIsEmpty then List<'T>()
         else null
 
-    override _.Read(node, options, serializer) =
+    override _.Read(node, options, serializer): List<'T> | null =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then List<'T>()
@@ -27,11 +27,11 @@ type ListConverter<'T>() =
 type DictionaryConverter<'T>() =
     inherit YamlConverter<Dictionary<string, 'T> | null>()
 
-    override _.Default options =
+    override _.Default options: Dictionary<string, 'T> | null =
         if options.NoneIsEmpty then Dictionary<string, 'T>()
         else null
 
-    override _.Read(node, options, serializer) =
+    override _.Read(node, options, serializer): Dictionary<string, 'T> | null =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Dictionary<string, 'T>()
@@ -47,11 +47,11 @@ type DictionaryConverter<'T>() =
 type ArrayConverter<'T>() =
     inherit YamlConverter<'T[] | null>()
 
-    override _.Default options =
+    override _.Default options: 'T[] | null =
         if options.NoneIsEmpty then Array.empty
         else null
 
-    override _.Read(node, options, serializer) =
+    override _.Read(node, options, serializer): 'T[] | null =
         match node with
         | YamlNode.None ->
             if options.NoneIsEmpty then Array.empty

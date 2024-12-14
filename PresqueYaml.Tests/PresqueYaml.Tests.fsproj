@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../../oss/fsharp/fsharp/UseLocalCompiler.Directory.Build.props"/>
-
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
@@ -11,7 +9,6 @@
     <LangVersion>preview</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
-    <OtherFlags>$(OtherFlags) --checknulls</OtherFlags>
   </PropertyGroup>
 
   <ItemGroup>
